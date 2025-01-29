@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b015a2b2fb9f5fb4596543c78ea239fa, type: 3}
+  m_Name: FPSstate
+  m_EditorClassIdentifier: 
+  state: 1
+  cameraPrefab: {fileID: 862654217548357959, guid: 12f537099f319094d8659b369fafeb43, type: 3}
+  uiPrefab: {fileID: 5865351661263841050, guid: f74373e213f5de84188d7b3d8cc6c230, type: 3}

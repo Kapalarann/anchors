@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b015a2b2fb9f5fb4596543c78ea239fa, type: 3}
+  m_Name: RTSstate
+  m_EditorClassIdentifier: 
+  state: 0
+  cameraPrefab: {fileID: 6985863232236000911, guid: 67f4d07bcb81cce46bff74de97d861ae, type: 3}
+  uiPrefab: {fileID: 1435694886790252541, guid: 6cd2317627daf1848be747c67ea04a62, type: 3}

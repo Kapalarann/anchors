@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b015a2b2fb9f5fb4596543c78ea239fa, type: 3}
+  m_Name: Platformerstate
+  m_EditorClassIdentifier: 
+  state: 4
+  cameraPrefab: {fileID: 862654217548357959, guid: e45051516ac70bc42a0351fc2a0036ef, type: 3}
+  uiPrefab: {fileID: 2263651913877124332, guid: 3c369b874d2b3b140bc9c4479fe2b653, type: 3}
