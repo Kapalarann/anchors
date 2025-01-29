@@ -15,3 +15,5 @@ MonoBehaviour:
   state: 0
   cameraPrefab: {fileID: 6985863232236000911, guid: 67f4d07bcb81cce46bff74de97d861ae, type: 3}
   uiPrefab: {fileID: 1435694886790252541, guid: 6cd2317627daf1848be747c67ea04a62, type: 3}
+  hasMovement: 0
+  movementScriptType: 

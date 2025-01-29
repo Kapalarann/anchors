@@ -5,10 +5,6 @@ public class FPSMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float mouseSensitivity = 2f;
 
-    private void Start()
-    {
-        GameStateManager.Instance.RegisterMovement(StateType.FPS, this);
-    }
     void Update()
     {
         // Movement

@@ -14,11 +14,6 @@ public class MinerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
-    private void Start()
-    {
-        GameStateManager.Instance.RegisterMovement(StateType.Platformer, this);
-    }
-
     void Update()
     {
         HandleMovement();

@@ -15,3 +15,5 @@ MonoBehaviour:
   state: 4
   cameraPrefab: {fileID: 862654217548357959, guid: e45051516ac70bc42a0351fc2a0036ef, type: 3}
   uiPrefab: {fileID: 2263651913877124332, guid: 3c369b874d2b3b140bc9c4479fe2b653, type: 3}
+  hasMovement: 1
+  movementScriptType: MinerMovement

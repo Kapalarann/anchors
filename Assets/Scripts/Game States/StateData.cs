@@ -21,5 +21,6 @@ public class StateData : ScriptableObject
     public GameObject uiPrefab;
 
     [Header("Movement")]
-    public MonoBehaviour movementScript;
+    public bool hasMovement;
+    public string movementScriptType;
 }
