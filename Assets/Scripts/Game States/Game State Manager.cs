@@ -134,6 +134,9 @@ public class GameStateManager : MonoBehaviour
             case StateType.Platformer:
                 currentState = new MinerState(this, stateData);
                 break;
+            case StateType.ThirdPerson:
+                currentState = new ThirdPersonState(this, stateData);
+                break;
             default:
                 Debug.LogError($"Unknown state type: {stateData.state}");
                 return;
