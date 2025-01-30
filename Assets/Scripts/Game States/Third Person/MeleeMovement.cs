@@ -25,7 +25,7 @@ public class MeleeMovement : MonoBehaviour
         _playerInput = GetComponent<PlayerInput>();
         if (_playerInput != null)
         {
-            _playerInput.actions.Enable();  // Ensure input system is enabled
+            //_playerInput.actions.Enable();  // Ensure input system is enabled
         }
     }
 
