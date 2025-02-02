@@ -1,10 +1,10 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class ThirdPersonState : GameState 
 {
     public Camera TPCameraInstance;
-    private Transform crystal;
-    private Transform basePoint;
+    public CinemachineCamera CinemachineInstance;
 
     private StateData stateData;
 
@@ -24,25 +24,16 @@ public class ThirdPersonState : GameState
 
         if (manager.cameraInstances.TryGetValue(stateData.state, out GameObject cameraObj))
         {
-            TPCameraInstance = cameraObj.GetComponentInChildren<Camera>();
+            CinemachineInstance = cameraObj.GetComponentsInChildren<CinemachineCamera>()[0];
 
-            if (TPCameraInstance != null)
+            if (CinemachineInstance != null)
             {
-                // Parent the camera to the miner unit
-                TPCameraInstance.transform.SetParent(manager.selectedUnit.transform);
-                TPCameraInstance.transform.localPosition = Vector3.zero;
-                TPCameraInstance.transform.LookAt(manager.selectedUnit.transform.position + Vector3.forward);
+                CinemachineInstance.Target.TrackingTarget = manager.selectedUnit.transform;
             }
             else
             {
-                Debug.LogError("TP Camera prefab does not have a Camera component!");
+                Debug.LogError("TP Camera prefab does not have a cinemachine component!");
             }
-        }
-
-        var meleeMovement = manager.selectedUnit.GetComponent<MeleeMovement>();
-        if (meleeMovement != null)
-        {
-            meleeMovement.enabled = true;
         }
 
         Debug.Log("Entered TP Mode");
@@ -52,9 +43,9 @@ public class ThirdPersonState : GameState
     public override void Exit()
     {
         // Unparent the TP camera
-        if (TPCameraInstance != null)
+        if (CinemachineInstance != null)
         {
-            TPCameraInstance.transform.SetParent(null);
+            CinemachineInstance.Target.TrackingTarget = null;
         }
 
         Debug.Log("Exited Third Person Mode");

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1415356574963724379}
   - component: {fileID: 5948592034924453215}
   - component: {fileID: 7110201219544583536}
-  - component: {fileID: 5410104306970929196}
+  - component: {fileID: 8812215013048179520}
   m_Layer: 0
   m_Name: RTS Camera
   m_TagString: MainCamera
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6985863232236000911}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 20, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &5410104306970929196
+--- !u!114 &8812215013048179520
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
