@@ -20,24 +20,37 @@ public class RTSState : GameState
 
     public override void Update()
     {
-        // Handle unit selection
-        if (Input.GetMouseButtonDown(0))
+        HandleMouseClick(0, hit =>
         {
-            Ray ray = manager.cameraInstances[stateData.state].GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, manager.unitLayerMask))
-            {
-                SelectableUnit unit = hit.collider.GetComponent<SelectableUnit>();
-                if (unit != null)
-                {
-                    SelectUnit(unit);
-                }
-            }
-            else DeselectUnit();
-        }
+            SelectableUnit unit = hit.collider.GetComponent<SelectableUnit>();
+            if (unit != null) SelectUnit(unit);
+        }, DeselectUnit);
+
+        HandleMouseClick(1, hit =>
+        {
+            UnitStateManager unitBehavior = manager.selectedUnit.GetComponent<UnitStateManager>();
+            if(unitBehavior != null) unitBehavior.MoveTo(hit.point);
+        });
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             manager.RequestStateChange(manager.selectedUnit.GetComponent<UnitStats>().unitType); //request state change based on selected unit's unitType
+        }
+    }
+
+    void HandleMouseClick(int button, System.Action<RaycastHit> onHit, System.Action onMiss = null)
+    {
+        if (Input.GetMouseButtonDown(button))
+        {
+            Ray ray = manager.cameraInstances[stateData.state].GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+            {
+                onHit?.Invoke(hit);
+            }
+            else
+            {
+                onMiss?.Invoke();
+            }
         }
     }
 
