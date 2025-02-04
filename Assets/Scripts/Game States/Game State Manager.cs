@@ -30,6 +30,7 @@ public class GameStateManager : MonoBehaviour
     [HideInInspector] public GameState currentState;
     [HideInInspector] public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
+    [HideInInspector] public UnitStateManager currentUSM;
 
     void Awake()
     {
@@ -102,7 +103,8 @@ public class GameStateManager : MonoBehaviour
         if (uiInstances.ContainsKey(stateData.state)) uiInstances[stateData.state].SetActive(true);
 
         ActivateStateComponents(stateData);
-        if(stateData.hasPlayerInput) HandlePlayerInput();
+        HandlePlayerInput(stateData.hasPlayerInput);
+        HandleUSM();
 
         switch (stateData.state)
         {
@@ -192,18 +194,34 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    private void HandlePlayerInput()
+    private void HandlePlayerInput(bool hasPlayerInput)
     {
         if(currentPlayerInput != null)
         {
             currentPlayerInput.enabled = false;
             currentPlayerInput = null;
         }
-        PlayerInput pInput = selectedUnit.GetComponent<PlayerInput>();
-        if (selectedUnit != null && pInput != null)
+        if(hasPlayerInput)
         {
-            currentPlayerInput = pInput;
-            pInput.enabled = true;
+            PlayerInput pInput = selectedUnit.GetComponent<PlayerInput>();
+            if (selectedUnit != null && pInput != null)
+            {
+                currentPlayerInput = pInput;
+                pInput.enabled = true;
+            }
+        }
+    }
+
+    private void HandleUSM()
+    {
+        if(currentUSM != null)
+        {
+            currentUSM.enabled = true;
+        }
+        if (selectedUnit != null)
+        {
+            currentUSM = selectedUnit.GetComponent<UnitStateManager>();
+            if (currentUSM != null) currentUSM.enabled = false;
         }
     }
 }
