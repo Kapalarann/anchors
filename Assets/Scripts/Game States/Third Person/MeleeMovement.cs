@@ -1,18 +1,27 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Cinemachine; // Ensure correct Cinemachine import
 
 public class MeleeMovement : MonoBehaviour
 {
     public float MoveSpeed { get; private set; } = 5f;
 
     [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _rollSpeed = 5f;
+    [SerializeField] private float _rollDuration = 0.5f;
+    [SerializeField] private CinemachineCamera _cinemachineCamera; // Cinemachine reference
+    [SerializeField] private Transform _cameraFollowTarget; // Target for the camera to follow
+
     private Rigidbody _rb;
     private Vector3 _direction = Vector3.zero;
 
     private Animator _animator;
     private static readonly int MovementSpeedHash = Animator.StringToHash("Movementspeed");
-    private static readonly int OnAttackHash = Animator.StringToHash("OnAttack");
+    private static readonly int OnRollHash = Animator.StringToHash("OnRoll");
+    private static readonly int IsRollingHash = Animator.StringToHash("IsRolling");
+
     public bool _isAttacking = false;
+    public bool _isRolling = false;
 
     private PlayerInput _playerInput;
 
@@ -25,13 +34,18 @@ public class MeleeMovement : MonoBehaviour
         _playerInput = GetComponent<PlayerInput>();
         if (_playerInput != null)
         {
-            _playerInput.actions.Enable();  // Ensure input system is enabled
+            _playerInput.actions.Enable();
         }
     }
 
     private void FixedUpdate()
     {
-        if (_isAttacking) return;
+        if (_isRolling) return; // Prevent movement during rolling
+        if (_isAttacking) // Disable movement but allow rolling
+        {
+            _direction = Vector3.zero;
+            return;
+        }
 
         Vector3 normalizedDirection = _direction.normalized;
         Vector3 newPosition = _rb.position + normalizedDirection * _moveSpeed * Time.fixedDeltaTime;
@@ -44,12 +58,13 @@ public class MeleeMovement : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(_direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * 10f);
+            UpdateCameraRotation(targetRotation);
         }
     }
 
     public void Move_Event(InputAction.CallbackContext context)
     {
-        if (_isAttacking)
+        if (_isAttacking || _isRolling)
         {
             _direction = Vector3.zero;
             return;
@@ -67,13 +82,45 @@ public class MeleeMovement : MonoBehaviour
         }
     }
 
-
-
-    // **This function should be called via an Animation Event at the end of the attack animation**
-    public void EndAttack()
+    public void Roll_Event(InputAction.CallbackContext context)
     {
-        Debug.Log("Attack animation finished! Resetting attack state.");
-        _isAttacking = false;
+        if (context.performed && !_isRolling)
+        {
+            Debug.Log("Rolling!");
+            _animator.SetTrigger(OnRollHash);
+            _animator.SetBool(IsRollingHash, true);
+            _isRolling = true;
+            _isAttacking = false;
+            Invoke(nameof(EndRoll), _rollDuration);
+        }
     }
 
+    public void ApplyRollMovement()
+    {
+        Debug.Log("Applying Roll Movement...");
+        Vector3 rollDirection = transform.forward * _rollSpeed;
+        _rb.AddForce(rollDirection, ForceMode.VelocityChange);
+    }
+
+    public void EndRoll()
+    {
+        Debug.Log("Rolling finished.");
+        _isRolling = false;
+        _animator.SetBool(IsRollingHash, false);
+    }
+
+    public void ResetPlayerState()
+    {
+        _isAttacking = false;
+        _isRolling = false;
+        _animator.SetBool(IsRollingHash, false);
+    }
+
+    private void UpdateCameraRotation(Quaternion targetRotation)
+    {
+        if (_cameraFollowTarget != null)
+        {
+            _cameraFollowTarget.rotation = targetRotation; // Rotate camera follow target
+        }
+    }
 }
