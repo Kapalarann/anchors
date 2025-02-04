@@ -16,14 +16,12 @@ public class PlayerInteract : MonoBehaviour
     void Start()
     {
         cam = GetComponent<PlayerLook>().cam;
-        playerUI = GetComponent<PlayerUI>();
         inputManager = GetComponent<InputManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerUI.UpdateText(string.Empty);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         Debug.DrawRay(ray.origin, ray.direction * distance);
         RaycastHit hitInfo;
@@ -33,7 +31,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
                 playerUI.UpdateText(interactable.promptMessage);
-                if (inputManager.onFoot.Interact.triggered)
+                if (inputManager.onFoot.FindAction("Interact").triggered)
                 {
                     interactable.BaseInteract();
                 }

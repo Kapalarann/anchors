@@ -83,7 +83,7 @@ public class Weapon : MonoBehaviour
     }
     public Vector3 CalculateDirectionAndSpread()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f,0.5f, 0));
+        Ray ray = Camera.current.ViewportPointToRay(new Vector3(0.5f,0.5f, 0));
         RaycastHit hit;
 
         Vector3 targetPoint;

@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PlayerMotor : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class PlayerMotor : MonoBehaviour
     private bool crouching = false;
     private float crouchTimer = 0f;
     private bool sprinting = false;
+    private Vector3 moveDirection = Vector3.zero;
 
     void Start()
     {
@@ -40,11 +43,8 @@ public class PlayerMotor : MonoBehaviour
                 crouchTimer = 0f;
             }
         }
-    }
 
-    public void ProcessMove(Vector2 input)
-    {
-        Vector3 moveDirection = new Vector3(input.x, 0, input.y);
+        //movement
         controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
 
         playerVelocity.y += -gravity * Time.deltaTime;
@@ -55,7 +55,12 @@ public class PlayerMotor : MonoBehaviour
         controller.Move(playerVelocity * Time.deltaTime);
     }
 
-    public void Jump()
+    public void OnMovement(InputValue value)
+    {
+        moveDirection = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y);
+    }
+
+    public void OnJump()
     {
         if (isGrounded)
         {
@@ -63,7 +68,7 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-    public void Crouch()
+    public void OnCrouch()
     {
         if (!crouching && Physics.Raycast(transform.position, Vector3.up, 2f))
         {
@@ -76,7 +81,7 @@ public class PlayerMotor : MonoBehaviour
         lerpCrouch = true;
     }
 
-    public void Sprint()
+    public void OnSprint()
     {
         sprinting = !sprinting;
         speed = sprinting ? 8f : 5f;
