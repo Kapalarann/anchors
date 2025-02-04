@@ -15,5 +15,7 @@ MonoBehaviour:
   state: 2
   cameraPrefab: {fileID: 5868105064367729772, guid: a0c279afaf6c61f40af977c9f2d494ce, type: 3}
   uiPrefab: {fileID: 0}
-  hasMovement: 1
-  movementScriptType: MeleeMovement
+  ScriptType:
+  - MeleeMovement
+  - PlayerAttack
+  hasPlayerInput: 1
