@@ -7,6 +7,7 @@ public class MeleeMovement : MonoBehaviour
     public float MoveSpeed { get; private set; } = 5f;
 
     [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _sprintSpeed = 8f; // Sprinting speed
     [SerializeField] private float _rollSpeed = 5f;
     [SerializeField] private float _rollDuration = 0.5f;
     [SerializeField] private CinemachineCamera _cinemachineCamera; // Cinemachine reference
@@ -14,11 +15,13 @@ public class MeleeMovement : MonoBehaviour
 
     private Rigidbody _rb;
     private Vector3 _direction = Vector3.zero;
+    private bool _isSprinting = false; // Sprinting state
 
     private Animator _animator;
     private static readonly int MovementSpeedHash = Animator.StringToHash("Movementspeed");
     private static readonly int OnRollHash = Animator.StringToHash("OnRoll");
     private static readonly int IsRollingHash = Animator.StringToHash("IsRolling");
+    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning"); // Added IsRunning parameter
 
     public bool _isAttacking = false;
     public bool _isRolling = false;
@@ -44,15 +47,20 @@ public class MeleeMovement : MonoBehaviour
         if (_isAttacking) // Disable movement but allow rolling
         {
             _direction = Vector3.zero;
+            _animator.SetBool(IsRunningHash, false);
             return;
         }
 
+        float currentSpeed = _isSprinting ? _sprintSpeed : _moveSpeed;
         Vector3 normalizedDirection = _direction.normalized;
-        Vector3 newPosition = _rb.position + normalizedDirection * _moveSpeed * Time.fixedDeltaTime;
+        Vector3 newPosition = _rb.position + normalizedDirection * currentSpeed * Time.fixedDeltaTime;
         _rb.MovePosition(newPosition);
 
-        float speedValue = _direction.magnitude * _moveSpeed;
+        float speedValue = _direction.magnitude * currentSpeed;
         _animator.SetFloat(MovementSpeedHash, speedValue);
+
+        // Set the IsRunning animation parameter
+        _animator.SetBool(IsRunningHash, _isSprinting && _direction.magnitude > 0);
 
         if (_direction != Vector3.zero)
         {
@@ -82,6 +90,18 @@ public class MeleeMovement : MonoBehaviour
         }
     }
 
+    public void Sprint_Event(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            _isSprinting = true;
+        }
+        else if (context.canceled)
+        {
+            _isSprinting = false;
+        }
+    }
+
     public void Roll_Event(InputAction.CallbackContext context)
     {
         if (context.performed && !_isRolling)
@@ -91,6 +111,8 @@ public class MeleeMovement : MonoBehaviour
             _animator.SetBool(IsRollingHash, true);
             _isRolling = true;
             _isAttacking = false;
+            _isSprinting = false; // Stop sprinting when rolling
+            _animator.SetBool(IsRunningHash, false); // Stop running animation
             Invoke(nameof(EndRoll), _rollDuration);
         }
     }
@@ -113,7 +135,9 @@ public class MeleeMovement : MonoBehaviour
     {
         _isAttacking = false;
         _isRolling = false;
+        _isSprinting = false;
         _animator.SetBool(IsRollingHash, false);
+        _animator.SetBool(IsRunningHash, false);
     }
 
     private void UpdateCameraRotation(Quaternion targetRotation)

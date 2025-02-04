@@ -546,6 +546,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3rd Person Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 6071872294290617212, guid: a0c279afaf6c61f40af977c9f2d494ce, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
