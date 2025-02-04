@@ -217,6 +217,17 @@
                 },
                 {
                     "name": "",
+                    "id": "07125286-a027-4ee3-b89e-0d0e4045715c",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse;Touch",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e18603a9-d409-4190-89ff-6d860481d737",
                     "path": "<Keyboard>/leftCtrl",
                     "interactions": "",

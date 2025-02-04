@@ -1,40 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerLook : MonoBehaviour
 {
-     public float mouseSensitivity = 100f;
     public Camera cam;
-     float xRotation = 0f;
-     float yRotation = 0f;
+    public Transform hand;
 
-     public float topClamp = -90f;
-     public float bottomClamp = 90f;
+    Vector2 mouse;
+    float VerticalRotation;
 
-    public float xSensitivity = 30f;
-    public float ySensitivity = 30f;
+    public float maxVerticalAngle = 90f;
+
+    public float xSensitivity = 5f;
+    public float ySensitivity = 1f;
    
-   void Start()
+   void OnEnable()
    {
-     Cursor.lockState = CursorLockMode.Locked;
+        cam = GameStateManager.Instance.cameraInstances[StateType.FPS].GetComponent<Camera>();
+        Cursor.lockState = CursorLockMode.Locked;
    }
-   void Update()
+
+    private void OnDisable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
+    public void OnLook(InputValue value)
    {
+        mouse = value.Get<Vector2>();
+    }
 
+    private void Update()
+    {
+        VerticalRotation -= mouse.y * ySensitivity;
+        VerticalRotation = Mathf.Clamp(VerticalRotation, -maxVerticalAngle, maxVerticalAngle);
 
-   }
-   public void ProcessLook(Vector2 input)
-   {
-        float mouseX = input.x;
-        float mouseY = input.y;
+        cam.transform.localRotation = Quaternion.Euler(VerticalRotation, 0, 0);
+        hand.localRotation = cam.transform.localRotation;
 
-        xRotation -= (mouseY * Time.deltaTime) * mouseSensitivity;
-        yRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
-
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-
-        transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
-   }
+        transform.Rotate(0, mouse.x * xSensitivity * Time.deltaTime, 0);
+    }
 
 }
