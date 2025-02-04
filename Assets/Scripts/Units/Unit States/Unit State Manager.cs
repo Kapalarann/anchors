@@ -28,10 +28,14 @@ public class UnitStateManager : MonoBehaviour
 
     [HideInInspector] public NavMeshAgent _navMeshAgent;
 
-    private void Start()
+    private void Awake()
     {
         _unitStat = GetComponent<UnitStats>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Start()
+    {
         SetState(new UnitIdleState());
     }
 
@@ -49,6 +53,15 @@ public class UnitStateManager : MonoBehaviour
     public void Update()
     {
         _currentState?.Update(this);
+    }
+
+    private void OnEnable()
+    {
+        if(_navMeshAgent != null) _navMeshAgent.enabled = true;
+    }
+    private void OnDisable()
+    {
+        _navMeshAgent.enabled = false;
     }
 
     public void MoveTo(Vector3 position)

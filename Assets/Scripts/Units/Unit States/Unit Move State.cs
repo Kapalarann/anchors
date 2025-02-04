@@ -11,6 +11,7 @@ public class UnitMoveState : UnitState
     {
         if (!unit._navMeshAgent.pathPending && unit._navMeshAgent.remainingDistance <= unit._navMeshAgent.stoppingDistance)
         {
+            unit._navMeshAgent.isStopped = true;
             unit.SetState(unit.idleState);
         }
     }
