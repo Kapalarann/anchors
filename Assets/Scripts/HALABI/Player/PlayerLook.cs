@@ -30,7 +30,7 @@ public class PlayerLook : MonoBehaviour
         float mouseY = input.y;
 
         xRotation -= (mouseY * Time.deltaTime) * mouseSensitivity;
-        xRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
+        yRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
 
         cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
 
