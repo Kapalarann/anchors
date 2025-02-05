@@ -4,37 +4,103 @@ using UnityEngine.InputSystem;
 public class PlayerAttack : MonoBehaviour
 {
     private Animator _animator;
-    [SerializeField] AnimationReceiver _receiver;
-    MeleeMovement _meleeMovement;
+    [SerializeField] private AnimationReceiver _receiver;
+    private MeleeMovement _meleeMovement;
+
+    [Header("Weapon Settings")]
+    [SerializeField] private Collider weaponCollider; // Weapon collider for detecting hits
+    [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
+    [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
+
+    private float baseLightAttackDamage;
+    private float baseHeavyAttackDamage;
 
     private static readonly int OnAttackHash = Animator.StringToHash("OnAttack");
     private static readonly int OnHeavyAttackHash = Animator.StringToHash("OnHeavyAttack");
+
+    private bool _isAttacking = false;
 
     private void Awake()
     {
         _meleeMovement = GetComponent<MeleeMovement>();
         _animator = GetComponent<Animator>();
         _receiver.AttackEnd += EndAttack;
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false; // Disable the weapon collider by default
+        }
+
+        // Initialize base damage values
+        baseLightAttackDamage = lightAttackDamage;
+        baseHeavyAttackDamage = heavyAttackDamage;
     }
 
     public void Attack_Event(InputAction.CallbackContext context)
     {
-        if (context.performed && !_meleeMovement._isRolling)
+        if (context.performed && !_meleeMovement._isRolling && !_isAttacking)
         {
             Debug.Log("Light Attack triggered!");
             _animator.SetTrigger(OnAttackHash);
             _meleeMovement._isAttacking = true;
+            _isAttacking = true;
         }
     }
 
     public void HeavyAttack_Event(InputAction.CallbackContext context)
     {
-        if (context.performed && !_meleeMovement._isRolling)
+        if (context.performed && !_meleeMovement._isRolling && !_isAttacking)
         {
             Debug.Log("Heavy Attack triggered!");
             _animator.SetTrigger(OnHeavyAttackHash);
             _meleeMovement._isAttacking = true;
+            _isAttacking = true;
         }
+    }
+
+    // Enable weapon collider during attack animation
+    public void EnableWeaponCollider(AnimationEvent animationEvent)
+    {
+        if (weaponCollider != null)
+        {
+            Debug.Log("Weapon collider enabled!");
+            weaponCollider.enabled = true;
+        }
+    }
+
+    // Disable weapon collider after attack animation
+    public void DisableWeaponCollider(AnimationEvent animationEvent)
+    {
+        if (weaponCollider != null)
+        {
+            Debug.Log("Weapon collider disabled!");
+            weaponCollider.enabled = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!weaponCollider.enabled) return; // Ignore collisions when the weapon is disabled
+
+        if (other.CompareTag("Enemy")) // Detect enemies
+        {
+            Debug.Log("Enemy hit!");
+
+            EnemyAI enemy = other.GetComponent<EnemyAI>();
+            if (enemy != null)
+            {
+                float damage = _animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack") ? heavyAttackDamage : lightAttackDamage;
+                enemy.TakeDamage(damage);
+                Debug.Log($"Dealt {damage} damage to {enemy.name}.");
+            }
+        }
+    }
+
+    public void EndAttack(AnimationEvent animationEvent)
+    {
+        Debug.Log("Attack animation finished!");
+        _meleeMovement._isAttacking = false;
+        _isAttacking = false;
     }
 
     private void OnDestroy()
@@ -42,9 +108,21 @@ public class PlayerAttack : MonoBehaviour
         _receiver.AttackEnd -= EndAttack;
     }
 
-    public void EndAttack(AnimationEvent animationEvent)
+    // Modify damage values (and update Inspector)
+    public void ModifyDamage(float multiplier)
     {
-        Debug.Log("Attack animation finished!");
-        _meleeMovement._isAttacking = false;
+        lightAttackDamage = baseLightAttackDamage * multiplier;
+        heavyAttackDamage = baseHeavyAttackDamage * multiplier;
+
+        Debug.Log($"Damage updated: Light = {lightAttackDamage}, Heavy = {heavyAttackDamage}");
+    }
+
+    // Reset damage values to their base
+    public void ResetDamage()
+    {
+        lightAttackDamage = baseLightAttackDamage;
+        heavyAttackDamage = baseHeavyAttackDamage;
+
+        Debug.Log("Damage reverted to base values.");
     }
 }

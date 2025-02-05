@@ -42,6 +42,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SwordArt",
+                    "type": "Button",
+                    "id": "aca5727f-54c7-45b9-9589-6963284a0ea2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Roll",
                     "type": "Button",
                     "id": "db416fca-d3ed-4f7f-ad22-120f169d5c7c",
@@ -345,6 +354,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Heavy Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "850d8ff9-9527-4715-9a43-d9802bec3517",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "SwordArt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
