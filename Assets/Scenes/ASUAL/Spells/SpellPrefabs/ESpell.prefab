@@ -123,6 +123,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellPrefab: {fileID: 9013515318021641681}
-  radius: 5
   stunDuration: 2
   damage: 20
+  radius: 5

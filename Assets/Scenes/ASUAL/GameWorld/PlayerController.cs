@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
     private bool isAttacking = false;
+    private Coroutine autoAttackCoroutine;
 
     void Start()
     {
@@ -36,8 +37,12 @@ public class PlayerController : MonoBehaviour
                 {
                     targetEnemy = hit.collider.transform;
                     isMoving = true;
-                    isAttacking = true;
-                    StartCoroutine(AutoAttackCoroutine());
+
+                    if (!isAttacking)
+                    {
+                        isAttacking = true;
+                        autoAttackCoroutine = StartCoroutine(AutoAttackCoroutine());
+                    }
                 }
                 else
                 {
@@ -83,16 +88,9 @@ public class PlayerController : MonoBehaviour
     {
         while (isAttacking)
         {
-            if (targetEnemy == null)
+            if (targetEnemy == null || Vector3.Distance(transform.position, targetEnemy.position) > attackRange)
             {
-                isAttacking = false;
-                yield break;
-            }
-
-            float distance = Vector3.Distance(transform.position, targetEnemy.position);
-            if (distance > attackRange)
-            {
-                isMoving = true;
+                StopAutoAttack();
                 yield break;
             }
 
@@ -119,11 +117,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     void StopAutoAttack()
     {
         isAttacking = false;
-        StopCoroutine(AutoAttackCoroutine());
+
+        if (autoAttackCoroutine != null)
+        {
+            StopCoroutine(autoAttackCoroutine);
+            autoAttackCoroutine = null;
+        }
     }
 
     void FaceTarget(Transform target)

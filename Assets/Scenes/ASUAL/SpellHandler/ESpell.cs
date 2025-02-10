@@ -2,28 +2,44 @@ using UnityEngine;
 
 public class ESpell : Spell
 {
-    public float radius = 5f;
     public float stunDuration = 2f;
     public float damage = 20f;
+    public float radius = 5f;
 
-    public override void Cast(Vector3 targetPosition)
+    public override void Cast(Vector3 position)
     {
-        Collider[] hitEnemies = Physics.OverlapSphere(targetPosition, radius);
-
-        foreach (Collider enemy in hitEnemies)
+        // Instantiate the spell effect with a fixed rotation of (90,0,0)
+        if (spellPrefab != null)
         {
-            if (enemy.CompareTag("Enemy"))
+            GameObject spellEffect = Instantiate(spellPrefab, position, Quaternion.Euler(90, 0, 0));
+            spellEffect.transform.localScale = new Vector3(radius * 2, radius * 2, radius * 2);
+
+            SphereCollider sphereCollider = spellEffect.GetComponent<SphereCollider>();
+            if (sphereCollider == null)
             {
-                EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
+                sphereCollider = spellEffect.AddComponent<SphereCollider>();
+            }
+            sphereCollider.isTrigger = true;
+            sphereCollider.radius = radius;
+
+            Destroy(spellEffect, 2f);
+        }
+
+        // Apply stun and damage to enemies in range
+        Collider[] hitColliders = Physics.OverlapSphere(position, radius);
+        foreach (Collider hit in hitColliders)
+        {
+            if (hit.CompareTag("Enemy"))
+            {
+                EnemyStats enemyStats = hit.GetComponent<EnemyStats>();
                 if (enemyStats != null)
                 {
-                    enemyStats.TakeDamage(damage);
                     enemyStats.ApplyStun(stunDuration);
-
+                    enemyStats.TakeDamage(damage);
                 }
             }
         }
 
-        Destroy(gameObject, 0.5f); 
+        Debug.Log("E spell cast, stunned enemies in range.");
     }
 }

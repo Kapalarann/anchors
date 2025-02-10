@@ -1,53 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class WSpell : Spell
 {
-    public float duration = 5f;
-    public float damagePerSecond = 5f;
-    public float slowPercentage = 0.5f;
-    public float tickRate = 1f;
+    public float slowPercent = 0.5f;
+    public float slowDuration = 2f;
+    public float radius = 5f;
+    public float maxRange = 10f;
 
-    public override void Cast(Vector3 target)
+    public override void Cast(Vector3 targetPosition)
     {
-        transform.position = target;
-        StartCoroutine(DestroyAfterTime());
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        if (distance > maxRange)
         {
-            EnemyStats enemy = other.GetComponent<EnemyStats>();
+            Debug.Log("W Spell target out of range!");
+            return;
+        }
+
+        // Instantiate spell prefab at target position with a fixed rotation of (90,0,0)
+        if (spellPrefab != null)
+        {
+            GameObject spellEffect = Instantiate(spellPrefab, targetPosition, Quaternion.Euler(90, 0, 0));
+            Destroy(spellEffect, 2f);
+        }
+
+        // Apply slow effect to enemies in range
+        Collider[] affectedEnemies = Physics.OverlapSphere(targetPosition, radius);
+        foreach (Collider col in affectedEnemies)
+        {
+            EnemyStats enemy = col.GetComponent<EnemyStats>();
             if (enemy != null)
             {
-                StartCoroutine(ApplyEffects(enemy));
+                enemy.ApplySlow(slowPercent, slowDuration);
             }
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            other.GetComponent<EnemyStats>()?.ResetSpeed();
-        }
-    }
-
-    private IEnumerator ApplyEffects(EnemyStats enemy)
-    {
-        enemy.ApplySlow(slowPercentage);
-
-        while (enemy != null && enemy.IsInsideSpellArea(this))
-        {
-            enemy.TakeDamage(damagePerSecond);
-            yield return new WaitForSeconds(tickRate);
-        }
-    }
-
-    private IEnumerator DestroyAfterTime()
-    {
-        yield return new WaitForSeconds(duration);
-        Destroy(gameObject);
+        Debug.Log("W spell cast at: " + targetPosition);
     }
 }

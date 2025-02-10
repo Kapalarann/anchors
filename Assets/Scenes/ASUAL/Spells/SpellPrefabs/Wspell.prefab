@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellPrefab: {fileID: 9013515318021641681}
-  duration: 5
-  damagePerSecond: 5
-  slowPercentage: 0.5
-  tickRate: 1
+  slowPercent: 0.5
+  slowDuration: 2
+  radius: 5
+  maxRange: 10

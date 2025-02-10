@@ -4,22 +4,20 @@ public class QSpell : Spell
 {
     public float speed = 20f;
     public float damage = 10f;
-    private Vector3 targetPoint;
+    private Vector3 direction;
+    private bool isFired = false;
 
     public override void Cast(Vector3 target)
     {
-        targetPoint = target;
+        direction = (target - transform.position).normalized;
+        isFired = true;
     }
 
     private void Update()
     {
-        if (targetPoint != Vector3.zero)
+        if (isFired)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPoint, speed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, targetPoint) < 0.1f)
-            {
-                Destroy(gameObject);
-            }
+            transform.position += direction * speed * Time.deltaTime;
         }
     }
 
