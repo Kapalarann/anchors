@@ -8,7 +8,7 @@ public class ESpell : Spell
 
     public override void Cast(Vector3 position)
     {
-        // Instantiate the spell effect with a fixed rotation of (90,0,0)
+        
         if (spellPrefab != null)
         {
             GameObject spellEffect = Instantiate(spellPrefab, position, Quaternion.Euler(90, 0, 0));
@@ -25,7 +25,7 @@ public class ESpell : Spell
             Destroy(spellEffect, 2f);
         }
 
-        // Apply stun and damage to enemies in range
+        
         Collider[] hitColliders = Physics.OverlapSphere(position, radius);
         foreach (Collider hit in hitColliders)
         {

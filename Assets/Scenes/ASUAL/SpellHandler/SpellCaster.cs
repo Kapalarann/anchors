@@ -16,7 +16,7 @@ public class SpellCaster : MonoBehaviour
     public float autoAttackCooldown = 1.0f;
     private float lastAutoAttackTime;
 
-    private float[] spellCooldowns = { 5f, 7f, 10f, 15f }; // Q, W, E, R cooldowns
+    private float[] spellCooldowns = { 5f, 7f, 10f, 15f }; 
     private float[] lastCastTimes = new float[4];
 
     private void Start()
@@ -33,7 +33,7 @@ public class SpellCaster : MonoBehaviour
                 if (Time.time >= lastCastTimes[i] + spellCooldowns[i])
                 {
                     SelectSpell(spells[i]);
-                    lastCastTimes[i] = Time.time; // Start cooldown
+                    lastCastTimes[i] = Time.time; 
                 }
                 else
                 {
@@ -53,7 +53,7 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
-        // Auto attack only when right-clicking an enemy
+        
         if (Input.GetMouseButtonDown(1))
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -62,7 +62,7 @@ public class SpellCaster : MonoBehaviour
                 if (hit.collider.CompareTag("Enemy") && Time.time >= lastAutoAttackTime + autoAttackCooldown)
                 {
                     AutoAttack(hit.collider.gameObject);
-                    lastAutoAttackTime = Time.time; // Start auto-attack cooldown
+                    lastAutoAttackTime = Time.time; 
                 }
             }
         }
@@ -117,18 +117,18 @@ public class SpellCaster : MonoBehaviour
         {
             float distance = Vector3.Distance(transform.position, hit.point);
 
-            // W Spell: Drop on the ground
+            
             if (selectedSpell is WSpell)
             {
                 Instantiate(selectedSpell.spellPrefab, hit.point, Quaternion.Euler(90, 0, 0));
             }
-            // E Spell: Drop at player but ignore player's collider
+            
             else if (selectedSpell is ESpell)
             {
                 Vector3 spawnPosition = GetGroundPosition(transform.position + Vector3.up * 2f);
                 Instantiate(selectedSpell.spellPrefab, spawnPosition, Quaternion.Euler(90, 0, 0));
             }
-            // Q Spell: Shoot from the player to the target
+            
             else
             {
                 GameObject spellObj = Instantiate(selectedSpell.spellPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
@@ -155,12 +155,12 @@ public class SpellCaster : MonoBehaviour
         {
             return hit.point;
         }
-        return position; // Fallback in case no ground is hit
+        return position; 
     }
 
     private void AutoAttack(GameObject target)
     {
         Debug.Log($"Auto Attack performed on {target.name}!");
-        // Implement auto attack logic here
+        
     }
 }

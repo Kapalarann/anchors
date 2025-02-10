@@ -16,14 +16,14 @@ public class WSpell : Spell
             return;
         }
 
-        // Instantiate spell prefab at target position with a fixed rotation of (90,0,0)
+        
         if (spellPrefab != null)
         {
             GameObject spellEffect = Instantiate(spellPrefab, targetPosition, Quaternion.Euler(90, 0, 0));
             Destroy(spellEffect, 2f);
         }
 
-        // Apply slow effect to enemies in range
+       
         Collider[] affectedEnemies = Physics.OverlapSphere(targetPosition, radius);
         foreach (Collider col in affectedEnemies)
         {

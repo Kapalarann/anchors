@@ -58,6 +58,6 @@ public class EnemyStats : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject); // Replace with your custom death logic
+        Destroy(gameObject); 
     }
 }
