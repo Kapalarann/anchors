@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Spells;
 
 public class PlayerController : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float attackRange = 5f;
     public float attackCooldown = 1f;
     public GameObject autoAttackPrefab;
+    public GameObject homingPrefab; // Assign this in Unity
     public Transform attackSpawnPoint;
 
     private Transform targetEnemy;
@@ -104,8 +106,17 @@ public class PlayerController : MonoBehaviour
     {
         if (targetEnemy == null) return;
 
-        GameObject projectile = Instantiate(autoAttackPrefab, attackSpawnPoint.position, Quaternion.identity);
-        HomingProjectile homingScript = projectile.GetComponent<HomingProjectile>();
+        if (homingPrefab == null)
+        {
+            Debug.LogError("HomingPrefab is not assigned in PlayerController!");
+            return;
+        }
+
+        // Instantiate the homing projectile (now using HomingSpell)
+        GameObject projectile = Instantiate(homingPrefab, attackSpawnPoint.position, Quaternion.identity);
+
+        // Get the HomingSpell script instead of HomingProjectile
+        HomingSpell homingScript = projectile.GetComponent<HomingSpell>();
 
         if (homingScript != null)
         {
@@ -113,7 +124,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("HomingProjectile script missing on autoAttackPrefab!");
+            Debug.LogError("HomingSpell script missing on homingPrefab!");
         }
     }
 

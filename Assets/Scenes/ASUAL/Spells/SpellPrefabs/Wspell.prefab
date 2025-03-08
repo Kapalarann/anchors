@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5402025998377517730}
   - component: {fileID: 4387641732658249540}
   - component: {fileID: -6757134524940744223}
+  - component: {fileID: 5817677744824641061}
   m_Layer: 0
   m_Name: Wspell
   m_TagString: Untagged
@@ -123,7 +124,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellPrefab: {fileID: 9013515318021641681}
-  slowPercent: 0.5
-  slowDuration: 2
+  effectComponents:
+  - {fileID: 5817677744824641061}
   radius: 5
   maxRange: 10
+--- !u!114 &5817677744824641061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9013515318021641681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc8063361b578541a0d776618d20793, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  burnDamagePerSecond: 5
+  burnDuration: 4

@@ -1,23 +1,19 @@
+using Spells;
 using UnityEngine;
 
 public class SpellCaster : MonoBehaviour
 {
     public Spell[] spells = new Spell[4];
     public KeyCode[] spellKeys = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R };
-
     private Spell selectedSpell;
-    private GameObject spellIndicator;
     private Camera mainCamera;
 
-    public float autoAttackRange = 5f;
-    public GameObject rangeIndicatorPrefab;
-    private GameObject rangeIndicator;
-
-    public float autoAttackCooldown = 1.0f;
-    private float lastAutoAttackTime;
-
-    private float[] spellCooldowns = { 5f, 7f, 10f, 15f }; 
+    private float[] spellCooldowns = { 5f, 7f, 10f, 15f };
     private float[] lastCastTimes = new float[4];
+
+    public GameObject rangeIndicatorPrefab; 
+    private GameObject activeRangeIndicator;
+    private float currentSpellRange = 0f;
 
     private void Start()
     {
@@ -32,8 +28,19 @@ public class SpellCaster : MonoBehaviour
             {
                 if (Time.time >= lastCastTimes[i] + spellCooldowns[i])
                 {
-                    SelectSpell(spells[i]);
-                    lastCastTimes[i] = Time.time; 
+                    lastCastTimes[i] = Time.time;
+
+                    if (spells[i] is ESpell)
+                    {
+                        
+                        spells[i].Cast(transform.position);
+                    }
+                    else
+                    {
+                        
+                        selectedSpell = spells[i];
+                        ShowRangeIndicator(GetSpellRange(spells[i]));
+                    }
                 }
                 else
                 {
@@ -42,70 +49,36 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
-        if (selectedSpell != null)
+        if (selectedSpell != null && Input.GetMouseButtonDown(0))
         {
-            UpdateSpellIndicator();
-            UpdateRangeIndicator();
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                CastSelectedSpell();
-            }
+            CastSelectedSpell();
+            HideRangeIndicator();
         }
+    }
+
+    private void ShowRangeIndicator(float range)
+    {
+        if (activeRangeIndicator != null) Destroy(activeRangeIndicator);
 
         
-        if (Input.GetMouseButtonDown(1))
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                if (hit.collider.CompareTag("Enemy") && Time.time >= lastAutoAttackTime + autoAttackCooldown)
-                {
-                    AutoAttack(hit.collider.gameObject);
-                    lastAutoAttackTime = Time.time; 
-                }
-            }
-        }
+        if (selectedSpell is ESpell) return;
+
+        activeRangeIndicator = Instantiate(rangeIndicatorPrefab, transform.position, Quaternion.identity);
+        activeRangeIndicator.transform.localScale = new Vector3(range * 2, 0.1f, range * 2);
+        currentSpellRange = range;
     }
 
-    private void SelectSpell(Spell spell)
+    private void HideRangeIndicator()
     {
-        selectedSpell = spell;
-
-        if (spellIndicator != null) Destroy(spellIndicator);
-        if (rangeIndicator != null) Destroy(rangeIndicator);
-
-        if (selectedSpell.spellPrefab != null)
-        {
-            spellIndicator = Instantiate(selectedSpell.spellPrefab);
-            spellIndicator.GetComponent<Collider>().enabled = false;
-        }
-
-        if (selectedSpell is WSpell && rangeIndicatorPrefab != null)
-        {
-            rangeIndicator = Instantiate(rangeIndicatorPrefab, transform.position, Quaternion.identity);
-            rangeIndicator.transform.localScale = new Vector3(autoAttackRange * 2, 1, autoAttackRange * 2);
-        }
+        if (activeRangeIndicator != null) Destroy(activeRangeIndicator);
     }
 
-    private void UpdateSpellIndicator()
+    private float GetSpellRange(Spell spell)
     {
-        if (spellIndicator != null)
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-            {
-                spellIndicator.transform.position = hit.point;
-            }
-        }
-    }
-
-    private void UpdateRangeIndicator()
-    {
-        if (rangeIndicator != null)
-        {
-            rangeIndicator.transform.position = transform.position;
-        }
+        if (spell is QSpell) return 10f; 
+        if (spell is WSpell) return 5f; 
+        if (spell is HomingSpell) return 12f;
+        return 0f;
     }
 
     private void CastSelectedSpell()
@@ -115,52 +88,20 @@ public class SpellCaster : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
-            float distance = Vector3.Distance(transform.position, hit.point);
+            Vector3 castPosition = hit.point;
 
             
-            if (selectedSpell is WSpell)
+            float distance = Vector3.Distance(transform.position, castPosition);
+            if (distance > currentSpellRange)
             {
-                Instantiate(selectedSpell.spellPrefab, hit.point, Quaternion.Euler(90, 0, 0));
-            }
-            
-            else if (selectedSpell is ESpell)
-            {
-                Vector3 spawnPosition = GetGroundPosition(transform.position + Vector3.up * 2f);
-                Instantiate(selectedSpell.spellPrefab, spawnPosition, Quaternion.Euler(90, 0, 0));
-            }
-            
-            else
-            {
-                GameObject spellObj = Instantiate(selectedSpell.spellPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-                Spell spellInstance = spellObj.GetComponent<Spell>();
-                if (spellInstance != null)
-                {
-                    spellInstance.Cast(hit.point);
-                }
+                Vector3 direction = (castPosition - transform.position).normalized;
+                castPosition = transform.position + direction * currentSpellRange;
             }
 
-            Debug.Log($"Spell {selectedSpell.name} cast at: " + hit.point);
+            selectedSpell.Cast(castPosition);
+            Debug.Log($"Spell {selectedSpell.name} cast at: {castPosition}");
         }
-
-        if (spellIndicator != null) Destroy(spellIndicator);
-        if (rangeIndicator != null) Destroy(rangeIndicator);
 
         selectedSpell = null;
-    }
-
-    private Vector3 GetGroundPosition(Vector3 position)
-    {
-        Ray ray = new Ray(position, Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-        {
-            return hit.point;
-        }
-        return position; 
-    }
-
-    private void AutoAttack(GameObject target)
-    {
-        Debug.Log($"Auto Attack performed on {target.name}!");
-        
     }
 }
