@@ -6,7 +6,9 @@ public class SpellCaster : MonoBehaviour
     public Spell[] spells = new Spell[4];
     public KeyCode[] spellKeys = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R };
     private Spell selectedSpell;
+    private int selectedSpellNum;
     private Camera mainCamera;
+    public SpellCooldownUI splCldwnUi;
 
     private float[] spellCooldowns = { 5f, 7f, 10f, 15f };
     private float[] lastCastTimes = new float[4];
@@ -32,13 +34,12 @@ public class SpellCaster : MonoBehaviour
 
                     if (spells[i] is ESpell)
                     {
-                        
                         spells[i].Cast(transform.position);
                     }
                     else
                     {
-                        
                         selectedSpell = spells[i];
+                        selectedSpellNum = i;
                         ShowRangeIndicator(GetSpellRange(spells[i]));
                     }
                 }
@@ -53,6 +54,7 @@ public class SpellCaster : MonoBehaviour
         {
             CastSelectedSpell();
             HideRangeIndicator();
+            splCldwnUi.StartCooldown(selectedSpellNum);
         }
     }
 
