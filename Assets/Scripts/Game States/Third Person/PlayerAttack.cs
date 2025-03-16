@@ -84,6 +84,11 @@ public class PlayerAttack : MonoBehaviour
     {
         if (!weaponCollider.enabled) return; // Ignore collisions when the weapon is disabled
 
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack"))
+        {
+            if (TransferToTarget(other)) return;
+        }
+
         if (other.CompareTag("Enemy")) // Detect enemies
         {
             Debug.Log("Enemy hit!");
@@ -126,5 +131,19 @@ public class PlayerAttack : MonoBehaviour
         heavyAttackDamage = baseHeavyAttackDamage;
 
         Debug.Log("Damage reverted to base values.");
+    }
+
+    public bool TransferToTarget(Collider target)
+    {
+        // Transfer control on hit
+        SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
+        UnitStats stats = target.GetComponent<UnitStats>();
+
+        if (unit == null || stats == null) return false;
+
+        GameStateManager.Instance.selectedUnit = unit;
+        GameStateManager.Instance.RequestStateChange(stats.unitType);
+
+        return true;
     }
 }
