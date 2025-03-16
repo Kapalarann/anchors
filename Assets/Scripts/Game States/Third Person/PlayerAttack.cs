@@ -11,6 +11,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private Collider weaponCollider; // Weapon collider for detecting hits
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
     [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
+    [SerializeField] private float attackSpeed = 1f;
 
     private float baseLightAttackDamage;
     private float baseHeavyAttackDamage;
@@ -41,6 +42,7 @@ public class PlayerAttack : MonoBehaviour
         if (context.performed && !_meleeMovement._isRolling && !_isAttacking)
         {
             Debug.Log("Light Attack triggered!");
+            _animator.SetFloat("attackSpeed", attackSpeed);
             _animator.SetTrigger(OnAttackHash);
             _meleeMovement._isAttacking = true;
             _isAttacking = true;

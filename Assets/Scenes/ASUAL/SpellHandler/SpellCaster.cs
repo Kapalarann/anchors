@@ -3,17 +3,13 @@ using UnityEngine;
 
 public class SpellCaster : MonoBehaviour
 {
-    public Spell[] spells = new Spell[4];
-    public KeyCode[] spellKeys = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R };
+    [SerializeField] public spells[] spellList;
     private Spell selectedSpell;
     private int selectedSpellNum;
     private Camera mainCamera;
     public SpellCooldownUI splCldwnUi;
 
-    private float[] spellCooldowns = { 5f, 7f, 10f, 15f };
-    private float[] lastCastTimes = new float[4];
-
-    public GameObject rangeIndicatorPrefab; 
+    public GameObject rangeIndicatorPrefab;
     private GameObject activeRangeIndicator;
     private float currentSpellRange = 0f;
 
@@ -24,28 +20,28 @@ public class SpellCaster : MonoBehaviour
 
     private void Update()
     {
-        for (int i = 0; i < spells.Length; i++)
+        for (int i = 0; i < spellList.Length; i++)
         {
-            if (Input.GetKeyDown(spellKeys[i]) && spells[i] != null)
+            if (Input.GetKeyDown(spellList[i].keyCode) && spellList[i].spell != null)
             {
-                if (Time.time >= lastCastTimes[i] + spellCooldowns[i])
+                if (Time.time >= spellList[i].lastCastTimes + spellList[i].spellCooldowns)
                 {
-                    lastCastTimes[i] = Time.time;
+                    spellList[i].lastCastTimes = Time.time;
 
-                    if (spells[i] is ESpell)
+                    if (spellList[i].spell is ESpell)
                     {
-                        spells[i].Cast(transform.position);
+                        spellList[i].spell.Cast(transform.position);
                     }
                     else
                     {
-                        selectedSpell = spells[i];
+                        selectedSpell = spellList[i].spell;
                         selectedSpellNum = i;
-                        ShowRangeIndicator(GetSpellRange(spells[i]));
+                        ShowRangeIndicator(spellList[i].range);
                     }
                 }
                 else
                 {
-                    Debug.Log($"Spell {spellKeys[i]} is on cooldown!");
+                    Debug.Log($"Spell {spellList[i].keyCode} is on cooldown!");
                 }
             }
         }
@@ -62,10 +58,9 @@ public class SpellCaster : MonoBehaviour
     {
         if (activeRangeIndicator != null) Destroy(activeRangeIndicator);
 
-        
         if (selectedSpell is ESpell) return;
 
-        activeRangeIndicator = Instantiate(rangeIndicatorPrefab, transform.position, Quaternion.identity);
+        activeRangeIndicator = Instantiate(rangeIndicatorPrefab, transform);
         activeRangeIndicator.transform.localScale = new Vector3(range * 2, 0.1f, range * 2);
         currentSpellRange = range;
     }
@@ -73,14 +68,6 @@ public class SpellCaster : MonoBehaviour
     private void HideRangeIndicator()
     {
         if (activeRangeIndicator != null) Destroy(activeRangeIndicator);
-    }
-
-    private float GetSpellRange(Spell spell)
-    {
-        if (spell is QSpell) return 10f; 
-        if (spell is WSpell) return 5f; 
-        if (spell is HomingSpell) return 12f;
-        return 0f;
     }
 
     private void CastSelectedSpell()
@@ -92,7 +79,6 @@ public class SpellCaster : MonoBehaviour
         {
             Vector3 castPosition = hit.point;
 
-            
             float distance = Vector3.Distance(transform.position, castPosition);
             if (distance > currentSpellRange)
             {
@@ -105,5 +91,15 @@ public class SpellCaster : MonoBehaviour
         }
 
         selectedSpell = null;
+    }
+
+    [System.Serializable]
+    public class spells
+    {
+        public Spell spell;
+        public KeyCode keyCode;
+        public float spellCooldowns;
+        public float range;
+        [HideInInspector]public float lastCastTimes;
     }
 }
