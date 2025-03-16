@@ -114,7 +114,10 @@ public class MeleeMovement : MonoBehaviour
 
     public void Sprint_Event(InputAction.CallbackContext context)
     {
-        _isSprinting = context.started;
+        if (context.started)
+            _isSprinting = true;
+        else if (context.canceled)
+            _isSprinting = false;
     }
 
     public void Roll_Event(InputAction.CallbackContext context)

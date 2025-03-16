@@ -419,6 +419,10 @@ PrefabInstance:
       propertyPath: m_StoppingDistance
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6037066643949003414, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2102,6 +2106,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5269d57748fa7cb43a03b4f2a4c52776, type: 2}
   selectedUnit: {fileID: 0}
   currentPlayerInput: {fileID: 0}
+  currentUSM: {fileID: 0}
 --- !u!4 &1744597977
 Transform:
   m_ObjectHideFlags: 0

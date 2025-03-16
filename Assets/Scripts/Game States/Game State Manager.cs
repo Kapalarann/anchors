@@ -164,32 +164,31 @@ public class GameStateManager : MonoBehaviour
 
     private void ActivateStateComponents(StateData sData)
     {
-        if (selectedUnit != null && sData.ScriptType.Length > 0)
+        if (selectedUnit == null || sData.ScriptType.Length == 0) return;
+
+        foreach (var scriptName in sData.ScriptType)
         {
-            foreach (var scriptName in sData.ScriptType)
+            Type scriptType = Type.GetType(scriptName);
+            if (scriptType != null)
             {
-                Type scriptType = Type.GetType(scriptName);
-                if (scriptType != null)
+                Component componentInstance = selectedUnit.GetComponent(scriptType);
+                if (componentInstance != null)
                 {
-                    Component componentInstance = selectedUnit.GetComponent(scriptType);
-                    if (componentInstance != null)
+                    if (componentInstance is MonoBehaviour monoBehaviour)
                     {
-                        if (componentInstance is MonoBehaviour monoBehaviour)
-                        {
-                            monoBehaviour.enabled = true;
-                        }
-                        else
-                        {
-                            MethodInfo activateMethod = scriptType.GetMethod("ActivateInput");
-                            activateMethod?.Invoke(componentInstance, null);
-                        }
-                        activeComponents.Add(componentInstance);
+                        monoBehaviour.enabled = true;
                     }
+                    else
+                    {
+                        MethodInfo activateMethod = scriptType.GetMethod("ActivateInput");
+                        activateMethod?.Invoke(componentInstance, null);
+                    }
+                    activeComponents.Add(componentInstance);
                 }
-                else
-                {
-                    Debug.LogError($"Invalid script type: {scriptName}");
-                }
+            }
+            else
+            {
+                Debug.LogError($"Invalid script type: {scriptName}");
             }
         }
     }
