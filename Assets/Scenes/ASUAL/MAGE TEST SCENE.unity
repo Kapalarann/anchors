@@ -476,11 +476,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1cdcc0f8a90984c9bd80a21f25d362, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spells:
-  - {fileID: 1768500268490659297, guid: baefd9396209ad84b84b28b6c2d38a5e, type: 3}
-  - {fileID: -6757134524940744223, guid: a2e0dd4644e40f948b1b43f97773a9b2, type: 3}
-  - {fileID: 7831462038043715858, guid: 4a6746cf94e56494391b2ea6b3efc319, type: 3}
-  spellKeys: 710000007700000065000000
+  spellList:
+  - spell: {fileID: 1768500268490659297, guid: baefd9396209ad84b84b28b6c2d38a5e, type: 3}
+    keyCode: 113
+    spellCooldowns: 5
+    range: 10
+    lastCastTimes: 0
+  - spell: {fileID: -6757134524940744223, guid: a2e0dd4644e40f948b1b43f97773a9b2, type: 3}
+    keyCode: 119
+    spellCooldowns: 7
+    range: 5
+    lastCastTimes: 0
+  - spell: {fileID: 7831462038043715858, guid: 4a6746cf94e56494391b2ea6b3efc319, type: 3}
+    keyCode: 101
+    spellCooldowns: 10
+    range: 0
+    lastCastTimes: 0
+  - spell: {fileID: 0}
+    keyCode: 114
+    spellCooldowns: 15
+    range: 12
+    lastCastTimes: 0
   splCldwnUi: {fileID: 1500788228}
   rangeIndicatorPrefab: {fileID: 6121574602041681404, guid: ec4c3edde138bd749b7c9f2fb8a687da, type: 3}
 --- !u!1 &438930976
