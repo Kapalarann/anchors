@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CameraLock",
+                    "type": "Button",
+                    "id": "0f1c8925-c785-4a5a-9a7c-0d2ca86f70d2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Heavy Attack",
                     "type": "Button",
                     "id": "8b948780-2f37-4f8a-9fc5-a0107baa271a",
@@ -343,6 +352,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "311fbf92-8ba1-414a-88d3-693ea05e9a77",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CameraLock",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

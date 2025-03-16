@@ -11,11 +11,12 @@ public class MeleeMovement : MonoBehaviour
     [SerializeField] private float _rollSpeed = 5f;
     [SerializeField] private float _rollDuration = 0.5f;
     [SerializeField] private CinemachineCamera _cinemachineCamera;
-    [SerializeField] private Transform _cameraTransform; // Reference to the main camera
+    [SerializeField] private Transform _cameraTransform;
 
     private Rigidbody _rb;
     private Vector3 _direction = Vector3.zero;
     private bool _isSprinting = false;
+    private Health _health;
 
     private Animator _animator;
     private static readonly int MovementSpeedHash = Animator.StringToHash("Movementspeed");
@@ -44,6 +45,8 @@ public class MeleeMovement : MonoBehaviour
         {
             _cameraTransform = Camera.main.transform; // Get the main camera's transform
         }
+
+        _health = GetComponent<Health>(); // Get Health component
     }
 
     private void FixedUpdate()
@@ -79,18 +82,15 @@ public class MeleeMovement : MonoBehaviour
     {
         if (_cameraTransform == null) return inputDirection;
 
-        // Get camera forward and right, ignoring vertical tilt
         Vector3 cameraForward = _cameraTransform.forward;
-        cameraForward.y = 0; // Ignore vertical tilt
+        cameraForward.y = 0;
         cameraForward.Normalize();
 
         Vector3 cameraRight = _cameraTransform.right;
         cameraRight.y = 0;
         cameraRight.Normalize();
 
-        // Convert input into world-space movement direction
-        Vector3 moveDirection = (cameraForward * inputDirection.z + cameraRight * inputDirection.x).normalized;
-        return moveDirection;
+        return (cameraForward * inputDirection.z + cameraRight * inputDirection.x).normalized;
     }
 
     public void Move_Event(InputAction.CallbackContext context)
@@ -106,7 +106,7 @@ public class MeleeMovement : MonoBehaviour
             Vector2 input = context.ReadValue<Vector2>();
             _direction = new Vector3(input.x, 0, input.y);
         }
-        else
+        else if (context.canceled)
         {
             _direction = Vector3.zero;
         }
@@ -114,7 +114,14 @@ public class MeleeMovement : MonoBehaviour
 
     public void Sprint_Event(InputAction.CallbackContext context)
     {
-        _isSprinting = context.started;
+        if (context.started)
+        {
+            _isSprinting = true;
+        }
+        else if (context.canceled)
+        {
+            _isSprinting = false;
+        }
     }
 
     public void Roll_Event(InputAction.CallbackContext context)
@@ -127,6 +134,12 @@ public class MeleeMovement : MonoBehaviour
             _isAttacking = false;
             _isSprinting = false;
             _animator.SetBool(IsRunningHash, false);
+
+            if (_health != null)
+            {
+                _health.isInvulnerable = true;
+            }
+
             Invoke(nameof(EndRoll), _rollDuration);
         }
     }
@@ -141,6 +154,11 @@ public class MeleeMovement : MonoBehaviour
     {
         _isRolling = false;
         _animator.SetBool(IsRollingHash, false);
+
+        if (_health != null)
+        {
+            _health.isInvulnerable = false;
+        }
     }
 
     public void ResetPlayerState()
@@ -150,5 +168,10 @@ public class MeleeMovement : MonoBehaviour
         _isSprinting = false;
         _animator.SetBool(IsRollingHash, false);
         _animator.SetBool(IsRunningHash, false);
+
+        if (_health != null)
+        {
+            _health.isInvulnerable = false;
+        }
     }
 }

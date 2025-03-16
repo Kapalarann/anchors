@@ -288,14 +288,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 539352511155650701, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: swordTransform
-      value: 
-      objectReference: {fileID: 1224879946}
-    - target: {fileID: 539352511155650701, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: skillEffectPrefab
-      value: 
-      objectReference: {fileID: 56852242586695117, guid: 4d7e19c9fcb52be4bb9a8ba855ffe12d, type: 3}
     - target: {fileID: 2754422296849947209, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.1225519
@@ -340,34 +332,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 4411790790957051263, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[21].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411790790957051263, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[21].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411790790957051263, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[21].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1224879947}
-    - target: {fileID: 4411790790957051263, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[21].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411790790957051263, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[21].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SwordArt_Event
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411790790957051263, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[21].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SwordSkill, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4411790790957051263, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[21].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 6037066643949003414, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
       propertyPath: _cameraTransform
       value: 
@@ -379,54 +343,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7364839780146288744, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1224879948}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
---- !u!1 &1224879939 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7364839780146288744, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-  m_PrefabInstance: {fileID: 978881281}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1224879946 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1869348173557388976, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-  m_PrefabInstance: {fileID: 978881281}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1224879947 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 539352511155650701, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
-  m_PrefabInstance: {fileID: 978881281}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1224879939}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 797095cc18968d44ca5996d50c1e6875, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!95 &1224879948
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1224879939}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 51c8a0d31f6fa4b48af2d313fb1fcb5a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1342327973 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3710205059493654360, guid: a0c279afaf6c61f40af977c9f2d494ce, type: 3}
