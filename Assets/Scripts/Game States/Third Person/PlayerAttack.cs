@@ -11,6 +11,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private Collider weaponCollider; // Weapon collider for detecting hits
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
     [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
+    [SerializeField] private float attackSpeed = 1f;
 
     private float baseLightAttackDamage;
     private float baseHeavyAttackDamage;
@@ -41,6 +42,7 @@ public class PlayerAttack : MonoBehaviour
         if (context.performed && !_meleeMovement._isRolling && !_isAttacking)
         {
             Debug.Log("Light Attack triggered!");
+            _animator.SetFloat("attackSpeed", attackSpeed);
             _animator.SetTrigger(OnAttackHash);
             _meleeMovement._isAttacking = true;
             _isAttacking = true;
@@ -81,6 +83,11 @@ public class PlayerAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!weaponCollider.enabled) return; // Ignore collisions when the weapon is disabled
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack"))
+        {
+            if (TransferToTarget(other)) return;
+        }
 
         if (other.CompareTag("Enemy")) // Detect enemies
         {
@@ -124,5 +131,19 @@ public class PlayerAttack : MonoBehaviour
         heavyAttackDamage = baseHeavyAttackDamage;
 
         Debug.Log("Damage reverted to base values.");
+    }
+
+    public bool TransferToTarget(Collider target)
+    {
+        // Transfer control on hit
+        SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
+        UnitStats stats = target.GetComponent<UnitStats>();
+
+        if (unit == null || stats == null) return false;
+
+        GameStateManager.Instance.selectedUnit = unit;
+        GameStateManager.Instance.RequestStateChange(stats.unitType);
+
+        return true;
     }
 }
