@@ -164,7 +164,7 @@ public class GameStateManager : MonoBehaviour
 
     private void ActivateStateComponents(StateData sData)
     {
-        if (selectedUnit == null || sData.ScriptType.Length == 0) return;
+        if (selectedUnit == null || sData == null || sData.ScriptType.Length == 0) return;
 
         foreach (var scriptName in sData.ScriptType)
         {
