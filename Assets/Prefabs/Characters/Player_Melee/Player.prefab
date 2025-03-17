@@ -540,20 +540,28 @@ PrefabInstance:
       addedObject: {fileID: 8151001629585888432}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7505682428891203382}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2104898716017716513}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4915593165376541815}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4209773935468637330}
     - targetCorrespondingSourceObject: {fileID: 5153876931679905226, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
       insertIndex: -1
       addedObject: {fileID: 746343102502004209}
     - targetCorrespondingSourceObject: {fileID: 5153876931679905226, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
       insertIndex: -1
       addedObject: {fileID: 539352511155650701}
+    - targetCorrespondingSourceObject: {fileID: 5153876931679905226, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3934028732165556772}
   m_SourcePrefab: {fileID: 100100000, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
+--- !u!4 &1869348173557388976 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5169473475685078254, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
+  m_PrefabInstance: {fileID: 2428307719121632674}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2754422296849947209 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
@@ -603,7 +611,7 @@ MonoBehaviour:
   _rollSpeed: 7
   _rollDuration: 0.8
   _cinemachineCamera: {fileID: 0}
-  _cameraFollowTarget: {fileID: 1907548608038948452}
+  _cameraTransform: {fileID: 0}
   _isAttacking: 0
   _isRolling: 0
 --- !u!54 &6688778827668344787
@@ -803,9 +811,25 @@ MonoBehaviour:
     m_ActionId: db416fca-d3ed-4f7f-ad22-120f169d5c7c
     m_ActionName: 'Player/Roll[/Keyboard/shift]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 539352511155650701}
+        m_TargetAssemblyTypeName: SwordSkill, Assembly-CSharp
+        m_MethodName: SwordArt_Event
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: aca5727f-54c7-45b9-9589-6963284a0ea2
     m_ActionName: 'Player/SwordArt[/Keyboard/1]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0f1c8925-c785-4a5a-9a7c-0d2ca86f70d2
+    m_ActionName: 'Player/CameraLock[/Keyboard/q]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -920,8 +944,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c44cc3a82713544afb66d5eee90a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 20
-  HP: 20
+  maxHP: 200
+  HP: 200
   type: 0
 --- !u!23 &8151001629585888432
 MeshRenderer:
@@ -968,21 +992,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7505682428891203382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3274817115598110963}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8c44cc3a82713544afb66d5eee90a19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 10
-  HP: 0
-  type: 0
 --- !u!114 &2104898716017716513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1023,6 +1032,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4209773935468637330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3274817115598110963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af614516b17632d4da838a463d30f8b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagePerSecond: 5
 --- !u!1 &7364839780146288744 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5153876931679905226, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
@@ -1061,7 +1083,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 797095cc18968d44ca5996d50c1e6875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillEffectPrefab: {fileID: 0}
-  swordTransform: {fileID: 0}
+  skillEffectPrefab: {fileID: 56852242586695117, guid: 4d7e19c9fcb52be4bb9a8ba855ffe12d, type: 3}
+  swordTransform: {fileID: 1869348173557388976}
   cooldown: 5
   skillDuration: 5
+--- !u!95 &3934028732165556772
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7364839780146288744}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 51c8a0d31f6fa4b48af2d313fb1fcb5a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
