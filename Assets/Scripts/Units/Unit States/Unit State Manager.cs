@@ -1,19 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum UnitBehavior
-{
-    Gatherer,
-    Melee,
-    Range,
-    Mage
-}
-
 public class UnitStateManager : MonoBehaviour
 {
     private UnitState _currentState;
-    [Header("Behavior Type")]
-    [SerializeField] public UnitBehavior _unitBehavior;
 
     [HideInInspector] public UnitIdleState idleState = new UnitIdleState();
     [HideInInspector] public UnitMoveState moveState = new UnitMoveState();
