@@ -124,6 +124,12 @@ public class MeleeMovement : MonoBehaviour
         }
     }
 
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        _moveSpeed = 5f * multiplier;
+        _sprintSpeed = 8f * multiplier;
+    }
+
     public void Roll_Event(InputAction.CallbackContext context)
     {
         if (context.performed && !_isRolling)

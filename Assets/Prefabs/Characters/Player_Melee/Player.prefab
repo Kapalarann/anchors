@@ -547,6 +547,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4209773935468637330}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8236789791547294077}
     - targetCorrespondingSourceObject: {fileID: 5153876931679905226, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
       insertIndex: -1
       addedObject: {fileID: 746343102502004209}
@@ -874,6 +877,7 @@ MonoBehaviour:
   weaponCollider: {fileID: 746343102502004209}
   lightAttackDamage: 10
   heavyAttackDamage: 20
+  attackSpeed: 1
 --- !u!114 &3105375539403806687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -946,7 +950,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 200
   HP: 200
-  type: 0
+  isInvulnerable: 0
 --- !u!23 &8151001629585888432
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1004,7 +1008,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitBehavior: 0
   _movementSpeed: 0
   _targetPosition: {x: 0, y: 0, z: 0}
   _unitStat: {fileID: 0}
@@ -1044,7 +1047,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af614516b17632d4da838a463d30f8b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damagePerSecond: 5
+  damagePerSecond: 10
+--- !u!114 &8236789791547294077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3274817115598110963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b979305b4967133469d1f2b0a301dcac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _berserkThreshold: 0.5
+  _speedMultiplier: 1
+  _sizeMultiplier: 2
+  _animationSpeedMultiplier: 1.5
+  _invulnerabilityDuration: 5
+  _berserkDuration: 5
+  _berserkCooldown: 15
+  _berserkEffect: {fileID: 56852242586695117, guid: 4d7e19c9fcb52be4bb9a8ba855ffe12d, type: 3}
 --- !u!1 &7364839780146288744 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5153876931679905226, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
