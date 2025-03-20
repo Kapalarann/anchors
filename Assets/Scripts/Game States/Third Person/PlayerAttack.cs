@@ -9,6 +9,7 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("Weapon Settings")]
     [SerializeField] private Collider weaponCollider; // Weapon collider for detecting hits
+    [SerializeField] private SwordCollision sword;
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
     [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
     [SerializeField] private float attackSpeed = 1f;
@@ -25,6 +26,7 @@ public class PlayerAttack : MonoBehaviour
     {
         _meleeMovement = GetComponent<MeleeMovement>();
         _animator = GetComponent<Animator>();
+        sword._animator = _animator;
         _receiver.AttackEnd += EndAttack;
 
         if (weaponCollider != null)
@@ -35,6 +37,8 @@ public class PlayerAttack : MonoBehaviour
         // Initialize base damage values
         baseLightAttackDamage = lightAttackDamage;
         baseHeavyAttackDamage = heavyAttackDamage;
+
+        UpdateSword();
     }
 
     public void Attack_Event(InputAction.CallbackContext context)
@@ -80,29 +84,6 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!weaponCollider.enabled) return; // Ignore collisions when the weapon is disabled
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack"))
-        {
-            if (TransferToTarget(other)) return;
-        }
-
-        if (other.CompareTag("Enemy")) // Detect enemies
-        {
-            Debug.Log("Enemy hit!");
-
-            EnemyAI enemy = other.GetComponent<EnemyAI>();
-            if (enemy != null)
-            {
-                float damage = _animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack") ? heavyAttackDamage : lightAttackDamage;
-                enemy.TakeDamage(damage);
-                Debug.Log($"Dealt {damage} damage to {enemy.name}.");
-            }
-        }
-    }
-
     public void EndAttack(AnimationEvent animationEvent)
     {
         Debug.Log("Attack animation finished!");
@@ -121,6 +102,8 @@ public class PlayerAttack : MonoBehaviour
         lightAttackDamage = baseLightAttackDamage * multiplier;
         heavyAttackDamage = baseHeavyAttackDamage * multiplier;
 
+        UpdateSword();
+
         Debug.Log($"Damage updated: Light = {lightAttackDamage}, Heavy = {heavyAttackDamage}");
     }
 
@@ -130,20 +113,14 @@ public class PlayerAttack : MonoBehaviour
         lightAttackDamage = baseLightAttackDamage;
         heavyAttackDamage = baseHeavyAttackDamage;
 
+        UpdateSword();
+
         Debug.Log("Damage reverted to base values.");
     }
 
-    public bool TransferToTarget(Collider target)
+    private void UpdateSword()
     {
-        // Transfer control on hit
-        SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
-        UnitStats stats = target.GetComponent<UnitStats>();
-
-        if (unit == null || stats == null) return false;
-
-        GameStateManager.Instance.selectedUnit = unit;
-        GameStateManager.Instance.RequestStateChange(stats.unitType);
-
-        return true;
+        sword.lDamage = lightAttackDamage;
+        sword.hDamage = heavyAttackDamage;
     }
 }
