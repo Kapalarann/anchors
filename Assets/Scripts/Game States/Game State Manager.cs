@@ -4,6 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.AI;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -28,9 +29,10 @@ public class GameStateManager : MonoBehaviour
     private List<Component> activeComponents = new List<Component>();
 
     [HideInInspector] public GameState currentState;
-    [HideInInspector] public SelectableUnit selectedUnit;
+    /*[HideInInspector]*/ public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
     [HideInInspector] public UnitStateManager currentUSM;
+    [HideInInspector] public NavMeshAgent currentAgent;
 
     void Awake()
     {
@@ -216,11 +218,15 @@ public class GameStateManager : MonoBehaviour
         if(currentUSM != null)
         {
             currentUSM.enabled = true;
+            currentAgent.enabled = true;
         }
         if (selectedUnit != null)
         {
             currentUSM = selectedUnit.GetComponent<UnitStateManager>();
             if (currentUSM != null) currentUSM.enabled = false;
+                
+            currentAgent = selectedUnit.GetComponent<NavMeshAgent>();
+            if(currentAgent != null) currentAgent.enabled = false;
         }
     }
 }
