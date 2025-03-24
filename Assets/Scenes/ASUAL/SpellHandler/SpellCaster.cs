@@ -1,5 +1,4 @@
-using Spells;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -8,16 +7,31 @@ public class SpellCaster : MonoBehaviour
     private Spell selectedSpell;
     private Camera mainCamera;
 
-    private float[] spellCooldowns = { 5f, 7f, 10f, 15f };
     private float[] lastCastTimes = new float[4];
 
-    public GameObject rangeIndicatorPrefab; 
+    public GameObject rangeIndicatorPrefab;
     private GameObject activeRangeIndicator;
     private float currentSpellRange = 0f;
+
+    private SpellCooldownUI cooldownUI;
+    private bool isSwitchMode = false;
+
+    public LayerMask unitLayerMask;
 
     private void Start()
     {
         mainCamera = Camera.main;
+        cooldownUI = Object.FindFirstObjectByType<SpellCooldownUI>();
+        if (cooldownUI != null)
+        {
+            cooldownUI.spellCaster = this;
+        }
+
+        if (GameStateManager.Instance.selectedUnit == null)
+        {
+            GameStateManager.Instance.selectedUnit = FindFirstObjectByType<SelectableUnit>();
+            Debug.Log($"✅ Default unit set to {GameStateManager.Instance.selectedUnit?.gameObject.name}");
+        }
     }
 
     private void Update()
@@ -26,41 +40,119 @@ public class SpellCaster : MonoBehaviour
         {
             if (Input.GetKeyDown(spellKeys[i]) && spells[i] != null)
             {
-                if (Time.time >= lastCastTimes[i] + spellCooldowns[i])
+                float spellCooldown = spells[i].cooldownTime;
+
+                if (Time.time >= lastCastTimes[i] + spellCooldown)
                 {
                     lastCastTimes[i] = Time.time;
 
                     if (spells[i] is ESpell)
                     {
-                        
-                        spells[i].Cast(transform.position);
+                        isSwitchMode = true;
+                        selectedSpell = spells[i];
+                        Debug.Log("Switch mode activated. Click on a unit to switch.");
                     }
                     else
                     {
-                        
                         selectedSpell = spells[i];
                         ShowRangeIndicator(GetSpellRange(spells[i]));
                     }
-                }
-                else
-                {
-                    Debug.Log($"Spell {spellKeys[i]} is on cooldown!");
+
+                    cooldownUI?.StartCooldown(i, spellCooldown);
                 }
             }
         }
 
         if (selectedSpell != null && Input.GetMouseButtonDown(0))
         {
-            CastSelectedSpell();
+            if (isSwitchMode)
+                AttemptCharacterSwitch();
+            else
+                CastSelectedSpell();
+
             HideRangeIndicator();
         }
+    }
+
+    private void AttemptCharacterSwitch()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayerMask))
+        {
+            Debug.Log($"🟢 Raycast hit: {hit.collider.gameObject.name} (Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
+
+            SelectableUnit newUnit = hit.collider.GetComponentInParent<SelectableUnit>(); 
+
+            if (newUnit == null)
+            {
+                Debug.LogError($"❌ {hit.collider.gameObject.name} does NOT have a SelectableUnit component!");
+                return;
+            }
+
+            GameObject newCharacter = newUnit.gameObject;
+            GameObject currentCharacter = GameStateManager.Instance.selectedUnit?.gameObject;
+
+            if (newCharacter == currentCharacter)
+            {
+                Debug.Log("Already controlling this unit.");
+                return;
+            }
+
+            Debug.Log($"🔄 Switching to {newCharacter.name}");
+
+            if (currentCharacter != null)
+            {
+                SelectableUnit oldUnit = currentCharacter.GetComponent<SelectableUnit>();
+                if (oldUnit != null)
+                {
+                    oldUnit.OnDeselect();
+                }
+                else
+                {
+                    Debug.LogError($"❌ {currentCharacter.name} is missing SelectableUnit!");
+                }
+                ToggleCharacterControl(currentCharacter, false);
+            }
+
+            
+            newUnit.OnSelect();
+            ToggleCharacterControl(newCharacter, true);
+            GameStateManager.Instance.selectedUnit = newUnit;
+        }
+        else
+        {
+            Debug.Log("❌ No valid unit selected. Check layer and colliders.");
+        }
+
+        selectedSpell = null;
+        isSwitchMode = false;
+    }
+
+    private void ToggleCharacterControl(GameObject character, bool isActive)
+    {
+        if (character == null)
+        {
+            Debug.LogError("❌ ToggleCharacterControl: Character is NULL!");
+            return;
+        }
+
+        PlayerController playerController = character.GetComponent<PlayerController>();
+        SpellCaster spellCaster = character.GetComponent<SpellCaster>();
+
+        if (playerController != null)
+            playerController.enabled = isActive;
+        else
+            Debug.LogWarning($"⚠️ {character.name} has no PlayerController.");
+
+        if (spellCaster != null)
+            spellCaster.enabled = isActive;
+        else
+            Debug.LogWarning($"⚠️ {character.name} has no SpellCaster.");
     }
 
     private void ShowRangeIndicator(float range)
     {
         if (activeRangeIndicator != null) Destroy(activeRangeIndicator);
-
-        
         if (selectedSpell is ESpell) return;
 
         activeRangeIndicator = Instantiate(rangeIndicatorPrefab, transform.position, Quaternion.identity);
@@ -75,9 +167,8 @@ public class SpellCaster : MonoBehaviour
 
     private float GetSpellRange(Spell spell)
     {
-        if (spell is QSpell) return 10f; 
-        if (spell is WSpell) return 5f; 
-        if (spell is HomingSpell) return 12f;
+        if (spell is QSpell) return 10f;
+        if (spell is WSpell) return 5f;
         return 0f;
     }
 
@@ -90,7 +181,6 @@ public class SpellCaster : MonoBehaviour
         {
             Vector3 castPosition = hit.point;
 
-            
             float distance = Vector3.Distance(transform.position, castPosition);
             if (distance > currentSpellRange)
             {
@@ -99,9 +189,9 @@ public class SpellCaster : MonoBehaviour
             }
 
             selectedSpell.Cast(castPosition);
-            Debug.Log($"Spell {selectedSpell.name} cast at: {castPosition}");
         }
 
         selectedSpell = null;
+        isSwitchMode = false;
     }
 }

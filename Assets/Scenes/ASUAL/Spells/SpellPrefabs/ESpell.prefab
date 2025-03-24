@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -2.2758167, y: 0, z: 1.4593339}
-  m_LocalScale: {x: 2.4380274, y: 2.4380274, z: -0.024541184}
+  m_LocalScale: {x: 9.333744, y: 9.333744, z: -0.09395347}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -154,5 +154,6 @@ MonoBehaviour:
   effectComponents:
   - {fileID: 7390400998666062284}
   - {fileID: 4427911762631889471}
+  cooldownTime: 5
   radius: 5
   maxRange: 10

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class BurnEffect : MonoBehaviour, ISpellEffect
@@ -11,7 +11,12 @@ public class BurnEffect : MonoBehaviour, ISpellEffect
         EnemyStats enemy = target.GetComponent<EnemyStats>();
         if (enemy != null)
         {
+            Debug.Log($"🔥 {target.name} is burning for {burnDuration} seconds!");
             enemy.StartCoroutine(ApplyBurn(enemy));
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ {target.name} does not have EnemyStats! Burn effect skipped.");
         }
     }
 

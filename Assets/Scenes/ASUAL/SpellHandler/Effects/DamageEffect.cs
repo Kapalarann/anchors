@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DamageEffect : MonoBehaviour, ISpellEffect
 {
@@ -7,10 +7,15 @@ public class DamageEffect : MonoBehaviour, ISpellEffect
     public void ApplyEffect(GameObject target)
     {
         EnemyStats enemy = target.GetComponent<EnemyStats>();
+
         if (enemy != null)
         {
             enemy.TakeDamage(damageAmount);
-            Debug.Log($"{target.name} took {damageAmount} damage from {gameObject.name}!");
+            Debug.Log(target.name + " took " + damageAmount + " damage!");
+        }
+        else
+        {
+            Debug.LogWarning(target.name + " does not have EnemyStats! No damage applied.");
         }
     }
 }
