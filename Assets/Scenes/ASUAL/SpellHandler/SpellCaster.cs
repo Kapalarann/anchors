@@ -21,11 +21,6 @@ public class SpellCaster : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
-        cooldownUI = Object.FindFirstObjectByType<SpellCooldownUI>();
-        if (cooldownUI != null)
-        {
-            cooldownUI.spellCaster = this;
-        }
 
         if (GameStateManager.Instance.selectedUnit == null)
         {
@@ -47,7 +42,7 @@ public class SpellCaster : MonoBehaviour
                     if (spellList[i].spell is ESpell)
                     {
                         isSwitchMode = true;
-                        selectedSpell = spells[i];
+                        selectedSpell = spellList[i].spell;
                         Debug.Log("Switch mode activated. Click on a unit to switch.");
                         spellList[i].spell.Cast(transform.position);
                     }
@@ -58,7 +53,7 @@ public class SpellCaster : MonoBehaviour
                         ShowRangeIndicator(spellList[i].range);
                     }
 
-                    cooldownUI?.StartCooldown(i, spellCooldown);
+                    SpellCooldownUI.instance?.StartCooldown(i, spellList[i].spellCooldowns);
                 }
             }
         }
@@ -109,7 +104,7 @@ public class SpellCaster : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"Spell {spellList[i].keyCode} is on cooldown!");
+                    Debug.Log($"Spell {spellList[selectedSpellNum].keyCode} is on cooldown!");
                 }
                 ToggleCharacterControl(currentCharacter, false);
             }
@@ -136,7 +131,7 @@ public class SpellCaster : MonoBehaviour
             return;
             CastSelectedSpell();
             HideRangeIndicator();
-            splCldwnUi.StartCooldown(selectedSpellNum);
+            SpellCooldownUI.instance.StartCooldown(2 ,selectedSpellNum);
         }
 
         PlayerController playerController = character.GetComponent<PlayerController>();
