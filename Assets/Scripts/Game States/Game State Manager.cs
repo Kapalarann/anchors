@@ -1,6 +1,10 @@
-using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using System;
+using UnityEngine.AI;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -22,11 +26,14 @@ public class GameStateManager : MonoBehaviour
     public Dictionary<StateType, StateData> stateDictionary; // Lookup table for states
     public Dictionary<StateType, GameObject> cameraInstances = new Dictionary<StateType, GameObject>(); // Stores camera instances
     public Dictionary<StateType, GameObject> uiInstances = new Dictionary<StateType, GameObject>(); // Stores UI instances
+    private List<Component> activeComponents = new List<Component>();
 
     [HideInInspector] public GameState currentState;
-    [HideInInspector] public SelectableUnit selectedUnit;
+    /*[HideInInspector]*/ public SelectableUnit selectedUnit;
+    [HideInInspector] public PlayerInput currentPlayerInput;
+    [HideInInspector] public UnitStateManager currentUSM;
+    [HideInInspector] public NavMeshAgent currentAgent;
 
-    private MonoBehaviour activeMovementScript;
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -92,36 +99,14 @@ public class GameStateManager : MonoBehaviour
         foreach (var cam in cameraInstances.Values) cam.SetActive(false);
         foreach (var ui in uiInstances.Values) ui.SetActive(false);
 
-        // Disable current movement script if it's not from the selected unit
-        if (activeMovementScript != null && activeMovementScript.gameObject == selectedUnit?.gameObject)
-        {
-            activeMovementScript.enabled = false;
-            activeMovementScript = null;
-        }
+        DisableActiveComponents();
 
-        // Activate the new state's camera, UI, and movement
         if (cameraInstances.ContainsKey(stateData.state)) cameraInstances[stateData.state].SetActive(true);
         if (uiInstances.ContainsKey(stateData.state)) uiInstances[stateData.state].SetActive(true);
 
-        // Enable movement for the selected unit
-        if (stateData.hasMovement && selectedUnit != null && !string.IsNullOrEmpty(stateData.movementScriptType))
-        {
-            Type movementType = Type.GetType(stateData.movementScriptType);
-
-            if (movementType != null)
-            {
-                MonoBehaviour newMovementScript = selectedUnit.GetComponent(movementType) as MonoBehaviour;
-                if (newMovementScript != null)
-                {
-                    activeMovementScript = newMovementScript;
-                    activeMovementScript.enabled = true;
-                }
-            }
-            else
-            {
-                Debug.LogError($"Invalid movement script type: {stateData.movementScriptType}");
-            }
-        }
+        ActivateStateComponents(stateData);
+        HandlePlayerInput(stateData.hasPlayerInput);
+        HandleUSM();
 
         switch (stateData.state)
         {
@@ -133,6 +118,9 @@ public class GameStateManager : MonoBehaviour
                 break;
             case StateType.Platformer:
                 currentState = new MinerState(this, stateData);
+                break;
+            case StateType.ThirdPerson:
+                currentState = new ThirdPersonState(this, stateData);
                 break;
             default:
                 Debug.LogError($"Unknown state type: {stateData.state}");
@@ -155,7 +143,90 @@ public class GameStateManager : MonoBehaviour
     // Public function for states to request a transition
     public void RequestStateChange(StateType newStateType)
     {
-        if (stateDictionary.TryGetValue(newStateType, out StateData newStateData)) SwitchState(newStateData);
-        else Debug.LogError($"No StateData found for {newStateType}");
+        if (stateDictionary.TryGetValue(newStateType, out StateData newStateData))
+        {
+            SwitchState(newStateData);
+        }
+        else
+        {
+            Debug.LogError($"No StateData found for {newStateType}");
+        }
+    }
+
+    private void DisableActiveComponents()
+    {
+        foreach (var component in activeComponents)
+        {
+            if (component is MonoBehaviour monoBehaviour) monoBehaviour.enabled = false;
+            MethodInfo deactivateMethod = component.GetType().GetMethod("DeactivateInput");
+            deactivateMethod?.Invoke(component, null);
+        }
+        activeComponents.Clear();
+    }
+
+    private void ActivateStateComponents(StateData sData)
+    {
+        if (selectedUnit == null || sData == null || sData.ScriptType.Length == 0) return;
+
+        foreach (var scriptName in sData.ScriptType)
+        {
+            Type scriptType = Type.GetType(scriptName);
+            if (scriptType != null)
+            {
+                Component componentInstance = selectedUnit.GetComponent(scriptType);
+                if (componentInstance != null)
+                {
+                    if (componentInstance is MonoBehaviour monoBehaviour)
+                    {
+                        monoBehaviour.enabled = true;
+                    }
+                    else
+                    {
+                        MethodInfo activateMethod = scriptType.GetMethod("ActivateInput");
+                        activateMethod?.Invoke(componentInstance, null);
+                    }
+                    activeComponents.Add(componentInstance);
+                }
+            }
+            else
+            {
+                Debug.LogError($"Invalid script type: {scriptName}");
+            }
+        }
+    }
+
+    private void HandlePlayerInput(bool hasPlayerInput)
+    {
+        if(currentPlayerInput != null)
+        {
+            currentPlayerInput.enabled = false;
+            currentPlayerInput = null;
+        }
+        if(hasPlayerInput)
+        {
+            PlayerInput pInput = selectedUnit.GetComponent<PlayerInput>();
+            if (selectedUnit != null && pInput != null)
+            {
+                currentPlayerInput = pInput;
+                pInput.enabled = true;
+            }
+        }
+    }
+
+    private void HandleUSM()
+    {
+        if(currentUSM != null)
+        {
+            currentUSM.enabled = true;
+            currentAgent.enabled = true;
+        }
+        if (selectedUnit != null)
+        {
+            currentUSM = selectedUnit.GetComponent<UnitStateManager>();
+            if (currentUSM != null) currentUSM.enabled = false;
+                
+            currentAgent = selectedUnit.GetComponent<NavMeshAgent>();
+            if(currentAgent != null) currentAgent.enabled = false;
+        }
     }
 }

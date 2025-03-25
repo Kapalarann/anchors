@@ -3,56 +3,43 @@ using UnityEngine.UI;
 
 public class SpellCooldownUI : MonoBehaviour
 {
-    public Image[] cooldownImages; // Assign in Inspector
-    private float[] cooldownTimers; // Tracks remaining cooldowns
-    private float[] cooldownDurations; // Stores max cooldown durations
-
-    public SpellCaster spellCaster; // Reference to SpellCaster to get spell cooldowns
+    public cooldownUI[] cooldownUIs;
 
     private void Start()
     {
-        int spellCount = cooldownImages.Length;
-        cooldownTimers = new float[spellCount];
-        cooldownDurations = new float[spellCount];
-
-        // Initialize cooldowns based on SpellCaster's spells
-        for (int i = 0; i < spellCount; i++)
+        
+        for (int i = 0; i < cooldownUIs.Length; i++)
         {
-            if (spellCaster.spells[i] != null)
-            {
-                cooldownDurations[i] = spellCaster.spells[i].cooldownTime;
-                cooldownTimers[i] = cooldownDurations[i]; // Start on full cooldown
-                cooldownImages[i].fillAmount = 1; // UI shows full cooldown at start
-            }
-            else
-            {
-                cooldownImages[i].fillAmount = 0; // No spell, no cooldown UI
-            }
+            cooldownUIs[i].Images.fillAmount = 0; 
         }
     }
 
     private void Update()
     {
-        for (int i = 0; i < cooldownTimers.Length; i++)
+        for (int i = 0; i < cooldownUIs.Length; i++)
         {
-            if (cooldownTimers[i] > 0)
+            if (cooldownUIs[i].Timers > 0)
             {
-                cooldownTimers[i] -= Time.deltaTime;
-                cooldownImages[i].fillAmount = cooldownTimers[i] / cooldownDurations[i]; // Smooth cooldown
+                cooldownUIs[i].Timers -= Time.deltaTime;
+                cooldownUIs[i].Images.fillAmount = cooldownUIs[i].Timers / cooldownUIs[i].Times;
             }
             else
             {
-                cooldownImages[i].fillAmount = 0; // Hide UI when ready
+                cooldownUIs[i].Images.fillAmount = 0; 
             }
         }
     }
 
     public void StartCooldown(int spellIndex, float cooldownTime)
-    {
-        if (spellIndex < 0 || spellIndex >= cooldownTimers.Length) return; // Prevent errors
+        cooldownUIs[spellIndex].Timers = cooldownUIs[spellIndex].Times;
+        cooldownUIs[spellIndex].Images.fillAmount = 1; 
+    }
 
-        cooldownTimers[spellIndex] = cooldownTime;
-        cooldownDurations[spellIndex] = cooldownTime;
-        cooldownImages[spellIndex].fillAmount = 1; // Reset cooldown UI
+    [System.Serializable] 
+    public class cooldownUI
+    {
+        public Image Images;
+        public float Times;
+        public float Timers;
     }
 }

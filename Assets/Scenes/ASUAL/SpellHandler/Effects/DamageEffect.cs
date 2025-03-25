@@ -6,8 +6,7 @@ public class DamageEffect : MonoBehaviour, ISpellEffect
 
     public void ApplyEffect(GameObject target)
     {
-        EnemyStats enemy = target.GetComponent<EnemyStats>();
-
+        Health enemy = target.GetComponent<Health>();
         if (enemy != null)
         {
             enemy.TakeDamage(damageAmount);

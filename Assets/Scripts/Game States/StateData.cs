@@ -20,7 +20,7 @@ public class StateData : ScriptableObject
     [Header("UI")]
     public GameObject uiPrefab;
 
-    [Header("Movement")]
-    public bool hasMovement;
-    public string movementScriptType;
+    [Header("Enabled/Disabled Scripts")]
+    public string[] ScriptType;
+    public bool hasPlayerInput;
 }
