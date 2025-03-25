@@ -29,7 +29,8 @@ public class CameraControls : MonoBehaviour
     private void Start()
     {
         _camera = GetComponent<Camera>();
-        currentZoom = _camera.orthographicSize;
+        //currentZoom = _camera.orthographicSize;
+        currentZoom = _camera.fieldOfView;
         pivotPoint = transform.position + transform.forward * pivotDistance;
     }
 
@@ -70,7 +71,8 @@ public class CameraControls : MonoBehaviour
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         currentZoom -= scroll * scrollSpeed * Time.deltaTime * 100f;
-        _camera.orthographicSize = Mathf.Clamp(currentZoom, minZoom, maxZoom);
+
+        _camera.fieldOfView = Mathf.Clamp(currentZoom, minZoom, maxZoom);
     }
 
     private void HandleRotation()
