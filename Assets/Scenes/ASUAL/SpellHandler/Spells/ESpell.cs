@@ -1,30 +1,63 @@
+﻿using System.Collections;
 using UnityEngine;
 
 public class ESpell : Spell
 {
-    public float radius = 5f; 
-    public float maxRange = 10f;
+    private Transform currentUnit;
+    private GameObject[] allUnits;
 
-    public override void Cast(Vector3 _)
+    private void Start()
     {
-        
-        Vector3 playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
-        playerPosition.y = 0.01f; 
+        allUnits = GameObject.FindGameObjectsWithTag("Unit");
+        currentUnit = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        
-        GameObject spellEffect = Instantiate(spellPrefab, playerPosition, Quaternion.Euler(-90, 0, 0));
-
-        
-        Collider[] affectedEnemies = Physics.OverlapSphere(playerPosition, radius);
-
-        foreach (Collider col in affectedEnemies)
+        if (currentUnit == null)
         {
-            ApplyEffects(col.gameObject);
+            Debug.LogError("❌ No active player found! Ensure a unit is tagged as 'Player'.");
+        }
+    }
+
+    public override void Cast(Vector3 targetPosition)
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            GameObject selectedUnit = hit.collider.gameObject;
+
+            if (selectedUnit.CompareTag("Unit"))
+            {
+                SwitchUnit(selectedUnit);
+            }
+            else
+            {
+                Debug.Log("No unit selected.");
+            }
+        }
+    }
+
+    private void SwitchUnit(GameObject newUnit)
+    {
+        if (newUnit == null || currentUnit == newUnit.transform)
+        {
+            Debug.Log("❌ Invalid unit switch attempt.");
+            return;
         }
 
-        Debug.Log($"ESpell cast at {playerPosition} affecting {affectedEnemies.Length} enemies.");
+        
+        currentUnit.tag = "Unit";
+        currentUnit.GetComponent<PlayerController>().enabled = false;
+        currentUnit.GetComponent<SpellCaster>().enabled = false;
 
         
-        Destroy(spellEffect, 2f);
+        newUnit.tag = "Player";
+        newUnit.GetComponent<PlayerController>().enabled = true;
+        newUnit.GetComponent<SpellCaster>().enabled = true;
+
+        
+        currentUnit = newUnit.transform;
+
+        Debug.Log($"🔄 Switched control to {newUnit.name}");
     }
 }

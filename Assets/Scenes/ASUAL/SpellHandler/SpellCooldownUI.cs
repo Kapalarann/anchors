@@ -30,8 +30,7 @@ public class SpellCooldownUI : MonoBehaviour
         }
     }
 
-    public void StartCooldown(int spellIndex)
-    {
+    public void StartCooldown(int spellIndex, float cooldownTime)
         cooldownUIs[spellIndex].Timers = cooldownUIs[spellIndex].Times;
         cooldownUIs[spellIndex].Images.fillAmount = 1; 
     }
