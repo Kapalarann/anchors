@@ -12,6 +12,7 @@ public class RTSState : GameState
     public override void Enter()
     {
         Debug.Log("Entered RTS Mode");
+        GameStateManager.Instance.selectedUnit = null;
     }
 
     public override void Exit()

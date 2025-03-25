@@ -32,11 +32,7 @@ public class SwordCollision : MonoBehaviour
         SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
         UnitStats stats = target.gameObject.GetComponent<UnitStats>();
 
-        if (unit == null || stats == null) 
-        {
-            Debug.Log($"Unable to transfer to {unit.name}, not a unit");
-            return false; 
-        }
+        if (unit == null || stats == null)   return false; 
 
         GameStateManager.Instance.selectedUnit = unit;
         GameStateManager.Instance.RequestStateChange(stats.unitType);

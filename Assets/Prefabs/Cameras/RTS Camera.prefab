@@ -68,8 +68,8 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
-  orthographic: 1
+  field of view: 90
+  orthographic: 0
   orthographic size: 20
   m_Depth: -1
   m_CullingMask:
@@ -157,8 +157,8 @@ MonoBehaviour:
   _down: 115
   _left: 97
   _right: 100
-  scrollSpeed: 10
-  minZoom: 5
-  maxZoom: 50
+  scrollSpeed: 100
+  minZoom: 20
+  maxZoom: 180
   rotationSpeed: 50
   pivotDistance: 20

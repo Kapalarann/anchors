@@ -9,9 +9,6 @@ public class UnitType : ScriptableObject
     [Range(0f, 1f)] public float moveWeight = 0.5f;
     [Range(0f, 1f)] public float attackWeight = 0.5f;
     [Range(0f, 1f)] public float idleWeight = 0.1f;
-    [Range(0f, 1f)] public float cast1Weight = 0f;
-    [Range(0f, 1f)] public float cast2Weight = 0f;
-    [Range(0f, 1f)] public float cast3Weight = 0f;
 
     public float GetTotalWeight()
     {
