@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -61,9 +63,9 @@ public class UnitStateManager : MonoBehaviour
             if (attack.attackTimer >= attack.attackCooldown) 
             {
                 attack.attackTimer = 0f;
-                Vector3 pos = AquireTarget();
-                if(pos == null) continue;
-                FireProjectile(pos, attack);
+                Transform tar = AquireTarget();
+                if(tar == null) continue;
+                FireProjectile(tar.position, attack);
             }
         }
 
@@ -85,14 +87,14 @@ public class UnitStateManager : MonoBehaviour
         SetState(moveState);
     }
 
-    public Vector3 AquireTarget()
+    public Transform AquireTarget()
     {
-        return GameStateManager.Instance.currentAgent.transform.position;
+        return GameStateManager.Instance.currentAgent.transform;
     }
 
     public void FireProjectile(Vector3 targetPosition, RangeAttack attack)
     {
-        Vector3 direction = targetPosition - attack.firePoint.position;
+        Vector3 direction = (targetPosition + attack.fireOffset) - attack.firePoint.position;
         float distance = new Vector3(direction.x, 0, direction.z).magnitude; // Horizontal distance
         float height = direction.y; // Vertical height
 
@@ -105,6 +107,8 @@ public class UnitStateManager : MonoBehaviour
 
             // Instantiate and fire the projectile
             GameObject projectile = Instantiate(attack.projectilePrefab, attack.firePoint.position, Quaternion.LookRotation(launchDirection));
+            projectile.GetComponent<PlayerBullet>().damage = attack.damage;
+            projectile.GetComponent<PlayerBullet>().headshotMult = attack.headshotMultiplier;
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
             if (rb)
             {
@@ -148,5 +152,6 @@ public class RangeAttack
     [HideInInspector]public float attackTimer = 0f;
     public float projectileSpeed;
     public float damage;
+    public float headshotMultiplier;
     public float weight;
 }

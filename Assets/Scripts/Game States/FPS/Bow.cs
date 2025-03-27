@@ -3,6 +3,9 @@ using UnityEngine;
 public class Bow : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] public SkinnedMeshRenderer[] bowMesh;
+    [SerializeField] public MeshRenderer arrowMesh;
+    [SerializeField] public SkinnedMeshRenderer[] characterMesh;
     [SerializeField] public Animator bowAnimator;
     [SerializeField] public GameObject arrowPrefab;
     [SerializeField] public Transform arrowSpawnPoint;
@@ -15,6 +18,32 @@ public class Bow : MonoBehaviour
 
     private bool isDrawing = false;
     private float drawStartTime;
+
+    private void OnEnable()
+    {
+        foreach(SkinnedMeshRenderer mesh in bowMesh)
+        {
+            mesh.enabled = true;
+        }
+        arrowMesh.enabled = true;
+        foreach(SkinnedMeshRenderer mesh in characterMesh)
+        {
+            mesh.enabled = false;
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (SkinnedMeshRenderer mesh in bowMesh)
+        {
+            mesh.enabled = false;
+        }
+        arrowMesh.enabled = false;
+        foreach (SkinnedMeshRenderer mesh in characterMesh)
+        {
+            mesh.enabled = true;
+        }
+    }
 
     void Update()
     {
