@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,12 +21,14 @@ public class UnitStateManager : MonoBehaviour
     [Header("Shooting")]
     [SerializeField] public bool isRanged;
     [SerializeField] public RangeAttack[] rangeAttacks;
+    [HideInInspector] public int currentAttack = 0;
 
     [HideInInspector] public UnitStats _unitStat;
     [HideInInspector] public UnitStats _target;
 
     [HideInInspector] public NavMeshAgent _agent;
     [HideInInspector] public Animator _animator;
+    [HideInInspector] public bool isAttacking = false;
 
     private void Awake()
     {
@@ -60,13 +58,13 @@ public class UnitStateManager : MonoBehaviour
         foreach (var attack in rangeAttacks)
         {
             attack.attackTimer += Time.deltaTime;
-            if (attack.attackTimer >= attack.attackCooldown) 
+            /*if (attack.attackTimer >= attack.attackCooldown) 
             {
                 attack.attackTimer = 0f;
                 Transform tar = AquireTarget();
                 if(tar == null) continue;
                 FireProjectile(tar.position, attack);
-            }
+            }*/
         }
 
         _currentState?.Update(this);
@@ -89,11 +87,14 @@ public class UnitStateManager : MonoBehaviour
 
     public Transform AquireTarget()
     {
-        return GameStateManager.Instance.currentAgent.transform;
+        if(GameStateManager.Instance.currentAgent != null) return GameStateManager.Instance.currentAgent.transform;
+        return null;
     }
 
-    public void FireProjectile(Vector3 targetPosition, RangeAttack attack)
+    public void FireProjectile()
     {
+        Vector3 targetPosition = _target.transform.position;
+        RangeAttack attack = rangeAttacks[currentAttack];
         Vector3 direction = (targetPosition + attack.fireOffset) - attack.firePoint.position;
         float distance = new Vector3(direction.x, 0, direction.z).magnitude; // Horizontal distance
         float height = direction.y; // Vertical height
@@ -152,8 +153,10 @@ public class UnitStateManager : MonoBehaviour
 public class RangeAttack
 {
     public GameObject projectilePrefab;
+    public string animationTrigger;
     public Transform firePoint;
     public Vector3 fireOffset;
+    public float maxRange;
     public int projectileCount;
     public float attackCooldown;
     [HideInInspector]public float attackTimer = 0f;

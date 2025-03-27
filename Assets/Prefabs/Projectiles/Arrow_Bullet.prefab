@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 664863214031063691}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 7750029509817885646}
   - component: {fileID: 8591899633973026600}
   m_Layer: 0
-  m_Name: Arrow_Bulltet
+  m_Name: Arrow_Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,7 +144,7 @@ CapsuleCollider:
   m_Radius: 0.01
   m_Height: 0.63
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0.58}
+  m_Center: {x: 0, y: 0, z: 0.3}
 --- !u!54 &2667895133638776019
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -301,5 +301,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
-  rb: {fileID: 2667895133638776019}
-  col: {fileID: 197875822515521381}
+  headshotMult: 1
+  isTransfer: 0
+  shooterTransform: {fileID: 0}

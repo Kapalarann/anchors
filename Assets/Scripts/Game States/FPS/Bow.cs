@@ -89,10 +89,23 @@ public class Bow : MonoBehaviour
         arrow.damage = damage;
         arrow.headshotMult = headshotMultiplier;
 
+        if (isTransferArrow) arrow.GetComponent<TrailRenderer>().colorGradient = setTrailGradient(Color.black);
+
         Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
         if (arrowRb != null)
         {
             arrowRb.linearVelocity = playerCamera.transform.forward * shootForce;
         }
+    }
+
+    private Gradient setTrailGradient(Color color)
+    {
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(color, 0f), new GradientColorKey(color, 1f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(color.a, 0f), new GradientAlphaKey(color.a, 1f) }
+        );
+
+        return gradient;
     }
 }

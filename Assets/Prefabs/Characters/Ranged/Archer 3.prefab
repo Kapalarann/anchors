@@ -1248,12 +1248,12 @@ GameObject:
   - component: {fileID: 169797476456274793}
   - component: {fileID: 7480054159546000760}
   - component: {fileID: 6017800410959771869}
-  - component: {fileID: 343298378482652683}
   - component: {fileID: 2453768056972263296}
   - component: {fileID: 896791351262873648}
   - component: {fileID: 5125437087440565947}
   - component: {fileID: 1132659579013751085}
   - component: {fileID: 2039638777993251253}
+  - component: {fileID: 4569841048431006319}
   m_Layer: 6
   m_Name: Archer 3
   m_TagString: Unit
@@ -1475,28 +1475,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &343298378482652683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _movementSpeed: 0
-  _targetPosition: {x: 0, y: 0, z: 0}
-  strafes: 1
-  strafeStrength: 1
-  isRanged: 0
-  rangeAttacks: []
-  _unitStat: {fileID: 0}
-  _target: {fileID: 0}
-  _agent: {fileID: 0}
-  _animator: {fileID: 0}
 --- !u!195 &2453768056972263296
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1504,7 +1482,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 0
+  m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -1595,6 +1573,40 @@ MonoBehaviour:
   damage: 10
   headshotMultiplier: 1
   isTransferArrow: 0
+--- !u!114 &4569841048431006319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _movementSpeed: 3
+  _targetPosition: {x: 0, y: 0, z: 0}
+  strafes: 0
+  strafeStrength: 0
+  isRanged: 1
+  rangeAttacks:
+  - projectilePrefab: {fileID: 3902991209137145900, guid: 5bd7075221cb9ad40ae84935f80304ba, type: 3}
+    animationTrigger: onRanged
+    firePoint: {fileID: 7691113968724095571}
+    fireOffset: {x: 0, y: 1, z: 0}
+    maxRange: 15
+    projectileCount: 1
+    attackCooldown: 3
+    attackTimer: 0
+    projectileSpeed: 30
+    damage: 1
+    headshotMultiplier: 2
+    weight: 1
+  _unitStat: {fileID: 0}
+  _target: {fileID: 0}
+  _agent: {fileID: 0}
+  _animator: {fileID: 0}
 --- !u!1 &4597260397375489776
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,6 +1829,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6031588527335995492}
+  - {fileID: 7691113968724095571}
   m_Father: {fileID: 8589637116891320840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4904060875897743630
@@ -2376,6 +2389,37 @@ Transform:
   - {fileID: 3351775754717833597}
   m_Father: {fileID: 1711393280547881149}
   m_LocalEulerAnglesHint: {x: 3.342114, y: 82.12182, z: -170.61302}
+--- !u!1 &6021268049502492195
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7691113968724095571}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7691113968724095571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6021268049502492195}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5761022017370659300}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6039726057740202303
 GameObject:
   m_ObjectHideFlags: 0

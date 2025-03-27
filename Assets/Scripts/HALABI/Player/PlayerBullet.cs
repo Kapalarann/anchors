@@ -16,20 +16,31 @@ public class PlayerBullet : MonoBehaviour
         col = rb.GetComponent<Collider>();
     }
 
+    private void Update()
+    {
+        if (rb.linearVelocity != Vector3.zero) transform.rotation = Quaternion.LookRotation(rb.linearVelocity);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Transform parent = other.transform.root;
 
+        if (shooterTransform == parent) return;
+
+        Health hp = parent.gameObject.GetComponent<Health>();
+        if (hp == null) return;
+
         if (isTransfer)
         {
-            if (GameStateManager.Instance.TransferToTarget(shooterTransform, other)) return;
+            if (GameStateManager.Instance.TransferToTarget(shooterTransform, other))
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
 
         if (other.gameObject.CompareTag("Body") || other.gameObject.CompareTag("Head"))
         {
-            Health hp = parent.gameObject.GetComponent<Health>();
-            if (hp == null) return;
-
             float damageMult = 1f;
             if (other.gameObject.CompareTag("Head")) 
             { 
