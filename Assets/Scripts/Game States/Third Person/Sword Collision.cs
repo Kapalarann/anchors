@@ -15,7 +15,7 @@ public class SwordCollision : MonoBehaviour
     {
         if (!coll.enabled) return;
 
-        if (TransferToTarget(other)) return;
+        if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
 
         Health targetHP = other.GetComponent<Health>();
         if (targetHP == null) return;
@@ -23,21 +23,5 @@ public class SwordCollision : MonoBehaviour
         float damage = _animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack") ? hDamage : lDamage;
         targetHP.TakeDamage(damage);
         Debug.Log($"Dealt {damage} damage to {targetHP.name}.");
-    }
-
-    public bool TransferToTarget(Collider target)
-    {
-        if (target.gameObject == _animator.gameObject) return false;
-
-        SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
-        UnitStats stats = target.gameObject.GetComponent<UnitStats>();
-
-        if (unit == null || stats == null)   return false; 
-
-        GameStateManager.Instance.selectedUnit = unit;
-        GameStateManager.Instance.RequestStateChange(stats.unitType);
-        Debug.Log($"Transfered to {unit.name}");
-
-        return true;
     }
 }

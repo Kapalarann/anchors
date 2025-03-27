@@ -14,6 +14,19 @@ public class UnitMoveState : UnitState
     {
         unit._animator.SetFloat("Movementspeed", unit._agent.velocity.magnitude);
 
+        if (unit._target != null && unit.isRanged)
+        {
+            float distance = Vector3.Distance(unit.transform.position, unit._target.transform.position);
+            foreach(var attack in unit.rangeAttacks)
+            {
+                if (distance <= attack.maxRange)
+                {
+                    unit.SetState(unit.idleState);
+                    return;
+                }
+            }
+        }
+
         if (!unit._agent.pathPending && unit._agent.remainingDistance <= unit._agent.stoppingDistance)
         {
             unit._animator.SetFloat("Movementspeed", 0f);

@@ -228,4 +228,20 @@ public class GameStateManager : MonoBehaviour
             if(currentAgent != null) currentAgent.enabled = false;
         }
     }
+
+    public bool TransferToTarget(Transform root, Collider target)
+    {
+        if (target.gameObject == root.gameObject) return false;
+
+        SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
+        UnitStats stats = target.gameObject.GetComponent<UnitStats>();
+
+        if (unit == null || stats == null) return false;
+
+        selectedUnit = unit;
+        RequestStateChange(stats.unitType);
+        Debug.Log($"Transfered to {unit.name}");
+
+        return true;
+    }
 }
