@@ -7,17 +7,14 @@ public class PlayerLook : MonoBehaviour
     public Camera cam;
     public Transform hand;
 
-    Vector2 mouse;
-    float VerticalRotation;
-
-    public float maxVerticalAngle = 90f;
+    private float mouseX;
 
     public float xSensitivity = 5f;
-    public float ySensitivity = 1f;
    
    void OnEnable()
    {
-        cam = GameStateManager.Instance.cameraInstances[StateType.FPS].GetComponent<Camera>();
+        if(cam == null) cam = GameStateManager.Instance.cameraInstances[StateType.FPS].GetComponent<Camera>();
+        GetComponentInChildren<Bow>().playerCamera = cam;
         Cursor.lockState = CursorLockMode.Locked;
    }
 
@@ -26,19 +23,14 @@ public class PlayerLook : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
     public void OnLook(InputValue value)
-   {
-        mouse = value.Get<Vector2>();
+    {
+        mouseX = value.Get<Vector2>().x;
     }
 
     private void Update()
     {
-        VerticalRotation -= mouse.y * ySensitivity;
-        VerticalRotation = Mathf.Clamp(VerticalRotation, -maxVerticalAngle, maxVerticalAngle);
-
-        cam.transform.localRotation = Quaternion.Euler(VerticalRotation, 0, 0);
-        hand.localRotation = cam.transform.localRotation;
-
-        transform.Rotate(0, mouse.x * xSensitivity * Time.deltaTime, 0);
+        transform.Rotate(0, mouseX * xSensitivity, 0);
+        hand.rotation = cam.transform.rotation;
     }
 
 }
