@@ -8,6 +8,8 @@ TagManager:
   - Unit
   - Target
   - Wall
+  - Body
+  - Head
   layers:
   - Default
   - TransparentFX

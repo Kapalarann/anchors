@@ -2,21 +2,35 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision objectWeHit)
+    public float damage = 0f;
+
+    private Rigidbody rb;
+    private Collider col;
+
+    private void Start()
     {
-        if (objectWeHit.gameObject.CompareTag("Target"))
+        rb = GetComponent<Rigidbody>();
+        col = rb.GetComponent<Collider>();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Body") || other.gameObject.CompareTag("Head"))
         {
-            print("hit " + objectWeHit.gameObject.name + "!");
-            CreateBulletImpactEffect(objectWeHit);
-            Destroy(gameObject);
+            Transform parent = other.transform.root;
+            Health hp = parent.gameObject.GetComponent<Health>();
+            if (hp == null) return;
+
+            float damageMult = 1f;
+            if (other.gameObject.CompareTag("Head")) damageMult = 2f;
+
+            hp.TakeDamage(damage * damageMult);
+            rb.isKinematic = true;
+            GetComponent<TrailRenderer>().enabled = false;
+            col.enabled = false;
+            this.enabled = false;
+            transform.SetParent(parent, true);
         }
-         if (objectWeHit.gameObject.CompareTag("Wall"))
-        {
-            print("hit a wall");
-            CreateBulletImpactEffect(objectWeHit);
-            Destroy(gameObject);
-        }
-        
     }
 
     void CreateBulletImpactEffect(Collision objectWeHit)

@@ -19,4 +19,5 @@ MonoBehaviour:
   - PlayerMotor
   - PlayerLook
   - PlayerInteract
+  - Bow
   hasPlayerInput: 1
