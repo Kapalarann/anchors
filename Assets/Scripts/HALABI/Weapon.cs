@@ -3,20 +3,18 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    
-    public bool isShooting,readyToShoot;
-    bool allowReset = true;
+    public bool isShooting, readyToShoot;
     public float shootingDelay = 2f;
 
-    public int bulletsPerBurst =3;
+    public int bulletsPerBurst = 3;
     public int burstBulletsLeft;
 
     public float spreadIntensity;
 
-   public GameObject bulletPrefab;
-   public Transform bulletSpawn;
-   public float bulletVelocity = 30;
-   public float bulletPrefabLifeTime = 3f;
+    public GameObject bulletPrefab;
+    public Transform bulletSpawn;
+    public float bulletVelocity = 30;
+    public float bulletPrefabLifeTime = 3f;
 
     public enum ShootingMode
     {
@@ -27,19 +25,31 @@ public class Weapon : MonoBehaviour
 
     public ShootingMode currentShootingMode;
 
+    private Camera mainCamera;
+
     private void Awake()
     {
+        if (bulletPrefab == null)
+        {
+            Debug.LogError("Bullet Prefab is not assigned!");
+        }
+        if (bulletSpawn == null)
+        {
+            Debug.LogError("Bullet Spawn is not assigned!");
+        }
+
         readyToShoot = true;
         burstBulletsLeft = bulletsPerBurst;
+        mainCamera = Camera.main;
     }
-    // Update is called once per frame
-    void Update()
+
+    private void Update()
     {
         if (currentShootingMode == ShootingMode.Auto)
         {
             isShooting = Input.GetKey(KeyCode.Mouse0);
         }
-        else if(currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
+        else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
         {
             isShooting = Input.GetKeyDown(KeyCode.Mouse0);
         }
@@ -50,40 +60,40 @@ public class Weapon : MonoBehaviour
             FireWeapon();
         }
     }
+
     private void FireWeapon()
     {
-        readyToShoot = false; 
+        readyToShoot = false;
 
-        Vector3 shootingDirection = CalculateDirectionAndSpread().normalized; 
+        Vector3 shootingDirection = CalculateDirectionAndSpread().normalized;
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
-
         bullet.transform.forward = shootingDirection;
-        bullet.GetComponent<Rigidbody>().AddForce(bulletSpawn.forward.normalized * bulletVelocity, ForceMode.Impulse);
+        bullet.GetComponent<Rigidbody>().AddForce(shootingDirection * bulletVelocity, ForceMode.Impulse);
         StartCoroutine(DestroyBulletAfterTime(bullet, bulletPrefabLifeTime));
 
-        if (allowReset)
-        {
-            Invoke("ResetShot", shootingDelay);
-            allowReset = false;
-        }
+        StartCoroutine(ResetShotAfterDelay(shootingDelay));
 
-        if (currentShootingMode == ShootingMode.Burst && burstBulletsLeft >1)
+        if (currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
         {
-            burstBulletsLeft --;
+            burstBulletsLeft--;
             Invoke("FireWeapon", shootingDelay);
         }
+        else
+        {
+            burstBulletsLeft = bulletsPerBurst; // Reset the burst counter
+        }
+    }
 
-        
-    }
-    private void ResetShot()
+    private IEnumerator ResetShotAfterDelay(float delay)
     {
+        yield return new WaitForSeconds(delay);
         readyToShoot = true;
-        allowReset = true;
     }
+
     public Vector3 CalculateDirectionAndSpread()
     {
-        Ray ray = Camera.current.ViewportPointToRay(new Vector3(0.5f,0.5f, 0));
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         Vector3 targetPoint;
@@ -98,11 +108,12 @@ public class Weapon : MonoBehaviour
 
         Vector3 direction = targetPoint - bulletSpawn.position;
 
-        float x = UnityEngine.Random.Range( -spreadIntensity, spreadIntensity);
-        float y = UnityEngine.Random.Range( spreadIntensity, -spreadIntensity);
+        float x = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
+        float y = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
 
         return direction + new Vector3(x, y, 0);
     }
+
     private IEnumerator DestroyBulletAfterTime(GameObject bullet, float delay)
     {
         yield return new WaitForSeconds(delay);
