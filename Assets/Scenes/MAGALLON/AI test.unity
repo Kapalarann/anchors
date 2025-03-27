@@ -1224,14 +1224,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1168248263534019810, guid: 22f6f69eb4c0cb64fbe81970067dd1a7, type: 3}
-      propertyPath: m_Height
-      value: 1.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1168248263534019810, guid: 22f6f69eb4c0cb64fbe81970067dd1a7, type: 3}
-      propertyPath: m_Center.y
-      value: 0.875
-      objectReference: {fileID: 0}
     - target: {fileID: 4584216481525430931, guid: 22f6f69eb4c0cb64fbe81970067dd1a7, type: 3}
       propertyPath: m_Name
       value: Archer 3
@@ -2797,6 +2789,14 @@ PrefabInstance:
     - target: {fileID: 2562253907568664245, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2810422020929854556, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
+      propertyPath: HP
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2810422020929854556, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
+      propertyPath: maxHP
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4384495699544970455, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
       propertyPath: m_LocalPosition.x

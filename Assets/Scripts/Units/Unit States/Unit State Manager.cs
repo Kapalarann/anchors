@@ -107,8 +107,15 @@ public class UnitStateManager : MonoBehaviour
 
             // Instantiate and fire the projectile
             GameObject projectile = Instantiate(attack.projectilePrefab, attack.firePoint.position, Quaternion.LookRotation(launchDirection));
-            projectile.GetComponent<PlayerBullet>().damage = attack.damage;
-            projectile.GetComponent<PlayerBullet>().headshotMult = attack.headshotMultiplier;
+            PlayerBullet arrow = projectile.GetComponent<PlayerBullet>();
+
+            if (arrow != null) 
+            {
+                arrow.shooterTransform = transform;
+                arrow.damage = attack.damage;
+                arrow.headshotMult = attack.headshotMultiplier;
+            }
+
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
             if (rb)
             {

@@ -4,6 +4,8 @@ public class PlayerBullet : MonoBehaviour
 {
     public float damage = 0f;
     public float headshotMult = 1f;
+    public bool isTransfer;
+    public Transform shooterTransform;
 
     private Rigidbody rb;
     private Collider col;
@@ -16,9 +18,15 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Transform parent = other.transform.root;
+
+        if (isTransfer)
+        {
+            if (GameStateManager.Instance.TransferToTarget(shooterTransform, other)) return;
+        }
+
         if (other.gameObject.CompareTag("Body") || other.gameObject.CompareTag("Head"))
         {
-            Transform parent = other.transform.root;
             Health hp = parent.gameObject.GetComponent<Health>();
             if (hp == null) return;
 

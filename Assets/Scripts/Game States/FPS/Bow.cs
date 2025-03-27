@@ -12,10 +12,13 @@ public class Bow : MonoBehaviour
     public Camera playerCamera;
 
     [Header("Bow Settings")]
-    public float maxDrawTime = 1.5f;
-    public float minShootForce = 10f;
-    public float maxShootForce = 50f;
+    [SerializeField] public float maxDrawTime = 1.5f;
+    [SerializeField] public float minShootForce = 10f;
+    [SerializeField] public float maxShootForce = 50f;
+    [SerializeField] public float damage = 0f;
+    [SerializeField] public float headshotMultiplier = 1f;
 
+    public bool isTransferArrow = false;
     private bool isDrawing = false;
     private float drawStartTime;
 
@@ -61,6 +64,16 @@ public class Bow : MonoBehaviour
             bowAnimator.SetTrigger("onRelease");
             ShootArrow();
         }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (isTransferArrow)
+            {
+                isTransferArrow = false;
+                return;
+            }
+            else isTransferArrow = true;
+        }
     }
 
     void ShootArrow()
@@ -69,6 +82,13 @@ public class Bow : MonoBehaviour
         float shootForce = Mathf.Lerp(minShootForce, maxShootForce, drawDuration / maxDrawTime);
 
         GameObject newArrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, arrowSpawnPoint.rotation);
+        PlayerBullet arrow = newArrow.GetComponent<PlayerBullet>();
+
+        arrow.shooterTransform = transform;
+        arrow.isTransfer = isTransferArrow;
+        arrow.damage = damage;
+        arrow.headshotMult = headshotMultiplier;
+
         Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
         if (arrowRb != null)
         {
