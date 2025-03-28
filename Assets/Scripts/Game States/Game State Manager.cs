@@ -28,6 +28,7 @@ public class GameStateManager : MonoBehaviour
     private List<Component> activeComponents = new List<Component>();
 
     [HideInInspector] public GameState currentState;
+    /*[HideInInspector]*/ public Camera currentCamera;
     /*[HideInInspector]*/ public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
     [HideInInspector] public UnitStateManager currentUSM;
@@ -100,7 +101,11 @@ public class GameStateManager : MonoBehaviour
 
         DisableActiveComponents();
 
-        if (cameraInstances.ContainsKey(stateData.state)) cameraInstances[stateData.state].SetActive(true);
+        if (cameraInstances.ContainsKey(stateData.state))
+        {
+            currentCamera = cameraInstances[stateData.state].GetComponentInChildren<Camera>();
+            cameraInstances[stateData.state].SetActive(true);
+        }
         if (uiInstances.ContainsKey(stateData.state)) uiInstances[stateData.state].SetActive(true);
 
         ActivateStateComponents(stateData);
