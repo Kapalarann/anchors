@@ -12,6 +12,7 @@ public class Health : MonoBehaviour
 
     private GameObject healthBarObj;
     private HealthBar healthBar;
+    private AnimationManager animationManager;
 
     public event Action<float, float> OnHealthChanged;
 
@@ -45,8 +46,9 @@ public class Health : MonoBehaviour
         healthBarObj.transform.SetParent(UIManager.Instance.HealthBarContainer);
         healthBar.Initialize(this);
 
-        if (bleedOverlay != null)
-            bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, 0);
+        if (bleedOverlay != null) bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, 0);
+
+        animationManager = GetComponent<AnimationManager>();
     }
 
     public void TakeDamage(float damage)
@@ -55,6 +57,10 @@ public class Health : MonoBehaviour
 
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, maxHP);
+        if(healthBar != null) healthBar.UpdateFill(HP, maxHP);
+        
+        animationManager.flinch();
+        GetComponent<Animator>().SetTrigger("onHit");
 
         if (healthBar != null)
             healthBar.UpdateFill(HP, maxHP);

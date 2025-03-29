@@ -157,8 +157,8 @@ MonoBehaviour:
   _down: 115
   _left: 97
   _right: 100
-  scrollSpeed: 100
+  scrollSpeed: 20
   minZoom: 20
-  maxZoom: 180
+  maxZoom: 140
   rotationSpeed: 50
   pivotDistance: 20

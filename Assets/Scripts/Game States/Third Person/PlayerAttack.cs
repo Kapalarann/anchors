@@ -5,6 +5,7 @@ public class PlayerAttack : MonoBehaviour
 {
     private Animator _animator;
     [SerializeField] private AnimationReceiver _receiver;
+    private AnimationManager _manager;
     private MeleeMovement _meleeMovement;
 
     [Header("Weapon Settings")]
@@ -13,6 +14,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
     [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
     [SerializeField] private float attackSpeed = 1f;
+    [SerializeField] public float attackForce = 1f;
 
     private float baseLightAttackDamage;
     private float baseHeavyAttackDamage;
@@ -20,12 +22,13 @@ public class PlayerAttack : MonoBehaviour
     private static readonly int OnAttackHash = Animator.StringToHash("OnAttack");
     private static readonly int OnHeavyAttackHash = Animator.StringToHash("OnHeavyAttack");
 
-    private bool _isAttacking = false;
+    public bool _isAttacking = false;
 
     private void Awake()
     {
         _meleeMovement = GetComponent<MeleeMovement>();
         _animator = GetComponent<Animator>();
+        _manager = GetComponent<AnimationManager>();
         sword._animator = _animator;
         _receiver.AttackEnd += EndAttack;
 
@@ -43,9 +46,8 @@ public class PlayerAttack : MonoBehaviour
 
     public void Attack_Event(InputAction.CallbackContext context)
     {
-        if (context.performed && !_meleeMovement._isRolling && !_isAttacking)
+        if (context.performed && !_meleeMovement._isRolling && !_isAttacking && !_manager.isFlinching)
         {
-            Debug.Log("Light Attack triggered!");
             _animator.SetFloat("attackSpeed", attackSpeed);
             _animator.SetTrigger(OnAttackHash);
             _meleeMovement._isAttacking = true;
@@ -55,38 +57,40 @@ public class PlayerAttack : MonoBehaviour
 
     public void HeavyAttack_Event(InputAction.CallbackContext context)
     {
-        if (context.performed && !_meleeMovement._isRolling && !_isAttacking)
+        if (context.performed && !_meleeMovement._isRolling && !_isAttacking && !_manager.isFlinching)
         {
-            Debug.Log("Heavy Attack triggered!");
             _animator.SetTrigger(OnHeavyAttackHash);
             _meleeMovement._isAttacking = true;
             _isAttacking = true;
         }
     }
 
+    public void TransferToggle_Event(InputAction.CallbackContext context)
+    {
+        if(sword.isTransfer) sword.isTransfer = false;
+        else sword.isTransfer = true;
+    }
+
     // Enable weapon collider during attack animation
-    public void EnableWeaponCollider(AnimationEvent animationEvent)
+    public void EnableWeaponCollider()
     {
         if (weaponCollider != null)
         {
-            Debug.Log("Weapon collider enabled!");
             weaponCollider.enabled = true;
         }
     }
 
     // Disable weapon collider after attack animation
-    public void DisableWeaponCollider(AnimationEvent animationEvent)
+    public void DisableWeaponCollider()
     {
         if (weaponCollider != null)
         {
-            Debug.Log("Weapon collider disabled!");
             weaponCollider.enabled = false;
         }
     }
 
     public void EndAttack(AnimationEvent animationEvent)
     {
-        Debug.Log("Attack animation finished!");
         _meleeMovement._isAttacking = false;
         _isAttacking = false;
     }

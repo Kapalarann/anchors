@@ -11,12 +11,17 @@ public class UnitStateManager : MonoBehaviour
     [HideInInspector] public UnitAttackState attackState = new UnitAttackState();
 
     [Header("Movement")]
+    [SerializeField] public float idleTime;
     [SerializeField] public float _movementSpeed;
     [HideInInspector]public Vector3 _targetPosition;
 
     [Header("Strafing")]
     [SerializeField] public bool strafes;
     [SerializeField] public float strafeStrength;
+
+    [Header("Melee Combat")]
+    [SerializeField] public bool isMelee;
+    [SerializeField] public MeleeAttack[] meleeAttacks;
 
     [Header("Shooting")]
     [SerializeField] public bool isRanged;
@@ -55,16 +60,16 @@ public class UnitStateManager : MonoBehaviour
 
     public void Update()
     {
+        _animator.SetFloat("Movementspeed", _agent.velocity.magnitude);
+
         foreach (var attack in rangeAttacks)
         {
             attack.attackTimer += Time.deltaTime;
-            /*if (attack.attackTimer >= attack.attackCooldown) 
-            {
-                attack.attackTimer = 0f;
-                Transform tar = AquireTarget();
-                if(tar == null) continue;
-                FireProjectile(tar.position, attack);
-            }*/
+        }
+
+        foreach (var attack in meleeAttacks)
+        {
+            attack.attackTimer += Time.deltaTime;
         }
 
         _currentState?.Update(this);
@@ -147,6 +152,11 @@ public class UnitStateManager : MonoBehaviour
         angle = Mathf.Min(angle1, angle2); // Choose the lower arc
         return true;
     }
+
+    public void DoneAttacking()
+    {
+        isAttacking = false;
+    }
 }
 
 [Serializable]
@@ -157,11 +167,22 @@ public class RangeAttack
     public Transform firePoint;
     public Vector3 fireOffset;
     public float maxRange;
-    public int projectileCount;
     public float attackCooldown;
     [HideInInspector]public float attackTimer = 0f;
     public float projectileSpeed;
     public float damage;
     public float headshotMultiplier;
     public float weight;
+}
+
+[Serializable]
+public class MeleeAttack
+{
+    public GameObject meleeObj;
+    public string animationTrigger;
+    public float attackSpeed;
+    public float attackRange;
+    public float attackCooldown;
+    [HideInInspector] public float attackTimer = 0f;
+    public float damage;
 }
