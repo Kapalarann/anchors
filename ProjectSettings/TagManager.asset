@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Enemy
   - Unit
+  - Target
+  - Wall
+  - Body
+  - Head
   layers:
   - Default
   - TransparentFX

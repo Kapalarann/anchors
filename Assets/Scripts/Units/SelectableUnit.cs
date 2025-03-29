@@ -1,8 +1,9 @@
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SelectableUnit : MonoBehaviour
 {
+    private NavMeshAgent agent;
     private Renderer unitRenderer;
     private Color originalColor;
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class RTSState : GameState
@@ -11,6 +12,7 @@ public class RTSState : GameState
     public override void Enter()
     {
         Debug.Log("Entered RTS Mode");
+        GameStateManager.Instance.selectedUnit = null;
     }
 
     public override void Exit()
@@ -24,13 +26,13 @@ public class RTSState : GameState
         {
             SelectableUnit unit = hit.collider.GetComponent<SelectableUnit>();
             if (unit != null) SelectUnit(unit);
-        }, DeselectUnit);
+        }, LayerMask.NameToLayer("Unit"), DeselectUnit);
 
         HandleMouseClick(1, hit =>
         {
             UnitStateManager unitBehavior = manager.selectedUnit.GetComponent<UnitStateManager>();
-            if(unitBehavior != null) unitBehavior.MoveTo(hit.point);
-        });
+            if (unitBehavior != null) unitBehavior.MoveTo(hit.point);
+        }, LayerMask.NameToLayer("Ground"), DoNothing);
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -38,7 +40,7 @@ public class RTSState : GameState
         }
     }
 
-    void HandleMouseClick(int button, System.Action<RaycastHit> onHit, System.Action onMiss = null)
+    void HandleMouseClick(int button, System.Action<RaycastHit> onHit, LayerMask layer, System.Action onMiss = null)
     {
         if (Input.GetMouseButtonDown(button))
         {
@@ -51,6 +53,16 @@ public class RTSState : GameState
             {
                 onMiss?.Invoke();
             }
+        }
+
+        if (onHit is null)
+        {
+            throw new ArgumentNullException(nameof(onHit));
+        }
+
+        if (onMiss is null)
+        {
+            throw new ArgumentNullException(nameof(onMiss));
         }
     }
 
@@ -69,5 +81,10 @@ public class RTSState : GameState
             manager.selectedUnit.OnDeselect();
             manager.selectedUnit = null;
         }
+    }
+
+    void DoNothing()
+    {
+
     }
 }

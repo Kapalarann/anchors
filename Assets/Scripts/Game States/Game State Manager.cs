@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.AI;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -28,8 +28,11 @@ public class GameStateManager : MonoBehaviour
     private List<Component> activeComponents = new List<Component>();
 
     [HideInInspector] public GameState currentState;
-    [HideInInspector] public SelectableUnit selectedUnit;
+    /*[HideInInspector]*/ public Camera currentCamera;
+    /*[HideInInspector]*/ public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
+    [HideInInspector] public UnitStateManager currentUSM;
+    [HideInInspector] public NavMeshAgent currentAgent;
 
     void Awake()
     {
@@ -98,11 +101,16 @@ public class GameStateManager : MonoBehaviour
 
         DisableActiveComponents();
 
-        if (cameraInstances.ContainsKey(stateData.state)) cameraInstances[stateData.state].SetActive(true);
+        if (cameraInstances.ContainsKey(stateData.state))
+        {
+            currentCamera = cameraInstances[stateData.state].GetComponentInChildren<Camera>();
+            cameraInstances[stateData.state].SetActive(true);
+        }
         if (uiInstances.ContainsKey(stateData.state)) uiInstances[stateData.state].SetActive(true);
 
         ActivateStateComponents(stateData);
-        if(stateData.hasPlayerInput) HandlePlayerInput();
+        HandlePlayerInput(stateData.hasPlayerInput);
+        HandleUSM();
 
         switch (stateData.state)
         {
@@ -162,48 +170,83 @@ public class GameStateManager : MonoBehaviour
 
     private void ActivateStateComponents(StateData sData)
     {
-        if (selectedUnit != null && sData.ScriptType.Length > 0)
+        if (selectedUnit == null || sData == null || sData.ScriptType.Length == 0) return;
+
+        foreach (var scriptName in sData.ScriptType)
         {
-            foreach (var scriptName in sData.ScriptType)
+            Type scriptType = Type.GetType(scriptName);
+            if (scriptType != null)
             {
-                Type scriptType = Type.GetType(scriptName);
-                if (scriptType != null)
+                Component componentInstance = selectedUnit.GetComponent(scriptType);
+                if (componentInstance != null)
                 {
-                    Component componentInstance = selectedUnit.GetComponent(scriptType);
-                    if (componentInstance != null)
+                    if (componentInstance is MonoBehaviour monoBehaviour)
                     {
-                        if (componentInstance is MonoBehaviour monoBehaviour)
-                        {
-                            monoBehaviour.enabled = true;
-                        }
-                        else
-                        {
-                            MethodInfo activateMethod = scriptType.GetMethod("ActivateInput");
-                            activateMethod?.Invoke(componentInstance, null);
-                        }
-                        activeComponents.Add(componentInstance);
+                        monoBehaviour.enabled = true;
                     }
+                    else
+                    {
+                        MethodInfo activateMethod = scriptType.GetMethod("ActivateInput");
+                        activateMethod?.Invoke(componentInstance, null);
+                    }
+                    activeComponents.Add(componentInstance);
                 }
-                else
-                {
-                    Debug.LogError($"Invalid script type: {scriptName}");
-                }
+            }
+            else
+            {
+                Debug.LogError($"Invalid script type: {scriptName}");
             }
         }
     }
 
-    private void HandlePlayerInput()
+    private void HandlePlayerInput(bool hasPlayerInput)
     {
         if(currentPlayerInput != null)
         {
             currentPlayerInput.enabled = false;
             currentPlayerInput = null;
         }
-        PlayerInput pInput = selectedUnit.GetComponent<PlayerInput>();
-        if (selectedUnit != null && pInput != null)
+        if(hasPlayerInput)
         {
-            currentPlayerInput = pInput;
-            pInput.enabled = true;
+            PlayerInput pInput = selectedUnit.GetComponent<PlayerInput>();
+            if (selectedUnit != null && pInput != null)
+            {
+                currentPlayerInput = pInput;
+                pInput.enabled = true;
+            }
         }
+    }
+
+    private void HandleUSM()
+    {
+        if(currentUSM != null)
+        {
+            currentUSM.enabled = true;
+            currentAgent.enabled = true;
+        }
+        if (selectedUnit != null)
+        {
+            currentUSM = selectedUnit.GetComponent<UnitStateManager>();
+            if (currentUSM != null) currentUSM.enabled = false;
+                
+            currentAgent = selectedUnit.GetComponent<NavMeshAgent>();
+            if(currentAgent != null) currentAgent.enabled = false;
+        }
+    }
+
+    public bool TransferToTarget(Transform root, Collider target)
+    {
+        if (target.gameObject == root.gameObject) return false;
+
+        SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
+        UnitStats stats = target.gameObject.GetComponent<UnitStats>();
+
+        if (unit == null || stats == null) return false;
+
+        selectedUnit = unit;
+        RequestStateChange(stats.unitType);
+        Debug.Log($"Transfered to {unit.name}");
+
+        return true;
     }
 }

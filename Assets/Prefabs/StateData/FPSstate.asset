@@ -16,5 +16,8 @@ MonoBehaviour:
   cameraPrefab: {fileID: 862654217548357959, guid: 12f537099f319094d8659b369fafeb43, type: 3}
   uiPrefab: {fileID: 5865351661263841050, guid: f74373e213f5de84188d7b3d8cc6c230, type: 3}
   ScriptType:
-  - FPSMovement
-  hasPlayerInput: 0
+  - PlayerMotor
+  - PlayerLook
+  - PlayerInteract
+  - Bow
+  hasPlayerInput: 1
