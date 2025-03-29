@@ -167,6 +167,14 @@ public class MeleeMovement : MonoBehaviour
         }
     }
 
+    public void AttackMove()
+    {
+        if (_rb == null) return;
+        Vector3 dir = transform.forward * GetComponent<PlayerAttack>().attackForce;
+        if (dir == null) return;
+        _rb.AddForce(dir, ForceMode.VelocityChange);
+    }
+
     public void ResetPlayerState()
     {
         _isAttacking = false;

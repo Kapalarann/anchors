@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SwordCollision : MonoBehaviour
 {
+    public bool isTransfer = false;
     private Collider coll;
     public Animator _animator;
     public float lDamage, hDamage;
@@ -15,7 +16,10 @@ public class SwordCollision : MonoBehaviour
     {
         if (!coll.enabled) return;
 
-        if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
+        if (isTransfer)
+        {
+            if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
+        }
 
         Health targetHP = other.GetComponent<Health>();
         if (targetHP == null) return;

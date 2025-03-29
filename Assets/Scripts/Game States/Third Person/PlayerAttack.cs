@@ -13,6 +13,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
     [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
     [SerializeField] private float attackSpeed = 1f;
+    [SerializeField] public float attackForce = 1f;
 
     private float baseLightAttackDamage;
     private float baseHeavyAttackDamage;
@@ -62,6 +63,12 @@ public class PlayerAttack : MonoBehaviour
             _meleeMovement._isAttacking = true;
             _isAttacking = true;
         }
+    }
+
+    public void TransferToggle_Event(InputAction.CallbackContext context)
+    {
+        if(sword.isTransfer) sword.isTransfer = false;
+        else sword.isTransfer = true;
     }
 
     // Enable weapon collider during attack animation

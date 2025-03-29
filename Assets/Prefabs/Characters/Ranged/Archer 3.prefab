@@ -354,10 +354,10 @@ Transform:
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 2881070894804825502}
   - {fileID: 8470117933120815114}
   - {fileID: 1653260807781058677}
   - {fileID: 8649526867363673332}
-  - {fileID: 2881070894804825502}
   m_Father: {fileID: 326991363835985452}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!95 &1486707213698802602
@@ -715,7 +715,7 @@ Transform:
   m_GameObject: {fileID: 2271965782753246407}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0.7071068, z: -0, w: 0}
-  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalPosition: {x: 2.51, y: 1.72, z: 0}
   m_LocalScale: {x: 6.6666646, y: 6.6666646, z: 6.6666636}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1566,8 +1566,9 @@ MonoBehaviour:
   bowAnimator: {fileID: 1486707213698802602}
   arrowPrefab: {fileID: 3902991209137145900, guid: 5bd7075221cb9ad40ae84935f80304ba, type: 3}
   arrowSpawnPoint: {fileID: 2881070894804825502}
+  crosshair: {fileID: 0}
   playerCamera: {fileID: 0}
-  maxDrawTime: 1.5
+  maxDrawTime: 0.7
   minShootForce: 10
   maxShootForce: 50
   damage: 10
@@ -1585,10 +1586,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idleTime: 2
   _movementSpeed: 3
   _targetPosition: {x: 0, y: 0, z: 0}
   strafes: 0
   strafeStrength: 0
+  isMelee: 0
+  meleeAttacks: []
   isRanged: 1
   rangeAttacks:
   - projectilePrefab: {fileID: 3902991209137145900, guid: 5bd7075221cb9ad40ae84935f80304ba, type: 3}
@@ -1596,17 +1600,18 @@ MonoBehaviour:
     firePoint: {fileID: 7691113968724095571}
     fireOffset: {x: 0, y: 1, z: 0}
     maxRange: 15
-    projectileCount: 1
     attackCooldown: 3
     attackTimer: 0
     projectileSpeed: 30
-    damage: 1
+    damage: 10
     headshotMultiplier: 2
     weight: 1
+  currentAttack: 0
   _unitStat: {fileID: 0}
   _target: {fileID: 0}
   _agent: {fileID: 0}
   _animator: {fileID: 0}
+  isAttacking: 0
 --- !u!1 &4597260397375489776
 GameObject:
   m_ObjectHideFlags: 0
