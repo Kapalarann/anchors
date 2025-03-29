@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class Health : MonoBehaviour
 {
@@ -13,14 +15,13 @@ public class Health : MonoBehaviour
     private GameObject healthBarObj;
     private HealthBar healthBar;
     private AnimationManager animationManager;
+    private NavMeshAgent agent;
 
     public event Action<float, float> OnHealthChanged;
 
     [Header("UI Elements")]
     public Slider healthSlider;
-    public Image bleedOverlay; // Bleed effect overlay
-
-    private Coroutine fadeCoroutine; // To manage fading effect
+    private Bleed bleed;
 
     [Header("Game Over Panel")]
     public GameOverPanel gameOverPanel; // Assign in Inspector
@@ -46,9 +47,10 @@ public class Health : MonoBehaviour
         healthBarObj.transform.SetParent(UIManager.Instance.HealthBarContainer);
         healthBar.Initialize(this);
 
-        if (bleedOverlay != null) bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, 0);
+        bleed = Bleed.instance;
 
         animationManager = GetComponent<AnimationManager>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     public void TakeDamage(float damage)
@@ -70,41 +72,12 @@ public class Health : MonoBehaviour
 
         OnHealthChanged?.Invoke(HP, maxHP);
 
-        if (bleedOverlay != null)
-        {
-            if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(ShowBleedEffect());
-        }
+        if (bleed != null && GameStateManager.Instance.currentAgent == agent) bleed.ShowBleed();
 
         if (HP <= 0)
         {
             Die();
         }
-    }
-
-    private IEnumerator ShowBleedEffect()
-    {
-        float fadeDuration = 0.5f;
-        float stayDuration = 0.3f;
-        float alpha = 0.6f;
-
-        for (float t = 0; t < fadeDuration; t += Time.deltaTime)
-        {
-            float newAlpha = Mathf.Lerp(0, alpha, t / fadeDuration);
-            bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, newAlpha);
-            yield return null;
-        }
-        bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, alpha);
-
-        yield return new WaitForSeconds(stayDuration);
-
-        for (float t = 0; t < fadeDuration; t += Time.deltaTime)
-        {
-            float newAlpha = Mathf.Lerp(alpha, 0, t / fadeDuration);
-            bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, newAlpha);
-            yield return null;
-        }
-        bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, 0);
     }
 
     private void Die()
