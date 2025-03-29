@@ -4,11 +4,12 @@ public class Bow : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] public SkinnedMeshRenderer[] bowMesh;
-    [SerializeField] public MeshRenderer arrowMesh;
+    [SerializeField] public MeshRenderer[] objectMesh;
     [SerializeField] public SkinnedMeshRenderer[] characterMesh;
     [SerializeField] public Animator bowAnimator;
     [SerializeField] public GameObject arrowPrefab;
     [SerializeField] public Transform arrowSpawnPoint;
+    [SerializeField] public Transform crosshair;
     public Camera playerCamera;
 
     [Header("Bow Settings")]
@@ -27,12 +28,18 @@ public class Bow : MonoBehaviour
         foreach(SkinnedMeshRenderer mesh in bowMesh)
         {
             mesh.enabled = true;
+
         }
-        arrowMesh.enabled = true;
+        foreach (MeshRenderer mesh in objectMesh)
+        {
+            mesh.enabled = false;
+        }
         foreach(SkinnedMeshRenderer mesh in characterMesh)
         {
             mesh.enabled = false;
         }
+
+        crosshair = UIManager.Instance.GetComponentInChildren<FPSCrosshair>().transform;
     }
 
     private void OnDisable()
@@ -41,7 +48,10 @@ public class Bow : MonoBehaviour
         {
             mesh.enabled = false;
         }
-        arrowMesh.enabled = false;
+        foreach (MeshRenderer mesh in objectMesh)
+        {
+            mesh.enabled = true;
+        }
         foreach (SkinnedMeshRenderer mesh in characterMesh)
         {
             mesh.enabled = true;
@@ -57,9 +67,15 @@ public class Bow : MonoBehaviour
             bowAnimator.SetBool("isHeld", true);
         }
 
+        if (isDrawing && crosshair != null)
+        {
+            crosshair.localScale = Vector3.one * (1f - 0.8f * (Mathf.Clamp(Time.time - drawStartTime, 0, maxDrawTime) / maxDrawTime));
+        }
+
         if (Input.GetMouseButtonUp(0) && isDrawing) // Release to shoot
         {
             isDrawing = false;
+            if(crosshair != null) crosshair.localScale = Vector3.one;
             bowAnimator.SetBool("isHeld", false);
             bowAnimator.SetTrigger("onRelease");
             ShootArrow();

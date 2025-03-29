@@ -12,8 +12,6 @@ public class UnitMoveState : UnitState
     }
     public override void Update(UnitStateManager unit)
     {
-        unit._animator.SetFloat("Movementspeed", unit._agent.velocity.magnitude);
-
         if (unit._target != null && unit.isRanged)
         {
             float distance = Vector3.Distance(unit.transform.position, unit._target.transform.position);
@@ -26,6 +24,8 @@ public class UnitMoveState : UnitState
                 }
             }
         }
+
+        if(unit.isMelee) unit._agent.SetDestination(unit._target.transform.position);
 
         if (!unit._agent.pathPending && unit._agent.remainingDistance <= unit._agent.stoppingDistance)
         {

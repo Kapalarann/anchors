@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
@@ -11,6 +10,7 @@ public class Health : MonoBehaviour
 
     private GameObject healthBarObj;
     private HealthBar healthBar;
+    private AnimationManager animationManager;
 
     public event Action<float, float> OnHealthChanged; // Event to notify health changes
 
@@ -27,9 +27,11 @@ public class Health : MonoBehaviour
         healthBar = healthBarObj.GetComponent<HealthBar>();
         if (healthBar == null) return;
 
-        // Attach health bar to this enemy
+        // Attach health bar to this unit
         healthBarObj.transform.SetParent(UIManager.Instance.HealthBarContainer);
         healthBar.Initialize(this);
+
+        animationManager = GetComponent<AnimationManager>();
     }
 
     public void TakeDamage(float damage)
@@ -39,6 +41,9 @@ public class Health : MonoBehaviour
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, maxHP);
         if(healthBar != null) healthBar.UpdateFill(HP, maxHP);
+        
+        animationManager.flinch();
+        GetComponent<Animator>().SetTrigger("onHit");
 
         OnHealthChanged?.Invoke(HP, maxHP); // Notify listeners (BerserkPassive)
 
