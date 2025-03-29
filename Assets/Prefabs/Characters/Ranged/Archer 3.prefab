@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8630629767270000673}
   - component: {fileID: 6493303777219909635}
   m_Layer: 6
-  m_Name: metal_Metal_Helm
+  m_Name: Archer Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1254,6 +1254,7 @@ GameObject:
   - component: {fileID: 1132659579013751085}
   - component: {fileID: 2039638777993251253}
   - component: {fileID: 4569841048431006319}
+  - component: {fileID: 238490976706030956}
   m_Layer: 6
   m_Name: Archer 3
   m_TagString: Unit
@@ -1321,7 +1322,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.75
-  m_Radius: 0.5
+  m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -1484,7 +1485,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4584216481525430931}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1493,7 +1494,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 1.8
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -1558,7 +1559,9 @@ MonoBehaviour:
   bowMesh:
   - {fileID: 5684732106608589954}
   - {fileID: 5101989944430853171}
-  arrowMesh: {fileID: 1775140847579369318}
+  objectMesh:
+  - {fileID: 1775140847579369318}
+  - {fileID: 6493303777219909635}
   characterMesh:
   - {fileID: 2465897301083203463}
   - {fileID: 1205445549186982898}
@@ -1612,6 +1615,18 @@ MonoBehaviour:
   _agent: {fileID: 0}
   _animator: {fileID: 0}
   isAttacking: 0
+--- !u!114 &238490976706030956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4aa2ca4cee5324e829cd692cf8e7da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4597260397375489776
 GameObject:
   m_ObjectHideFlags: 0

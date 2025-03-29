@@ -9,7 +9,6 @@ public class MeleeMovement : MonoBehaviour
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _sprintSpeed = 8f;
     [SerializeField] private float _rollSpeed = 5f;
-    [SerializeField] private float _rollDuration = 0.5f;
     [SerializeField] private CinemachineCamera _cinemachineCamera;
     [SerializeField] private Transform _cameraTransform;
 
@@ -19,6 +18,7 @@ public class MeleeMovement : MonoBehaviour
     private Health _health;
 
     private Animator _animator;
+    private PlayerAttack playerAttack;
     private static readonly int MovementSpeedHash = Animator.StringToHash("Movementspeed");
     private static readonly int OnRollHash = Animator.StringToHash("OnRoll");
     private static readonly int IsRollingHash = Animator.StringToHash("IsRolling");
@@ -33,6 +33,7 @@ public class MeleeMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
+        playerAttack = GetComponent<PlayerAttack>();
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
 
         _playerInput = GetComponent<PlayerInput>();
@@ -95,7 +96,7 @@ public class MeleeMovement : MonoBehaviour
 
     public void Move_Event(InputAction.CallbackContext context)
     {
-        if (_isAttacking || _isRolling)
+        if (_isAttacking)
         {
             _direction = Vector3.zero;
             return;
@@ -138,6 +139,7 @@ public class MeleeMovement : MonoBehaviour
             _animator.SetBool(IsRollingHash, true);
             _isRolling = true;
             _isAttacking = false;
+            if (playerAttack != null) playerAttack._isAttacking = false;
             _isSprinting = false;
             _animator.SetBool(IsRunningHash, false);
 
@@ -145,14 +147,12 @@ public class MeleeMovement : MonoBehaviour
             {
                 _health.isInvulnerable = true;
             }
-
-            Invoke(nameof(EndRoll), _rollDuration);
         }
     }
 
     public void ApplyRollMovement()
     {
-        Vector3 rollDirection = transform.forward * _rollSpeed;
+        Vector3 rollDirection = CameraRelativeMovement(_direction) * _rollSpeed;
         _rb.AddForce(rollDirection, ForceMode.VelocityChange);
     }
 

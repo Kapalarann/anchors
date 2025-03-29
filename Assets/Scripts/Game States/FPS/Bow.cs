@@ -4,7 +4,7 @@ public class Bow : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] public SkinnedMeshRenderer[] bowMesh;
-    [SerializeField] public MeshRenderer arrowMesh;
+    [SerializeField] public MeshRenderer[] objectMesh;
     [SerializeField] public SkinnedMeshRenderer[] characterMesh;
     [SerializeField] public Animator bowAnimator;
     [SerializeField] public GameObject arrowPrefab;
@@ -28,8 +28,12 @@ public class Bow : MonoBehaviour
         foreach(SkinnedMeshRenderer mesh in bowMesh)
         {
             mesh.enabled = true;
+
         }
-        arrowMesh.enabled = true;
+        foreach (MeshRenderer mesh in objectMesh)
+        {
+            mesh.enabled = false;
+        }
         foreach(SkinnedMeshRenderer mesh in characterMesh)
         {
             mesh.enabled = false;
@@ -44,7 +48,10 @@ public class Bow : MonoBehaviour
         {
             mesh.enabled = false;
         }
-        arrowMesh.enabled = false;
+        foreach (MeshRenderer mesh in objectMesh)
+        {
+            mesh.enabled = true;
+        }
         foreach (SkinnedMeshRenderer mesh in characterMesh)
         {
             mesh.enabled = true;

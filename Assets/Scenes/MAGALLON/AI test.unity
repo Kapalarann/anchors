@@ -2603,14 +2603,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8812215013048179520, guid: 67f4d07bcb81cce46bff74de97d861ae, type: 3}
-      propertyPath: maxZoom
-      value: 140
-      objectReference: {fileID: 0}
-    - target: {fileID: 8812215013048179520, guid: 67f4d07bcb81cce46bff74de97d861ae, type: 3}
-      propertyPath: scrollSpeed
-      value: 20
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
