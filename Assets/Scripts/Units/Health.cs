@@ -21,6 +21,9 @@ public class Health : MonoBehaviour
 
     private Coroutine fadeCoroutine; // To manage fading effect
 
+    [Header("Game Over Panel")]
+    public GameOverPanel gameOverPanel; // Assign in Inspector
+
     private void Awake()
     {
         HP = maxHP;
@@ -28,20 +31,17 @@ public class Health : MonoBehaviour
 
     private void Start()
     {
-        // Initialize UI Slider
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHP;
             healthSlider.value = HP;
         }
 
-        // Get a health bar from the pool
         healthBarObj = HealthBarPool.Instance.GetHealthBar();
         if (healthBarObj == null) return;
         healthBar = healthBarObj.GetComponent<HealthBar>();
         if (healthBar == null) return;
 
-        // Attach health bar to this enemy
         healthBarObj.transform.SetParent(UIManager.Instance.HealthBarContainer);
         healthBar.Initialize(this);
 
@@ -64,7 +64,6 @@ public class Health : MonoBehaviour
 
         OnHealthChanged?.Invoke(HP, maxHP);
 
-        //Bleed Effect
         if (bleedOverlay != null)
         {
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
@@ -81,9 +80,8 @@ public class Health : MonoBehaviour
     {
         float fadeDuration = 0.5f;
         float stayDuration = 0.3f;
-        float alpha = 0.6f; // Blood effect intensity
+        float alpha = 0.6f;
 
-        // Fade In
         for (float t = 0; t < fadeDuration; t += Time.deltaTime)
         {
             float newAlpha = Mathf.Lerp(0, alpha, t / fadeDuration);
@@ -92,10 +90,8 @@ public class Health : MonoBehaviour
         }
         bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, alpha);
 
-        // Stay visible
         yield return new WaitForSeconds(stayDuration);
 
-        // Fade Out
         for (float t = 0; t < fadeDuration; t += Time.deltaTime)
         {
             float newAlpha = Mathf.Lerp(alpha, 0, t / fadeDuration);
@@ -108,6 +104,14 @@ public class Health : MonoBehaviour
     private void Die()
     {
         HealthBarPool.Instance.ReturnHealthBar(healthBarObj);
-        Destroy(gameObject);
+
+        // Show Game Over panel instead of destroying the player
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.ShowGameOverPanel();
+        }
+
+        // Hide the player instead of destroying (optional)
+        gameObject.SetActive(false);
     }
 }
