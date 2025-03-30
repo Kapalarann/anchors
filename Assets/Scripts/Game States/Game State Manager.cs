@@ -113,6 +113,7 @@ public class GameStateManager : MonoBehaviour
         ActivateStateComponents(stateData);
         HandlePlayerInput(stateData.hasPlayerInput);
         HandleRigidbody(stateData.hasRigidbody);
+        HandleHealth();
         HandleUSM();
 
         switch (stateData.state)
@@ -254,6 +255,16 @@ public class GameStateManager : MonoBehaviour
                 
             currentAgent = selectedUnit.GetComponent<NavMeshAgent>();
             if(currentAgent != null) currentAgent.enabled = false;
+        }
+    }
+
+    private void HandleHealth()
+    {
+        HealthAndStamina hp;
+        if (selectedUnit != null)
+        {
+            hp = selectedUnit.GetComponent<HealthAndStamina>();
+            if (hp != null) hp.StopStun();
         }
     }
 

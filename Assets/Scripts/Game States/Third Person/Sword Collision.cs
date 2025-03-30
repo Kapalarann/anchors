@@ -21,7 +21,7 @@ public class SwordCollision : MonoBehaviour
             if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
         }
 
-        Health targetHP = other.GetComponent<Health>();
+        HealthAndStamina targetHP = other.GetComponent<HealthAndStamina>();
         if (targetHP == null) return;
         
         float damage = _animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack") ? hDamage : lDamage;

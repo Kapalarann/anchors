@@ -3,7 +3,7 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.AI;
 
-public class Health : MonoBehaviour
+public class HealthAndStamina : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] public float maxHP;
@@ -11,10 +11,15 @@ public class Health : MonoBehaviour
     public bool isInvulnerable = false;
     public bool invisibleHpBar = false;
 
+    [Header("Stamina")]
+    [SerializeField] public float maxStamina;
+    [SerializeField] public float stamina;
+    [SerializeField] public float staminaRegen;
+    [HideInInspector] public bool isStunned = false;
+
     private GameObject healthBarObj;
     private HealthBar healthBar;
     private AnimationManager animationManager;
-    private NavMeshAgent agent;
 
     public event Action<float, float> OnHealthChanged;
 
@@ -28,6 +33,7 @@ public class Health : MonoBehaviour
     private void Awake()
     {
         HP = maxHP;
+        stamina = maxStamina;
     }
 
     private void Start()
@@ -44,12 +50,19 @@ public class Health : MonoBehaviour
         if (healthBar == null) return;
 
         healthBarObj.transform.SetParent(UIManager.Instance.HealthBarContainer);
-        healthBar.Initialize(this);
+        healthBar.InitializeHP(this);
 
         bleed = Bleed.instance;
 
         animationManager = GetComponent<AnimationManager>();
-        agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Update()
+    {
+        if (stamina >= maxStamina || isStunned) return;
+        stamina += staminaRegen * Time.deltaTime;
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
     }
 
     public void TakeDamage(float damage)
@@ -58,20 +71,18 @@ public class Health : MonoBehaviour
 
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, maxHP);
-        if(healthBar != null) healthBar.UpdateFill(HP, maxHP);
-        
-        animationManager.Flinch();
+        if (GameStateManager.Instance.currentUnit != this.gameObject) ConsumeStamina(damage);
+
+        animationManager.Flinch(isStunned);
         GetComponent<Animator>().SetTrigger("onHit");
 
-        if (healthBar != null)
-            healthBar.UpdateFill(HP, maxHP);
+        if (healthBar != null) healthBar.UpdateHP(HP, maxHP);
 
-        if (healthSlider != null)
-            healthSlider.value = HP;
+        if (healthSlider != null) healthSlider.value = HP;
 
         OnHealthChanged?.Invoke(HP, maxHP);
 
-        if (bleed != null && GameStateManager.Instance.currentAgent == agent) bleed.ShowBleed();
+        if (bleed != null && GameStateManager.Instance.currentUnit == this.gameObject) bleed.ShowBleed();
 
         if (HP <= 0)
         {
@@ -79,12 +90,28 @@ public class Health : MonoBehaviour
         }
     }
 
+    public void ConsumeStamina(float staminaCost)
+    {
+        stamina -= staminaCost;
+        if(stamina < 0) isStunned = true;
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
+
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
+    }
+
+    public void StopStun()
+    {
+        isStunned = false;
+        stamina = maxStamina;
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
+    }
+
     private void Die()
     {
         HealthBarPool.Instance.ReturnHealthBar(healthBarObj);
 
         // Show Game Over panel instead of destroying the player
-        if (gameOverPanel != null)
+        if (gameOverPanel != null && GameStateManager.Instance.currentUnit == this.gameObject)
         {
             gameOverPanel.ShowGameOverPanel();
         }

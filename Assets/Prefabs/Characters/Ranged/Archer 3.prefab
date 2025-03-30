@@ -1505,6 +1505,10 @@ MonoBehaviour:
   maxHP: 100
   HP: 100
   isInvulnerable: 0
+  invisibleHpBar: 0
+  maxStamina: 30
+  stamina: 0
+  staminaRegen: 1
   healthSlider: {fileID: 0}
   gameOverPanel: {fileID: 0}
 --- !u!114 &238490976706030956

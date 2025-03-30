@@ -31,12 +31,14 @@ public class UnitStateManager : MonoBehaviour
     [HideInInspector] public UnitStats _unitStat;
     [HideInInspector] public UnitStats _target;
 
+    [HideInInspector] public HealthAndStamina _health;
     [HideInInspector] public NavMeshAgent _agent;
     [HideInInspector] public Animator _animator;
     [HideInInspector] public bool isAttacking = false;
 
     private void Awake()
     {
+        _health = GetComponent<HealthAndStamina>();
         _unitStat = GetComponent<UnitStats>();
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
@@ -60,6 +62,8 @@ public class UnitStateManager : MonoBehaviour
 
     public void Update()
     {
+        if (_health.isStunned) return; 
+
         if(_animator != null) _animator.SetFloat("Movementspeed", _agent.velocity.magnitude);
 
         foreach (var attack in rangeAttacks)

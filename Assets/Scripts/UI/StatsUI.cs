@@ -17,7 +17,7 @@ public class StatsUI : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void UpdateStats(UnitStats stats, Health hp)
+    public void UpdateStats(UnitStats stats, HealthAndStamina hp)
     {
         if (stats == null) return;
 

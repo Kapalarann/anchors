@@ -15,7 +15,7 @@ public class AnimationManager : MonoBehaviour
         movement = GetComponent<MeleeMovement>();
     }
 
-    public void Flinch()
+    public void Flinch(bool isStunned)
     {
         if (attack != null)
         {
@@ -32,6 +32,8 @@ public class AnimationManager : MonoBehaviour
         _animator.SetFloat("Movementspeed", 0f);
         _animator.SetBool("IsRunning", false);
         _animator.SetBool("isDrawing", false);
+        _animator.SetBool("IsRolling", false);
+        _animator.SetBool("isStunned", isStunned);
 
         isFlinching = true;
     }

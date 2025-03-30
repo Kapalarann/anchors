@@ -3,28 +3,37 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    private Health unit;
-    [SerializeField] private Image bar;
-    [SerializeField] private Image fill;
+    [Header("Health")]
+    private HealthAndStamina unit;
+    [SerializeField] private Image hpBar;
+    [SerializeField] private Image hpFill;
+
+    [Header("Stamina")]
+    [SerializeField] private Image staminaBar;
+    [SerializeField] private Image staminaFill;
+
     private RectTransform rectTransform;
 
+    [Header("Size Scaling")]
     [SerializeField] private float minScale = 0.5f; // Smallest size of the health bar
     [SerializeField] private float maxScale = 1.2f; // Largest size of the health bar
     [SerializeField] private float maxDistance = 20f; // Distance at which scaling stops
     [SerializeField] private float fadeSpeed = 5f;
 
-    public void Initialize(Health un)
+    private void Awake()
     {
-        this.unit = un;
         rectTransform = GetComponent<RectTransform>();
     }
+
+    public void InitializeHP(HealthAndStamina un) { this.unit = un; }
 
     private void Update()
     {
         if (unit == null) return;
         if (unit.invisibleHpBar)
         {
-            LerpBarAlpha(0f);
+            LerpBarAlpha(hpBar, hpFill, 0f);
+            LerpBarAlpha(staminaBar, staminaFill, 0f);
             return;
         }
 
@@ -48,16 +57,18 @@ public class HealthBar : MonoBehaviour
             rectTransform.localScale = new Vector3(scale, scale, scale);
 
             // Smoothly fade in
-            LerpBarAlpha(1f);
+            LerpBarAlpha(hpBar, hpFill, 1f);
+            LerpBarAlpha(staminaBar, staminaFill, 1f);
         }
         else
         {
             // Smoothly fade out
-            LerpBarAlpha(0f);
+            LerpBarAlpha(hpBar, hpFill, 0f);
+            LerpBarAlpha(staminaBar, staminaFill, 0f);
         }
     }
 
-    private void LerpBarAlpha(float towards)
+    private void LerpBarAlpha(Image bar, Image fill, float towards)
     {
         Color barColor = bar.color;
         Color fillColor = fill.color;
@@ -67,11 +78,15 @@ public class HealthBar : MonoBehaviour
         fill.color = fillColor;
     }
 
-    public void UpdateFill(float current, float max)
+    public void UpdateHP(float current, float max)
     {
-        if (fill != null)
-        {
-            fill.rectTransform.localScale = new Vector3(current / max, 1, 1);
-        }
+        if (hpFill == null) return;
+        hpFill.rectTransform.localScale = new Vector3(current / max, 1, 1);
+    }
+
+    public void UpdateStamina(float current, float max)
+    {
+        if (staminaFill == null) return;
+        staminaFill.rectTransform.localScale = new Vector3(current / max, 1, 1);
     }
 }

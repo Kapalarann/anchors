@@ -3,11 +3,11 @@ using UnityEngine;
 public class DamageOverTime : MonoBehaviour
 {
     [SerializeField] private float damagePerSecond = 3f;
-    private Health _health;
+    private HealthAndStamina _health;
 
     private void Start()
     {
-        _health = GetComponent<Health>();
+        _health = GetComponent<HealthAndStamina>();
         if (_health != null)
         {
             InvokeRepeating(nameof(ApplyDamage), 1f, 1f);

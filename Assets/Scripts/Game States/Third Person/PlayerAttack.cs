@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
+    private HealthAndStamina hp;
     private Animator _animator;
     [SerializeField] private AnimationReceiver _receiver;
     private AnimationManager _manager;
@@ -13,7 +14,9 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private Collider weaponCollider; // Weapon collider for detecting hits
     [SerializeField] private SwordCollision sword;
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
+    [SerializeField] private float lightStaminaCost = 3f;
     [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
+    [SerializeField] private float heavyStaminaCost = 5f;
     [SerializeField] private float attackSpeed = 1f;
     [SerializeField] public float attackForce = 1f;
 
@@ -32,6 +35,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Awake()
     {
+        hp = GetComponent<HealthAndStamina>();
         _meleeMovement = GetComponent<MeleeMovement>();
         _animator = GetComponent<Animator>();
         _manager = GetComponent<AnimationManager>();
@@ -60,6 +64,7 @@ public class PlayerAttack : MonoBehaviour
                 RotateTowardsTarget(target);
             }
 
+            hp.ConsumeStamina(lightStaminaCost);
             _animator.SetFloat("attackSpeed", attackSpeed);
             _animator.SetTrigger(OnAttackHash);
             _meleeMovement._isAttacking = true;
@@ -77,6 +82,7 @@ public class PlayerAttack : MonoBehaviour
                 RotateTowardsTarget(target);
             }
 
+            hp.ConsumeStamina(heavyStaminaCost);
             _animator.SetTrigger(OnHeavyAttackHash);
             _meleeMovement._isAttacking = true;
             _isAttacking = true;
@@ -91,6 +97,8 @@ public class PlayerAttack : MonoBehaviour
 
         foreach (var enemy in UnitStats.units)
         {
+            if (enemy.gameObject == this.gameObject) continue;
+
             Transform enemyTransform = enemy.transform;
             Vector3 directionToEnemy = (enemyTransform.position - transform.position).normalized;
             float angleToEnemy = Vector3.Angle(transform.forward, directionToEnemy);
