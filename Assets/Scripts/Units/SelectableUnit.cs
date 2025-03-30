@@ -8,14 +8,14 @@ public class SelectableUnit : MonoBehaviour
     private Color originalColor;
 
     private UnitStats stats;
-    private Health health;
+    private HealthAndStamina health;
     public MonoBehaviour movementScript;
 
     void Start()
     {
         unitRenderer = GetComponent<Renderer>();
         stats = GetComponent<UnitStats>();
-        health = GetComponent<Health>();
+        health = GetComponent<HealthAndStamina>();
 
         originalColor = unitRenderer.material.color;
     }

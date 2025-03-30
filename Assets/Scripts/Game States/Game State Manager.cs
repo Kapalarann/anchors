@@ -31,8 +31,10 @@ public class GameStateManager : MonoBehaviour
     /*[HideInInspector]*/ public Camera currentCamera;
     /*[HideInInspector]*/ public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
+    [HideInInspector] public Rigidbody currentRigidbody;
     [HideInInspector] public UnitStateManager currentUSM;
     [HideInInspector] public NavMeshAgent currentAgent;
+    [HideInInspector] public GameObject currentUnit;
 
     void Awake()
     {
@@ -110,6 +112,8 @@ public class GameStateManager : MonoBehaviour
 
         ActivateStateComponents(stateData);
         HandlePlayerInput(stateData.hasPlayerInput);
+        HandleRigidbody(stateData.hasRigidbody);
+        HandleHealth();
         HandleUSM();
 
         switch (stateData.state)
@@ -172,6 +176,8 @@ public class GameStateManager : MonoBehaviour
     {
         if (selectedUnit == null || sData == null || sData.ScriptType.Length == 0) return;
 
+        currentUnit = selectedUnit.gameObject;
+
         foreach (var scriptName in sData.ScriptType)
         {
             Type scriptType = Type.GetType(scriptName);
@@ -217,6 +223,24 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    private void HandleRigidbody(bool hasRigidbody)
+    {
+        if (currentRigidbody != null)
+        {
+            currentRigidbody.isKinematic = true;
+            currentRigidbody = null;
+        }
+        if (hasRigidbody)
+        {
+            Rigidbody rb = selectedUnit.GetComponent<Rigidbody>();
+            if(selectedUnit != null && rb != null)
+            {
+                currentRigidbody = rb;
+                rb.isKinematic = false;
+            }
+        }
+    }
+
     private void HandleUSM()
     {
         if(currentUSM != null)
@@ -231,6 +255,16 @@ public class GameStateManager : MonoBehaviour
                 
             currentAgent = selectedUnit.GetComponent<NavMeshAgent>();
             if(currentAgent != null) currentAgent.enabled = false;
+        }
+    }
+
+    private void HandleHealth()
+    {
+        HealthAndStamina hp;
+        if (selectedUnit != null)
+        {
+            hp = selectedUnit.GetComponent<HealthAndStamina>();
+            if (hp != null) hp.StopStun();
         }
     }
 

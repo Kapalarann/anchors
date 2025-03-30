@@ -15,10 +15,11 @@ public class MeleeMovement : MonoBehaviour
     private Rigidbody _rb;
     private Vector3 _direction = Vector3.zero;
     private bool _isSprinting = false;
-    private Health _health;
+    private HealthAndStamina _health;
 
     private Animator _animator;
     private PlayerAttack playerAttack;
+    private AnimationManager _animManager;
     private static readonly int MovementSpeedHash = Animator.StringToHash("Movementspeed");
     private static readonly int OnRollHash = Animator.StringToHash("OnRoll");
     private static readonly int IsRollingHash = Animator.StringToHash("IsRolling");
@@ -35,6 +36,7 @@ public class MeleeMovement : MonoBehaviour
         _animator = GetComponent<Animator>();
         playerAttack = GetComponent<PlayerAttack>();
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        _animManager = GetComponent<AnimationManager>();
 
         _playerInput = GetComponent<PlayerInput>();
         if (_playerInput != null)
@@ -47,7 +49,7 @@ public class MeleeMovement : MonoBehaviour
             _cameraTransform = Camera.main.transform; // Get the main camera's transform
         }
 
-        _health = GetComponent<Health>(); // Get Health component
+        _health = GetComponent<HealthAndStamina>(); // Get Health component
     }
 
     private void FixedUpdate()
@@ -133,7 +135,7 @@ public class MeleeMovement : MonoBehaviour
 
     public void Roll_Event(InputAction.CallbackContext context)
     {
-        if (context.performed && !_isRolling)
+        if (context.performed && !_isRolling && !_health.isStunned && !_animManager.isFlinching)
         {
             _animator.SetTrigger(OnRollHash);
             _animator.SetBool(IsRollingHash, true);

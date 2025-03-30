@@ -1,14 +1,21 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-using System.Collections;
+using UnityEngine.AI;
 
-public class Health : MonoBehaviour
+public class HealthAndStamina : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] public float maxHP;
     [SerializeField] public float HP;
     public bool isInvulnerable = false;
+    public bool invisibleHpBar = false;
+
+    [Header("Stamina")]
+    [SerializeField] public float maxStamina;
+    [SerializeField] public float stamina;
+    [SerializeField] public float staminaRegen;
+    [HideInInspector] public bool isStunned = false;
 
     private GameObject healthBarObj;
     private HealthBar healthBar;
@@ -18,9 +25,7 @@ public class Health : MonoBehaviour
 
     [Header("UI Elements")]
     public Slider healthSlider;
-    public Image bleedOverlay; // Bleed effect overlay
-
-    private Coroutine fadeCoroutine; // To manage fading effect
+    private Bleed bleed;
 
     [Header("Game Over Panel")]
     public GameOverPanel gameOverPanel; // Assign in Inspector
@@ -28,6 +33,7 @@ public class Health : MonoBehaviour
     private void Awake()
     {
         HP = maxHP;
+        stamina = maxStamina;
     }
 
     private void Start()
@@ -44,11 +50,19 @@ public class Health : MonoBehaviour
         if (healthBar == null) return;
 
         healthBarObj.transform.SetParent(UIManager.Instance.HealthBarContainer);
-        healthBar.Initialize(this);
+        healthBar.InitializeHP(this);
 
-        if (bleedOverlay != null) bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, 0);
+        bleed = Bleed.instance;
 
         animationManager = GetComponent<AnimationManager>();
+    }
+
+    private void Update()
+    {
+        if (stamina >= maxStamina || isStunned) return;
+        stamina += staminaRegen * Time.deltaTime;
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
     }
 
     public void TakeDamage(float damage)
@@ -57,24 +71,18 @@ public class Health : MonoBehaviour
 
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, maxHP);
-        if(healthBar != null) healthBar.UpdateFill(HP, maxHP);
-        
-        animationManager.flinch();
+        if (GameStateManager.Instance.currentUnit != this.gameObject) ConsumeStamina(damage);
+
+        animationManager.Flinch(isStunned);
         GetComponent<Animator>().SetTrigger("onHit");
 
-        if (healthBar != null)
-            healthBar.UpdateFill(HP, maxHP);
+        if (healthBar != null) healthBar.UpdateHP(HP, maxHP);
 
-        if (healthSlider != null)
-            healthSlider.value = HP;
+        if (healthSlider != null) healthSlider.value = HP;
 
         OnHealthChanged?.Invoke(HP, maxHP);
 
-        if (bleedOverlay != null)
-        {
-            if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(ShowBleedEffect());
-        }
+        if (bleed != null && GameStateManager.Instance.currentUnit == this.gameObject) bleed.ShowBleed();
 
         if (HP <= 0)
         {
@@ -82,29 +90,20 @@ public class Health : MonoBehaviour
         }
     }
 
-    private IEnumerator ShowBleedEffect()
+    public void ConsumeStamina(float staminaCost)
     {
-        float fadeDuration = 0.5f;
-        float stayDuration = 0.3f;
-        float alpha = 0.6f;
+        stamina -= staminaCost;
+        if(stamina < 0) isStunned = true;
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
 
-        for (float t = 0; t < fadeDuration; t += Time.deltaTime)
-        {
-            float newAlpha = Mathf.Lerp(0, alpha, t / fadeDuration);
-            bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, newAlpha);
-            yield return null;
-        }
-        bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, alpha);
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
+    }
 
-        yield return new WaitForSeconds(stayDuration);
-
-        for (float t = 0; t < fadeDuration; t += Time.deltaTime)
-        {
-            float newAlpha = Mathf.Lerp(alpha, 0, t / fadeDuration);
-            bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, newAlpha);
-            yield return null;
-        }
-        bleedOverlay.color = new Color(bleedOverlay.color.r, bleedOverlay.color.g, bleedOverlay.color.b, 0);
+    public void StopStun()
+    {
+        isStunned = false;
+        stamina = maxStamina;
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
     }
 
     private void Die()
@@ -112,7 +111,7 @@ public class Health : MonoBehaviour
         HealthBarPool.Instance.ReturnHealthBar(healthBarObj);
 
         // Show Game Over panel instead of destroying the player
-        if (gameOverPanel != null)
+        if (gameOverPanel != null && GameStateManager.Instance.currentUnit == this.gameObject)
         {
             gameOverPanel.ShowGameOverPanel();
         }

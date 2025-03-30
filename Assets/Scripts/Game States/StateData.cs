@@ -23,4 +23,5 @@ public class StateData : ScriptableObject
     [Header("Enabled/Disabled Scripts")]
     public string[] ScriptType;
     public bool hasPlayerInput;
+    public bool hasRigidbody;
 }

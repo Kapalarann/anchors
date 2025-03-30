@@ -23,14 +23,20 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Boundary"))
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
         Transform parent = other.transform.root;
 
         if (shooterTransform == parent) return;
 
-        Health hp = parent.gameObject.GetComponent<Health>();
+        HealthAndStamina hp = parent.gameObject.GetComponent<HealthAndStamina>();
         if (hp == null) return;
 
-        if (isTransfer)
+        if (isTransfer && GameStateManager.Instance.currentUnit.transform == shooterTransform && hp.isStunned)
         {
             if (GameStateManager.Instance.TransferToTarget(shooterTransform, other))
             {

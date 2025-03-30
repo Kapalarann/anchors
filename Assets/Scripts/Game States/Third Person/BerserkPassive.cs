@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BerserkPassive : MonoBehaviour
 {
-    private Health _health;
+    private HealthAndStamina _health;
     private MeleeMovement _movement;
     private Animator _animator;
 
@@ -25,7 +25,7 @@ public class BerserkPassive : MonoBehaviour
 
     private void Start()
     {
-        _health = GetComponent<Health>();
+        _health = GetComponent<HealthAndStamina>();
         _movement = GetComponent<MeleeMovement>();
         _animator = GetComponent<Animator>();
 

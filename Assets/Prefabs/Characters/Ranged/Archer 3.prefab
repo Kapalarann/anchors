@@ -323,7 +323,7 @@ Transform:
   m_Children:
   - {fileID: 4792437559222396159}
   m_Father: {fileID: 1793008126572289781}
-  m_LocalEulerAnglesHint: {x: 21.111834, y: -156.4867, z: -4.38764}
+  m_LocalEulerAnglesHint: {x: 17.13276, y: -157.70953, z: -8.594711}
 --- !u!1 &1030375483440451149
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,7 +715,7 @@ Transform:
   m_GameObject: {fileID: 2271965782753246407}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0.7071068, z: -0, w: 0}
-  m_LocalPosition: {x: 2.51, y: 1.72, z: 0}
+  m_LocalPosition: {x: 2.51, y: 1.2, z: 0}
   m_LocalScale: {x: 6.6666646, y: 6.6666646, z: 6.6666636}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -783,7 +783,7 @@ Transform:
   m_Children:
   - {fileID: 353788623119794768}
   m_Father: {fileID: 6761370994800250359}
-  m_LocalEulerAnglesHint: {x: -17.620604, y: 2.0570593, z: -13.030779}
+  m_LocalEulerAnglesHint: {x: -11.882261, y: 2.2837462, z: -14.923051}
 --- !u!1 &2484707799597086594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,7 +1165,7 @@ Transform:
   m_Children:
   - {fileID: 2366375060605265948}
   m_Father: {fileID: 5327600252509208972}
-  m_LocalEulerAnglesHint: {x: 15.005573, y: 0.35399252, z: 2.6851354}
+  m_LocalEulerAnglesHint: {x: 33.821915, y: 3.0842752, z: 4.9468675}
 --- !u!1 &4556641777444129168
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197,7 +1197,7 @@ Transform:
   m_Children:
   - {fileID: 1482433301374302199}
   m_Father: {fileID: 4792437559222396159}
-  m_LocalEulerAnglesHint: {x: -24.131643, y: -34.30212, z: -2.7165864}
+  m_LocalEulerAnglesHint: {x: -46.14505, y: -32.19611, z: -8.154088}
 --- !u!1 &4579004261180212069
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,19 +1242,19 @@ GameObject:
   - component: {fileID: 7919937944824364629}
   - component: {fileID: 1168248263534019810}
   - component: {fileID: 6393442464181360984}
-  - component: {fileID: 1644062310182030638}
-  - component: {fileID: 71346994044881790}
-  - component: {fileID: 1880477936843278760}
-  - component: {fileID: 169797476456274793}
-  - component: {fileID: 7480054159546000760}
   - component: {fileID: 6017800410959771869}
   - component: {fileID: 2453768056972263296}
+  - component: {fileID: 71346994044881790}
+  - component: {fileID: 1880477936843278760}
+  - component: {fileID: 4569841048431006319}
+  - component: {fileID: 7480054159546000760}
+  - component: {fileID: 238490976706030956}
+  - component: {fileID: 1644062310182030638}
+  - component: {fileID: 169797476456274793}
   - component: {fileID: 896791351262873648}
   - component: {fileID: 5125437087440565947}
   - component: {fileID: 1132659579013751085}
   - component: {fileID: 2039638777993251253}
-  - component: {fileID: 4569841048431006319}
-  - component: {fileID: 238490976706030956}
   m_Layer: 6
   m_Name: Archer 3
   m_TagString: Unit
@@ -1358,79 +1358,6 @@ MonoBehaviour:
   m_DefaultActionMap: OnFoot
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1644062310182030638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f75f4474e93657438eaa84c16b080e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &71346994044881790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b13b6965558601468b68d7a100f8339, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementScript: {fileID: 0}
---- !u!114 &1880477936843278760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4da7f7041bd75243a9890f3ac23e147, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitName: Kap
-  unitType: 1
---- !u!114 &169797476456274793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b845785d99fd3594b8a3bd4acc14b392, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visionRange: 10
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
---- !u!114 &7480054159546000760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8c44cc3a82713544afb66d5eee90a19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 200
-  HP: 200
-  isInvulnerable: 0
 --- !u!23 &6017800410959771869
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1498,6 +1425,136 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &71346994044881790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b13b6965558601468b68d7a100f8339, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementScript: {fileID: 0}
+--- !u!114 &1880477936843278760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4da7f7041bd75243a9890f3ac23e147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: Kap
+  unitType: 1
+--- !u!114 &4569841048431006319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idleTime: 2
+  _movementSpeed: 3
+  _targetPosition: {x: 0, y: 0, z: 0}
+  strafes: 0
+  strafeStrength: 0
+  isMelee: 0
+  meleeAttacks: []
+  isRanged: 1
+  rangeAttacks:
+  - projectilePrefab: {fileID: 3902991209137145900, guid: 5bd7075221cb9ad40ae84935f80304ba, type: 3}
+    animationTrigger: onRanged
+    firePoint: {fileID: 7691113968724095571}
+    fireOffset: {x: 0, y: 1, z: 0}
+    maxRange: 15
+    attackCooldown: 3
+    attackTimer: 0
+    projectileSpeed: 30
+    damage: 10
+    headshotMultiplier: 2
+    weight: 1
+  currentAttack: 0
+  _unitStat: {fileID: 0}
+  _target: {fileID: 0}
+  _agent: {fileID: 0}
+  _animator: {fileID: 0}
+  isAttacking: 0
+--- !u!114 &7480054159546000760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8c44cc3a82713544afb66d5eee90a19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 100
+  HP: 100
+  isInvulnerable: 0
+  invisibleHpBar: 0
+  maxStamina: 30
+  stamina: 0
+  staminaRegen: 1
+  healthSlider: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+--- !u!114 &238490976706030956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4aa2ca4cee5324e829cd692cf8e7da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFlinching: 0
+--- !u!114 &1644062310182030638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f75f4474e93657438eaa84c16b080e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &169797476456274793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584216481525430931}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b845785d99fd3594b8a3bd4acc14b392, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visionRange: 10
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &896791351262873648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1510,9 +1567,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550cd3e0ddf9e594d950da388f56a5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 9.8
-  speed: 5
-  jumpHeight: 3
+  speed: 3.5
+  jumpHeight: 2
 --- !u!114 &5125437087440565947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1559,8 +1615,8 @@ MonoBehaviour:
   bowMesh:
   - {fileID: 5684732106608589954}
   - {fileID: 5101989944430853171}
+  arrowMesh: {fileID: 1775140847579369318}
   objectMesh:
-  - {fileID: 1775140847579369318}
   - {fileID: 6493303777219909635}
   characterMesh:
   - {fileID: 2465897301083203463}
@@ -1577,56 +1633,6 @@ MonoBehaviour:
   damage: 10
   headshotMultiplier: 1
   isTransferArrow: 0
---- !u!114 &4569841048431006319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  idleTime: 2
-  _movementSpeed: 3
-  _targetPosition: {x: 0, y: 0, z: 0}
-  strafes: 0
-  strafeStrength: 0
-  isMelee: 0
-  meleeAttacks: []
-  isRanged: 1
-  rangeAttacks:
-  - projectilePrefab: {fileID: 3902991209137145900, guid: 5bd7075221cb9ad40ae84935f80304ba, type: 3}
-    animationTrigger: onRanged
-    firePoint: {fileID: 7691113968724095571}
-    fireOffset: {x: 0, y: 1, z: 0}
-    maxRange: 15
-    attackCooldown: 3
-    attackTimer: 0
-    projectileSpeed: 30
-    damage: 10
-    headshotMultiplier: 2
-    weight: 1
-  currentAttack: 0
-  _unitStat: {fileID: 0}
-  _target: {fileID: 0}
-  _agent: {fileID: 0}
-  _animator: {fileID: 0}
-  isAttacking: 0
---- !u!114 &238490976706030956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584216481525430931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b4aa2ca4cee5324e829cd692cf8e7da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4597260397375489776
 GameObject:
   m_ObjectHideFlags: 0
@@ -2006,7 +2012,7 @@ Transform:
   m_Children:
   - {fileID: 2510318678488378928}
   m_Father: {fileID: 4655009592872130847}
-  m_LocalEulerAnglesHint: {x: -11.458983, y: 27.349161, z: -10.110044}
+  m_LocalEulerAnglesHint: {x: -24.021414, y: 30.192198, z: -25.01096}
 --- !u!1 &5492304814559849693
 GameObject:
   m_ObjectHideFlags: 0
@@ -3073,7 +3079,7 @@ Transform:
   m_Children:
   - {fileID: 4559744843917849779}
   m_Father: {fileID: 2366375060605265948}
-  m_LocalEulerAnglesHint: {x: 10.367462, y: 0.16624823, z: 1.8322897}
+  m_LocalEulerAnglesHint: {x: 23.090546, y: 0.8189711, z: 3.3808308}
 --- !u!1 &7554898730924762179
 GameObject:
   m_ObjectHideFlags: 0
@@ -3223,7 +3229,7 @@ Transform:
   m_Children:
   - {fileID: 7431645559981007135}
   m_Father: {fileID: 2510318678488378928}
-  m_LocalEulerAnglesHint: {x: -10.442248, y: 1.3222898, z: -1.341562}
+  m_LocalEulerAnglesHint: {x: -23.093357, y: 1.8906304, z: -3.996233}
 --- !u!1 &7820226777470928725
 GameObject:
   m_ObjectHideFlags: 0
@@ -3600,7 +3606,7 @@ Transform:
   m_Children:
   - {fileID: 5058299393035589677}
   m_Father: {fileID: 353788623119794768}
-  m_LocalEulerAnglesHint: {x: 23.987553, y: 0.94917256, z: 4.4588923}
+  m_LocalEulerAnglesHint: {x: 45.97722, y: 4.468952, z: 8.578713}
 --- !u!1 &8543336697958799049
 GameObject:
   m_ObjectHideFlags: 0
