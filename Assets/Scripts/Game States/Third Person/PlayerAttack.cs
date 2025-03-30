@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
@@ -15,6 +16,11 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float heavyAttackDamage = 20f; // Base heavy attack damage
     [SerializeField] private float attackSpeed = 1f;
     [SerializeField] public float attackForce = 1f;
+
+    [Header("Targeting Settings")]
+    [SerializeField] private float maxSnapDistance = 2f; // Magnetic snapping max distance
+    [SerializeField] private float detectionRange = 5f;
+    [SerializeField] private float detectionAngle = 90f;
 
     private float baseLightAttackDamage;
     private float baseHeavyAttackDamage;
@@ -48,6 +54,12 @@ public class PlayerAttack : MonoBehaviour
     {
         if (context.performed && !_meleeMovement._isRolling && !_isAttacking && !_manager.isFlinching)
         {
+            Transform target = FindBestEnemy();
+            if (target != null)
+            {
+                RotateTowardsTarget(target);
+            }
+
             _animator.SetFloat("attackSpeed", attackSpeed);
             _animator.SetTrigger(OnAttackHash);
             _meleeMovement._isAttacking = true;
@@ -59,10 +71,56 @@ public class PlayerAttack : MonoBehaviour
     {
         if (context.performed && !_meleeMovement._isRolling && !_isAttacking && !_manager.isFlinching)
         {
+            Transform target = FindBestEnemy();
+            if (target != null)
+            {
+                RotateTowardsTarget(target);
+            }
+
             _animator.SetTrigger(OnHeavyAttackHash);
             _meleeMovement._isAttacking = true;
             _isAttacking = true;
         }
+    }
+
+    private Transform FindBestEnemy()
+    {
+        Transform closestEnemy = null;
+        float closestDistance = detectionRange;
+        float bestSnapDistance = maxSnapDistance;
+
+        foreach (var enemy in UnitStats.units)
+        {
+            Transform enemyTransform = enemy.transform;
+            Vector3 directionToEnemy = (enemyTransform.position - transform.position).normalized;
+            float angleToEnemy = Vector3.Angle(transform.forward, directionToEnemy);
+            float distanceToEnemy = Vector3.Distance(transform.position, enemyTransform.position);
+
+            // Must be within the attack cone
+            if (angleToEnemy < detectionAngle / 2 && distanceToEnemy < detectionRange)
+            {
+                // If within magnetic snapping distance, prioritize snapping
+                if (distanceToEnemy < bestSnapDistance)
+                {
+                    bestSnapDistance = distanceToEnemy;
+                    closestEnemy = enemyTransform;
+                }
+                // Otherwise, just find the closest
+                else if (distanceToEnemy < closestDistance)
+                {
+                    closestDistance = distanceToEnemy;
+                    closestEnemy = enemyTransform;
+                }
+            }
+        }
+        return closestEnemy;
+    }
+
+    private void RotateTowardsTarget(Transform target)
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+        direction.y = 0; // Keep rotation horizontal
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     public void TransferToggle_Event(InputAction.CallbackContext context)

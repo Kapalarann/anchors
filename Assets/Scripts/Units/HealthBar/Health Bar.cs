@@ -22,6 +22,11 @@ public class HealthBar : MonoBehaviour
     private void Update()
     {
         if (unit == null) return;
+        if (unit.invisibleHpBar)
+        {
+            LerpBarAlpha(0f);
+            return;
+        }
 
         // Get the current active camera
         Camera activeCamera = GameStateManager.Instance.currentCamera;

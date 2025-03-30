@@ -10,7 +10,6 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
-    public float gravity = 9.8f;
     public float speed = 5f;
     public float jumpHeight = 3f;
 
@@ -47,7 +46,7 @@ public class PlayerMotor : MonoBehaviour
         //movement
         controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
 
-        playerVelocity.y += -gravity * Time.deltaTime;
+        playerVelocity.y += Physics.gravity.y * Time.deltaTime;
 
         if (isGrounded && playerVelocity.y < 0)
             playerVelocity.y = -2f;
@@ -64,7 +63,7 @@ public class PlayerMotor : MonoBehaviour
     {
         if (isGrounded)
         {
-            playerVelocity.y = Mathf.Sqrt(jumpHeight * 2f * gravity);
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * 2f * -Physics.gravity.y);
         }
     }
 

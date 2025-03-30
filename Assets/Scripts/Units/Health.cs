@@ -1,8 +1,6 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-using System.Collections;
-using UnityEngine.InputSystem;
 using UnityEngine.AI;
 
 public class Health : MonoBehaviour
@@ -11,6 +9,7 @@ public class Health : MonoBehaviour
     [SerializeField] public float maxHP;
     [SerializeField] public float HP;
     public bool isInvulnerable = false;
+    public bool invisibleHpBar = false;
 
     private GameObject healthBarObj;
     private HealthBar healthBar;

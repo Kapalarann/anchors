@@ -19,3 +19,4 @@ MonoBehaviour:
   - MeleeMovement
   - PlayerAttack
   hasPlayerInput: 1
+  hasRigidbody: 1

@@ -60,7 +60,7 @@ public class UnitStateManager : MonoBehaviour
 
     public void Update()
     {
-        _animator.SetFloat("Movementspeed", _agent.velocity.magnitude);
+        if(_animator != null) _animator.SetFloat("Movementspeed", _agent.velocity.magnitude);
 
         foreach (var attack in rangeAttacks)
         {

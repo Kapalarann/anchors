@@ -31,6 +31,7 @@ public class GameStateManager : MonoBehaviour
     /*[HideInInspector]*/ public Camera currentCamera;
     /*[HideInInspector]*/ public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
+    [HideInInspector] public Rigidbody currentRigidbody;
     [HideInInspector] public UnitStateManager currentUSM;
     [HideInInspector] public NavMeshAgent currentAgent;
     [HideInInspector] public GameObject currentUnit;
@@ -111,6 +112,7 @@ public class GameStateManager : MonoBehaviour
 
         ActivateStateComponents(stateData);
         HandlePlayerInput(stateData.hasPlayerInput);
+        HandleRigidbody(stateData.hasRigidbody);
         HandleUSM();
 
         switch (stateData.state)
@@ -216,6 +218,24 @@ public class GameStateManager : MonoBehaviour
             {
                 currentPlayerInput = pInput;
                 pInput.enabled = true;
+            }
+        }
+    }
+
+    private void HandleRigidbody(bool hasRigidbody)
+    {
+        if (currentRigidbody != null)
+        {
+            currentRigidbody.isKinematic = true;
+            currentRigidbody = null;
+        }
+        if (hasRigidbody)
+        {
+            Rigidbody rb = selectedUnit.GetComponent<Rigidbody>();
+            if(selectedUnit != null && rb != null)
+            {
+                currentRigidbody = rb;
+                rb.isKinematic = false;
             }
         }
     }

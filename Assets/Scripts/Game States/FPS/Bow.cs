@@ -4,6 +4,7 @@ public class Bow : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] public SkinnedMeshRenderer[] bowMesh;
+    [SerializeField] public MeshRenderer arrowMesh;
     [SerializeField] public MeshRenderer[] objectMesh;
     [SerializeField] public SkinnedMeshRenderer[] characterMesh;
     [SerializeField] public Animator bowAnimator;
@@ -25,37 +26,19 @@ public class Bow : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach(SkinnedMeshRenderer mesh in bowMesh)
-        {
-            mesh.enabled = true;
+        foreach(SkinnedMeshRenderer mesh in bowMesh) mesh.enabled = true;
+        foreach (MeshRenderer mesh in objectMesh) mesh.enabled = false;
+        foreach(SkinnedMeshRenderer mesh in characterMesh) mesh.enabled = false;
 
-        }
-        foreach (MeshRenderer mesh in objectMesh)
-        {
-            mesh.enabled = false;
-        }
-        foreach(SkinnedMeshRenderer mesh in characterMesh)
-        {
-            mesh.enabled = false;
-        }
-
-        crosshair = UIManager.Instance.GetComponentInChildren<FPSCrosshair>().transform;
+        if(crosshair == null) crosshair = UIManager.Instance.GetComponentInChildren<FPSCrosshair>().transform;
     }
 
     private void OnDisable()
     {
-        foreach (SkinnedMeshRenderer mesh in bowMesh)
-        {
-            mesh.enabled = false;
-        }
-        foreach (MeshRenderer mesh in objectMesh)
-        {
-            mesh.enabled = true;
-        }
-        foreach (SkinnedMeshRenderer mesh in characterMesh)
-        {
-            mesh.enabled = true;
-        }
+        foreach (SkinnedMeshRenderer mesh in bowMesh) mesh.enabled = false;
+        arrowMesh.enabled = false;
+        foreach (MeshRenderer mesh in objectMesh) mesh.enabled = true;
+        foreach (SkinnedMeshRenderer mesh in characterMesh) mesh.enabled = true;
     }
 
     void Update()
@@ -69,7 +52,7 @@ public class Bow : MonoBehaviour
 
         if (isDrawing && crosshair != null)
         {
-            crosshair.localScale = Vector3.one * (1f - 0.8f * (Mathf.Clamp(Time.time - drawStartTime, 0, maxDrawTime) / maxDrawTime));
+            crosshair.localScale = Vector3.one * (1f - 0.6f * (Mathf.Clamp(Time.time - drawStartTime, 0, maxDrawTime) / maxDrawTime));
         }
 
         if (Input.GetMouseButtonUp(0) && isDrawing) // Release to shoot
@@ -95,14 +78,15 @@ public class Bow : MonoBehaviour
     void ShootArrow()
     {
         float drawDuration = Mathf.Clamp(Time.time - drawStartTime, 0, maxDrawTime);
-        float shootForce = Mathf.Lerp(minShootForce, maxShootForce, drawDuration / maxDrawTime);
+        float power = drawDuration / maxDrawTime;
+        float shootForce = Mathf.Lerp(minShootForce, maxShootForce, power);
 
         GameObject newArrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, arrowSpawnPoint.rotation);
         PlayerBullet arrow = newArrow.GetComponent<PlayerBullet>();
 
         arrow.shooterTransform = transform;
         arrow.isTransfer = isTransferArrow;
-        arrow.damage = damage;
+        arrow.damage = Mathf.Lerp(0f, damage, power);
         arrow.headshotMult = headshotMultiplier;
 
         if (isTransferArrow) arrow.GetComponent<TrailRenderer>().colorGradient = setTrailGradient(Color.black);
