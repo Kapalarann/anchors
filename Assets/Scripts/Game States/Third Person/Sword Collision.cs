@@ -16,7 +16,7 @@ public class SwordCollision : MonoBehaviour
     {
         if (!coll.enabled) return;
 
-        if (isTransfer)
+        if (isTransfer && GameStateManager.Instance.currentUnit.transform == this.transform.root)
         {
             if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
         }

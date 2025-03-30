@@ -30,7 +30,7 @@ public class PlayerBullet : MonoBehaviour
         Health hp = parent.gameObject.GetComponent<Health>();
         if (hp == null) return;
 
-        if (isTransfer)
+        if (isTransfer && GameStateManager.Instance.currentUnit.transform == shooterTransform)
         {
             if (GameStateManager.Instance.TransferToTarget(shooterTransform, other))
             {

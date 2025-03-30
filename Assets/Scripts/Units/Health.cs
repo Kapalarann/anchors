@@ -61,7 +61,7 @@ public class Health : MonoBehaviour
         HP = Mathf.Clamp(HP, 0, maxHP);
         if(healthBar != null) healthBar.UpdateFill(HP, maxHP);
         
-        animationManager.flinch();
+        animationManager.Flinch();
         GetComponent<Animator>().SetTrigger("onHit");
 
         if (healthBar != null)

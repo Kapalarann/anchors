@@ -1063,9 +1063,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c44cc3a82713544afb66d5eee90a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 200
-  HP: 200
+  maxHP: 100
+  HP: 100
   isInvulnerable: 0
+  healthSlider: {fileID: 0}
+  gameOverPanel: {fileID: 0}
 --- !u!23 &8012010071293299123
 MeshRenderer:
   m_ObjectHideFlags: 0

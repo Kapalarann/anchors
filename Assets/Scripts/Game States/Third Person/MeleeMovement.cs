@@ -19,6 +19,7 @@ public class MeleeMovement : MonoBehaviour
 
     private Animator _animator;
     private PlayerAttack playerAttack;
+    private AnimationManager _animManager;
     private static readonly int MovementSpeedHash = Animator.StringToHash("Movementspeed");
     private static readonly int OnRollHash = Animator.StringToHash("OnRoll");
     private static readonly int IsRollingHash = Animator.StringToHash("IsRolling");
@@ -35,6 +36,7 @@ public class MeleeMovement : MonoBehaviour
         _animator = GetComponent<Animator>();
         playerAttack = GetComponent<PlayerAttack>();
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        _animManager = GetComponent<AnimationManager>();
 
         _playerInput = GetComponent<PlayerInput>();
         if (_playerInput != null)
@@ -142,6 +144,7 @@ public class MeleeMovement : MonoBehaviour
             if (playerAttack != null) playerAttack._isAttacking = false;
             _isSprinting = false;
             _animator.SetBool(IsRunningHash, false);
+            _animManager.stopFlinching();
 
             if (_health != null)
             {

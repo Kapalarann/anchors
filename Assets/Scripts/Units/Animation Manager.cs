@@ -15,7 +15,7 @@ public class AnimationManager : MonoBehaviour
         movement = GetComponent<MeleeMovement>();
     }
 
-    public void flinch()
+    public void Flinch()
     {
         if (attack != null)
         {

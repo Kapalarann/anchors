@@ -33,6 +33,7 @@ public class GameStateManager : MonoBehaviour
     [HideInInspector] public PlayerInput currentPlayerInput;
     [HideInInspector] public UnitStateManager currentUSM;
     [HideInInspector] public NavMeshAgent currentAgent;
+    [HideInInspector] public GameObject currentUnit;
 
     void Awake()
     {
@@ -171,6 +172,8 @@ public class GameStateManager : MonoBehaviour
     private void ActivateStateComponents(StateData sData)
     {
         if (selectedUnit == null || sData == null || sData.ScriptType.Length == 0) return;
+
+        currentUnit = selectedUnit.gameObject;
 
         foreach (var scriptName in sData.ScriptType)
         {
