@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
-    private Animator _animator;
+    [HideInInspector] public Animator _animator;
     private PlayerAttack attack;
     private MeleeMovement movement;
 

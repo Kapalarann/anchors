@@ -16,14 +16,14 @@ public class SwordCollision : MonoBehaviour
     {
         if (!coll.enabled) return;
 
-        if (isTransfer && GameStateManager.Instance.currentUnit.transform == this.transform.root)
+        HealthAndStamina targetHP = other.GetComponent<HealthAndStamina>();
+        if (targetHP == null) return;
+
+        if (isTransfer && GameStateManager.Instance.currentUnit.transform == this.transform.root && targetHP.isStunned)
         {
             if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
         }
 
-        HealthAndStamina targetHP = other.GetComponent<HealthAndStamina>();
-        if (targetHP == null) return;
-        
         float damage = _animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack") ? hDamage : lDamage;
         targetHP.TakeDamage(damage);
         Debug.Log($"Dealt {damage} damage to {targetHP.name}.");

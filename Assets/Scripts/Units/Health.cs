@@ -101,6 +101,12 @@ public class HealthAndStamina : MonoBehaviour
 
     public void StopStun()
     {
+        animationManager._animator.SetBool("isStunned", false);
+        OnStunFinish();
+    }
+
+    public void OnStunFinish()
+    {
         isStunned = false;
         stamina = maxStamina;
         if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
