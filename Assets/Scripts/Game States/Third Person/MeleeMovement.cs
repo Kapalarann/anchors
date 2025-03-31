@@ -1,25 +1,38 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using Unity.Cinemachine; // Ensure correct Cinemachine import
+using Unity.Cinemachine;
+using System.Collections;
 
 public class MeleeMovement : MonoBehaviour
 {
     public float MoveSpeed { get; private set; } = 5f;
 
+    [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _sprintSpeed = 8f;
+    [SerializeField] private float _sprintStaminaCost = 2f;
+
+    [Header("Dodge")]
     [SerializeField] private float _rollSpeed = 5f;
+    [SerializeField] private float _rollStaminaCost = 3f;
+    [SerializeField] private float _dodgeDuration = 1.05f;
+    [SerializeField] private AnimationCurve _dodgeSpeedCurve;
+    private Coroutine dodgeRoutine;
+
+    [Header("Camera")]
     [SerializeField] private CinemachineCamera _cinemachineCamera;
     [SerializeField] private Transform _cameraTransform;
 
     private Rigidbody _rb;
-    private Vector3 _direction = Vector3.zero;
+    [HideInInspector] public Vector3 _direction = Vector3.zero;
+    [HideInInspector] public Vector3 _lastDirection = Vector3.zero;
     private bool _isSprinting = false;
+    
     private HealthAndStamina _health;
-
     private Animator _animator;
     private PlayerAttack playerAttack;
     private AnimationManager _animManager;
+
     private static readonly int MovementSpeedHash = Animator.StringToHash("Movementspeed");
     private static readonly int OnRollHash = Animator.StringToHash("OnRoll");
     private static readonly int IsRollingHash = Animator.StringToHash("IsRolling");
@@ -54,7 +67,7 @@ public class MeleeMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isRolling) return;
+        if (_isRolling || _health.isStunned) return;
         if (_isAttacking)
         {
             _direction = Vector3.zero;
@@ -62,6 +75,7 @@ public class MeleeMovement : MonoBehaviour
             return;
         }
 
+        if(_isSprinting) _health.ConsumeStamina(_sprintStaminaCost * Time.deltaTime);
         float currentSpeed = _isSprinting ? _sprintSpeed : _moveSpeed;
 
         // Convert input direction to camera-relative movement
@@ -98,20 +112,16 @@ public class MeleeMovement : MonoBehaviour
 
     public void Move_Event(InputAction.CallbackContext context)
     {
-        if (_isAttacking)
-        {
-            _direction = Vector3.zero;
-            return;
-        }
-
         if (context.performed)
         {
             Vector2 input = context.ReadValue<Vector2>();
-            _direction = new Vector3(input.x, 0, input.y);
+            _lastDirection = new Vector3(input.x, 0, input.y);
+            if (!_isAttacking) _direction = _lastDirection;
         }
         else if (context.canceled)
         {
             _direction = Vector3.zero;
+            _lastDirection = Vector3.zero;
         }
     }
 
@@ -137,6 +147,10 @@ public class MeleeMovement : MonoBehaviour
     {
         if (context.performed && !_isRolling && !_health.isStunned && !_animManager.isFlinching)
         {
+            _health.ConsumeStamina(_rollStaminaCost);
+            if (_health.isStunned) return;
+            _health.isInvulnerable = true;
+
             _animator.SetTrigger(OnRollHash);
             _animator.SetBool(IsRollingHash, true);
             _isRolling = true;
@@ -144,18 +158,31 @@ public class MeleeMovement : MonoBehaviour
             if (playerAttack != null) playerAttack._isAttacking = false;
             _isSprinting = false;
             _animator.SetBool(IsRunningHash, false);
-
-            if (_health != null)
-            {
-                _health.isInvulnerable = true;
-            }
         }
     }
 
     public void ApplyRollMovement()
     {
-        Vector3 rollDirection = CameraRelativeMovement(_direction) * _rollSpeed;
-        _rb.AddForce(rollDirection, ForceMode.VelocityChange);
+        if (dodgeRoutine != null) return;
+        dodgeRoutine = StartCoroutine(DodgeRoutine());
+    }
+
+    private IEnumerator DodgeRoutine()
+    {
+        float elapsedTime = 0f;
+        Vector3 dodgeDirection = _direction == Vector3.zero ? transform.forward : CameraRelativeMovement(_direction);
+
+        while (elapsedTime < _dodgeDuration)
+        {
+            float speedMultiplier = _dodgeSpeedCurve.Evaluate(elapsedTime / _dodgeDuration);
+            _rb.linearVelocity = dodgeDirection * (_rollSpeed * speedMultiplier);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _rb.linearVelocity = Vector3.zero;
+        dodgeRoutine = null;
     }
 
     public void EndRoll()

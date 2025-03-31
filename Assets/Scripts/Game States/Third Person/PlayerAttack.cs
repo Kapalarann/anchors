@@ -50,8 +50,6 @@ public class PlayerAttack : MonoBehaviour
         // Initialize base damage values
         baseLightAttackDamage = lightAttackDamage;
         baseHeavyAttackDamage = heavyAttackDamage;
-
-        UpdateSword();
     }
 
     public void Attack_Event(InputAction.CallbackContext context)
@@ -65,8 +63,10 @@ public class PlayerAttack : MonoBehaviour
             }
 
             hp.ConsumeStamina(lightStaminaCost);
+            if (hp.isStunned) return;
             _animator.SetFloat("attackSpeed", attackSpeed);
             _animator.SetTrigger(OnAttackHash);
+            sword.damage = lightAttackDamage;
             _meleeMovement._isAttacking = true;
             _isAttacking = true;
         }
@@ -83,7 +83,10 @@ public class PlayerAttack : MonoBehaviour
             }
 
             hp.ConsumeStamina(heavyStaminaCost);
+            if (hp.isStunned) return;
+            _animator.SetFloat("attackSpeed", attackSpeed);
             _animator.SetTrigger(OnHeavyAttackHash);
+            sword.damage = heavyAttackDamage;
             _meleeMovement._isAttacking = true;
             _isAttacking = true;
         }
@@ -158,6 +161,7 @@ public class PlayerAttack : MonoBehaviour
     public void EndAttack(AnimationEvent animationEvent)
     {
         _meleeMovement._isAttacking = false;
+        _meleeMovement._direction = _meleeMovement._lastDirection;
         _isAttacking = false;
     }
 
@@ -166,31 +170,15 @@ public class PlayerAttack : MonoBehaviour
         _receiver.AttackEnd -= EndAttack;
     }
 
-    // Modify damage values (and update Inspector)
     public void ModifyDamage(float multiplier)
     {
         lightAttackDamage = baseLightAttackDamage * multiplier;
         heavyAttackDamage = baseHeavyAttackDamage * multiplier;
-
-        UpdateSword();
-
-        Debug.Log($"Damage updated: Light = {lightAttackDamage}, Heavy = {heavyAttackDamage}");
     }
 
-    // Reset damage values to their base
     public void ResetDamage()
     {
         lightAttackDamage = baseLightAttackDamage;
         heavyAttackDamage = baseHeavyAttackDamage;
-
-        UpdateSword();
-
-        Debug.Log("Damage reverted to base values.");
-    }
-
-    private void UpdateSword()
-    {
-        sword.lDamage = lightAttackDamage;
-        sword.hDamage = heavyAttackDamage;
     }
 }

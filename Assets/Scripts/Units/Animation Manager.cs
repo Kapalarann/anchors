@@ -19,7 +19,7 @@ public class AnimationManager : MonoBehaviour
     {
         if (attack != null)
         {
-            attack._isAttacking = false;
+            attack.EndAttack(new AnimationEvent());
             attack.DisableWeaponCollider();
         }
 

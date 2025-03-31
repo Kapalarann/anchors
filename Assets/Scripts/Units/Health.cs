@@ -15,7 +15,7 @@ public class HealthAndStamina : MonoBehaviour
     [SerializeField] public float maxStamina;
     [SerializeField] public float stamina;
     [SerializeField] public float staminaRegen;
-    [HideInInspector] public bool isStunned = false;
+    public bool isStunned = false;
 
     private GameObject healthBarObj;
     private HealthBar healthBar;
@@ -71,9 +71,7 @@ public class HealthAndStamina : MonoBehaviour
 
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, maxHP);
-        if (GameStateManager.Instance.currentUnit != this.gameObject) ConsumeStamina(damage);
 
-        animationManager.Flinch(isStunned);
         GetComponent<Animator>().SetTrigger("onHit");
 
         if (healthBar != null) healthBar.UpdateHP(HP, maxHP);
@@ -88,15 +86,29 @@ public class HealthAndStamina : MonoBehaviour
         {
             Die();
         }
+        
+        if (isStunned)
+        {
+            StopStun();
+            return;
+        }
+        if (ConsumeStamina(damage)) return;
+        animationManager.Flinch(false);
+        
     }
 
-    public void ConsumeStamina(float staminaCost)
+    public bool ConsumeStamina(float staminaCost)
     {
         stamina -= staminaCost;
-        if(stamina < 0) isStunned = true;
-        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
+        if (stamina < 0)
+        {
+            isStunned = true;
+            animationManager.Flinch(true);
+        }
 
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
         if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
+        return isStunned;
     }
 
     public void StopStun()

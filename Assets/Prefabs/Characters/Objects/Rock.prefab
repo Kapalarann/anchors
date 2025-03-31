@@ -217,7 +217,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8154848154084562310}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -661,7 +661,16 @@ MonoBehaviour:
   _moveSpeed: 3
   _sprintSpeed: 8
   _rollSpeed: 9
+  _dodgeDuration: 1.05
+  _dodgeSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _cinemachineCamera: {fileID: 0}
   _cameraTransform: {fileID: 0}
+  _direction: {x: 0, y: 0, z: 0}
+  _lastDirection: {x: 0, y: 0, z: 0}
   _isAttacking: 0
   _isRolling: 0
