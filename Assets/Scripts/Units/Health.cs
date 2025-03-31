@@ -102,6 +102,7 @@ public class HealthAndStamina : MonoBehaviour
     public void StopStun()
     {
         animationManager._animator.SetBool("isStunned", false);
+        animationManager.stopFlinching();
         OnStunFinish();
     }
 

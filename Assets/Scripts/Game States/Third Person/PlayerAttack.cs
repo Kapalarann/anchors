@@ -11,6 +11,7 @@ public class PlayerAttack : MonoBehaviour
     private MeleeMovement _meleeMovement;
 
     [Header("Weapon Settings")]
+    [SerializeField] private ParticleSystem swordTrail;
     [SerializeField] private Collider weaponCollider; // Weapon collider for detecting hits
     [SerializeField] private SwordCollision sword;
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
@@ -148,6 +149,7 @@ public class PlayerAttack : MonoBehaviour
         if (weaponCollider != null)
         {
             weaponCollider.enabled = true;
+            swordTrail.Play();
         }
     }
 
@@ -157,6 +159,7 @@ public class PlayerAttack : MonoBehaviour
         if (weaponCollider != null)
         {
             weaponCollider.enabled = false;
+            swordTrail.Stop();
         }
     }
 

@@ -96,37 +96,6 @@ Transform:
   - {fileID: 4518817993922783529}
   m_Father: {fileID: 2574516479202440477}
   m_LocalEulerAnglesHint: {x: 61.157707, y: -7.1934056, z: 0.12550014}
---- !u!1 &1061398724120613969
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5248873377717650852}
-  m_Layer: 0
-  m_Name: CameraTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5248873377717650852
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1061398724120613969}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.038, y: 0, z: -0.03}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7302281998137915265}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1143178452822948582
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,7 +351,6 @@ Transform:
   m_Children:
   - {fileID: 5691418633675189365}
   - {fileID: 7771026409440020004}
-  - {fileID: 5248873377717650852}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3363922562728047547
@@ -632,7 +600,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2515544287848893123}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.3
+  m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -693,7 +661,7 @@ MonoBehaviour:
   meleeAttacks: []
   isRanged: 1
   rangeAttacks:
-  - projectilePrefab: {fileID: 3902991209137145900, guid: 5bd7075221cb9ad40ae84935f80304ba, type: 3}
+  - projectilePrefab: {fileID: 3281841961123716628, guid: 8c9c462aaf001474999202c8f37467fe, type: 3}
     animationTrigger: onRanged
     firePoint: {fileID: 0}
     fireOffset: {x: 0, y: 1, z: 0}
@@ -789,10 +757,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0b15866a2969734e9563dac28137e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 4
   attackRange: 10
   attackCooldown: 1
-  autoAttackPrefab: {fileID: 3281841961123716628, guid: 8c9c462aaf001474999202c8f37467fe, type: 3}
+  attackDamage: 5
   homingPrefab: {fileID: 3281841961123716628, guid: 8c9c462aaf001474999202c8f37467fe, type: 3}
   attackSpawnPoint: {fileID: 1878336573223313395}
 --- !u!114 &5475898609124185249
@@ -808,9 +776,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellList:
-  - spell: {fileID: 0}
+  - spell: {fileID: 7831462038043715858, guid: 4a6746cf94e56494391b2ea6b3efc319, type: 3}
     keyCode: 113
-    spellCooldowns: 5
+    spellCooldowns: 0
     range: 10
     lastCastTimes: 0
   - spell: {fileID: 1768500268490659297, guid: baefd9396209ad84b84b28b6c2d38a5e, type: 3}
@@ -825,6 +793,7 @@ MonoBehaviour:
     lastCastTimes: 0
   splCldwnUi: {fileID: 0}
   rangeIndicatorPrefab: {fileID: 6121574602041681404, guid: ec4c3edde138bd749b7c9f2fb8a687da, type: 3}
+  attackSpawnPoint: {fileID: 1878336573223313395}
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 64

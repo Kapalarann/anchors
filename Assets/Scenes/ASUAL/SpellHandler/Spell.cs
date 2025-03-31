@@ -6,12 +6,14 @@ public abstract class Spell : MonoBehaviour
     public GameObject spellPrefab;
 
     [SerializeField]
-    private MonoBehaviour[] effectComponents; 
+    private MonoBehaviour[] effectComponents;
 
     public List<ISpellEffect> spellEffects = new List<ISpellEffect>();
 
     [Header("Spell Settings")]
     public float cooldownTime = 5f;
+
+    public SpellCaster caster;
 
     private void Awake()
     {
@@ -51,6 +53,11 @@ public abstract class Spell : MonoBehaviour
         }
 
         Debug.Log($"🎯 Spell {name} now has {spellEffects.Count} valid effects.");
+    }
+
+    public void Initialize(SpellCaster caster)
+    {
+        this.caster = caster;
     }
 
     protected void ApplyEffects(GameObject target)

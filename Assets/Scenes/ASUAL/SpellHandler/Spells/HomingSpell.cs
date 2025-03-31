@@ -40,7 +40,9 @@ namespace Spells
         {
             if (target == null || !isFired) return;
 
-            Vector3 direction = (target.position - transform.position).normalized;
+            Vector3 tar = target.position;
+            tar.y += 1f;
+            Vector3 direction = (tar - transform.position).normalized;
             rb.linearVelocity = direction * speed;
 
             Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -49,9 +51,9 @@ namespace Spells
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Unit"))
+            if (other.CompareTag("Body"))
             {
-                other.GetComponent<HealthAndStamina>()?.TakeDamage(damage);
+                other.transform.root.GetComponent<HealthAndStamina>()?.TakeDamage(damage);
                 Destroy(gameObject);
             }
         }

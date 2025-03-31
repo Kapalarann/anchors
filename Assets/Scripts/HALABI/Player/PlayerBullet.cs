@@ -38,7 +38,7 @@ public class PlayerBullet : MonoBehaviour
 
         if (isTransfer && GameStateManager.Instance.currentUnit.transform == shooterTransform && hp.isStunned)
         {
-            if (GameStateManager.Instance.TransferToTarget(shooterTransform, other))
+            if (GameStateManager.Instance.TransferToTarget(shooterTransform, parent))
             {
                 Destroy(gameObject);
                 return;

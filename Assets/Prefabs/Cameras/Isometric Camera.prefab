@@ -68,7 +68,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 35
   orthographic: 0
   orthographic size: 20
   m_Depth: -1
@@ -158,4 +158,4 @@ MonoBehaviour:
   _right: 0
   scrollSpeed: 20
   minZoom: 20
-  maxZoom: 90
+  maxZoom: 60

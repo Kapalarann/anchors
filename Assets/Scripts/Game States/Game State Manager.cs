@@ -273,7 +273,7 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    public bool TransferToTarget(Transform root, Collider target)
+    public bool TransferToTarget(Transform root, Transform target)
     {
         if (target.gameObject == root.gameObject) return false;
 
