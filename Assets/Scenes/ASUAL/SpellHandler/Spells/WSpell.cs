@@ -11,7 +11,7 @@ public class WSpell : Spell
     {
         Debug.Log($"🎯 {name} casting at {targetPosition}.");
 
-        GameObject spellObj = Instantiate(spellPrefab, targetPosition, Quaternion.Euler(90, 0, 0));
+        GameObject spellObj = Instantiate(spellPrefab, targetPosition, Quaternion.Euler(-90, 0, 0));
 
         WSpell spellComponent = spellObj.GetComponent<WSpell>();
         if (spellComponent == null)
