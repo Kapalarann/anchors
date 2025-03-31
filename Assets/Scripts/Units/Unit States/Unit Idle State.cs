@@ -6,7 +6,6 @@ public class UnitIdleState : UnitState
     private float idleTimer;
     public override void Enter(UnitStateManager unit)
     {
-        Debug.Log("Entering Idle State");
         unit._animator.SetFloat("Movementspeed", 0f);
         idleTimer = 0f;
     }

@@ -11,6 +11,7 @@ public class PlayerAttack : MonoBehaviour
     private MeleeMovement _meleeMovement;
 
     [Header("Weapon Settings")]
+    [SerializeField] private ParticleSystem swordTrail;
     [SerializeField] private Collider weaponCollider; // Weapon collider for detecting hits
     [SerializeField] private SwordCollision sword;
     [SerializeField] private float lightAttackDamage = 10f; // Base light attack damage
@@ -98,8 +99,10 @@ public class PlayerAttack : MonoBehaviour
         float closestDistance = detectionRange;
         float bestSnapDistance = maxSnapDistance;
 
-        foreach (var enemy in UnitStats.units)
+        UnitStats[] unitList = UnitStats.GetUnitsArray();
+        for (int i = 0; i < unitList.Length; i++)
         {
+            var enemy = unitList[i];
             if (enemy.gameObject == this.gameObject) continue;
 
             Transform enemyTransform = enemy.transform;
@@ -146,6 +149,7 @@ public class PlayerAttack : MonoBehaviour
         if (weaponCollider != null)
         {
             weaponCollider.enabled = true;
+            swordTrail.Play();
         }
     }
 
@@ -155,6 +159,7 @@ public class PlayerAttack : MonoBehaviour
         if (weaponCollider != null)
         {
             weaponCollider.enabled = false;
+            swordTrail.Stop();
         }
     }
 

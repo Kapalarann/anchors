@@ -8,20 +8,19 @@ public class QSpell : Spell
 
     public override void Cast(Vector3 targetPosition)
     {
-        Vector3 playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
-
+        Vector3 playerPosition = caster.transform.position;
         
         if (Vector3.Distance(playerPosition, targetPosition) > maxRange)
         {
-            Debug.Log("QSpell target out of range!");
+            Debug.Log("target out of range!");
             return;
         }
 
+        targetPosition.y += 1f;
+        Vector3 direction = (targetPosition - caster.attackSpawnPoint.position).normalized;
         
-        Vector3 direction = (targetPosition - playerPosition).normalized;
-
-        
-        GameObject projectile = Instantiate(projectilePrefab, playerPosition, Quaternion.identity);
+        GameObject projectile = Instantiate(projectilePrefab, caster.attackSpawnPoint.position, Quaternion.identity);
+        projectile.GetComponent<QProjectile>().caster = caster.gameObject;
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
         if (rb != null)

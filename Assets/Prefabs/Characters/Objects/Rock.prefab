@@ -614,12 +614,11 @@ MonoBehaviour:
   HP: 100
   isInvulnerable: 0
   invisibleHpBar: 1
-  maxStamina: 1
+  maxStamina: 30
   stamina: 0
-  staminaRegen: 1
+  staminaRegen: 2
   isStunned: 0
   healthSlider: {fileID: 0}
-  gameOverPanel: {fileID: 0}
 --- !u!114 &6310807325434058336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,12 +658,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 3
-  _sprintSpeed: 8
-  _rollSpeed: 9
+  _sprintSpeed: 5
+  _sprintStaminaCost: 3
+  _rollSpeed: 6
+  _rollStaminaCost: 6
   _dodgeDuration: 1.05
   _dodgeSpeedCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.00059890747
+      value: 1.0003357
+      inSlope: -0.35934576
+      outSlope: -0.35934576
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.35717136
+      value: 0.87177247
+      inSlope: -0.25016034
+      outSlope: -0.25016034
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6857517
+      outWeight: 0.65118927
+    - serializedVersion: 3
+      time: 0.6852909
+      value: 0.71023
+      inSlope: -1.1819417
+      outSlope: -1.1819417
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.49681902
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8592232
+      value: 0.29553482
+      inSlope: -2.311281
+      outSlope: -2.311281
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.40149865
+      outWeight: 0.68138623
+    - serializedVersion: 3
+      time: 0.9904785
+      value: 0.011009216
+      inSlope: -2.167726
+      outSlope: -2.167726
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

@@ -13,7 +13,7 @@ public class GameStateManager : MonoBehaviour
 
     [Header("RTS settings")]
     [SerializeField] public LayerMask unitLayerMask;
-    
+
     [Header("FPS settings")]
     [SerializeField] public float cameraY;
 
@@ -21,15 +21,17 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] public float cameraDistance = 10f;
 
     [Header("State Data")]
-    public List<StateData> states; // List of all states in the game
+    public StateData[] states; // List of all states in the game
     public Dictionary<StateType, StateData> stateDictionary; // Lookup table for states
     public Dictionary<StateType, GameObject> cameraInstances = new Dictionary<StateType, GameObject>(); // Stores camera instances
     public Dictionary<StateType, GameObject> uiInstances = new Dictionary<StateType, GameObject>(); // Stores UI instances
     private List<Component> activeComponents = new List<Component>();
 
     [HideInInspector] public GameState currentState;
-    /*[HideInInspector]*/ public Camera currentCamera;
-    /*[HideInInspector]*/ public SelectableUnit selectedUnit;
+    /*[HideInInspector]*/
+    public Camera currentCamera;
+    /*[HideInInspector]*/
+    public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
     [HideInInspector] public Rigidbody currentRigidbody;
     [HideInInspector] public UnitStateManager currentUSM;
@@ -78,7 +80,7 @@ public class GameStateManager : MonoBehaviour
 
     private void Start()
     {
-        if (states.Count > 0) SwitchState(states[0]); // Default to the first state
+        if (states.Length > 0) SwitchState(states[0]); // Default to the first state
         else Debug.LogError("No states available in GameStateManager!");
     }
 
@@ -129,6 +131,9 @@ public class GameStateManager : MonoBehaviour
                 break;
             case StateType.ThirdPerson:
                 currentState = new ThirdPersonState(this, stateData);
+                break;
+            case StateType.Isometric:
+                currentState = new IsometricState(this, stateData);
                 break;
             default:
                 Debug.LogError($"Unknown state type: {stateData.state}");
@@ -207,12 +212,12 @@ public class GameStateManager : MonoBehaviour
 
     private void HandlePlayerInput(bool hasPlayerInput)
     {
-        if(currentPlayerInput != null)
+        if (currentPlayerInput != null)
         {
             currentPlayerInput.enabled = false;
             currentPlayerInput = null;
         }
-        if(hasPlayerInput)
+        if (hasPlayerInput)
         {
             PlayerInput pInput = selectedUnit.GetComponent<PlayerInput>();
             if (selectedUnit != null && pInput != null)
@@ -233,7 +238,7 @@ public class GameStateManager : MonoBehaviour
         if (hasRigidbody)
         {
             Rigidbody rb = selectedUnit.GetComponent<Rigidbody>();
-            if(selectedUnit != null && rb != null)
+            if (selectedUnit != null && rb != null)
             {
                 currentRigidbody = rb;
                 rb.isKinematic = false;
@@ -243,7 +248,7 @@ public class GameStateManager : MonoBehaviour
 
     private void HandleUSM()
     {
-        if(currentUSM != null)
+        if (currentUSM != null)
         {
             currentUSM.enabled = true;
             currentAgent.enabled = true;
@@ -252,9 +257,9 @@ public class GameStateManager : MonoBehaviour
         {
             currentUSM = selectedUnit.GetComponent<UnitStateManager>();
             if (currentUSM != null) currentUSM.enabled = false;
-                
+
             currentAgent = selectedUnit.GetComponent<NavMeshAgent>();
-            if(currentAgent != null) currentAgent.enabled = false;
+            if (currentAgent != null) currentAgent.enabled = false;
         }
     }
 
@@ -268,7 +273,7 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    public bool TransferToTarget(Transform root, Collider target)
+    public bool TransferToTarget(Transform root, Transform target)
     {
         if (target.gameObject == root.gameObject) return false;
 
@@ -279,7 +284,6 @@ public class GameStateManager : MonoBehaviour
 
         selectedUnit = unit;
         RequestStateChange(stats.unitType);
-        Debug.Log($"Transfered to {unit.name}");
 
         return true;
     }

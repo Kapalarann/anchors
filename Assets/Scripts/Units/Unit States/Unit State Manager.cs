@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -66,14 +67,14 @@ public class UnitStateManager : MonoBehaviour
 
         if(_animator != null) _animator.SetFloat("Movementspeed", _agent.velocity.magnitude);
 
-        foreach (var attack in rangeAttacks)
+        for (int i = 0; i < rangeAttacks.Length; i++)
         {
-            attack.attackTimer += Time.deltaTime;
+            rangeAttacks[i].attackTimer += Time.deltaTime;
         }
 
-        foreach (var attack in meleeAttacks)
+        for (int i = 0; i < meleeAttacks.Length; i++)
         {
-            attack.attackTimer += Time.deltaTime;
+            meleeAttacks[i].attackTimer += Time.deltaTime;
         }
 
         _currentState?.FixedUpdate(this);
@@ -131,10 +132,6 @@ public class UnitStateManager : MonoBehaviour
             {
                 rb.linearVelocity = launchDirection * attack.projectileSpeed;
             }
-        }
-        else
-        {
-            Debug.LogWarning("No valid firing angle found!");
         }
     }
 

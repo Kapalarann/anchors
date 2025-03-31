@@ -21,10 +21,9 @@ public class SwordCollision : MonoBehaviour
 
         if (isTransfer && GameStateManager.Instance.currentUnit.transform == this.transform.root && targetHP.isStunned)
         {
-            if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
+            if (GameStateManager.Instance.TransferToTarget(transform.root, other.transform)) return;
         }
 
         targetHP.TakeDamage(damage);
-        Debug.Log($"Dealt {damage} damage to {targetHP.name}.");
     }
 }

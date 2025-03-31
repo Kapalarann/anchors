@@ -16,6 +16,7 @@ public class SpellCaster : MonoBehaviour
     private SpellCooldownUI cooldownUI;
     private bool isSwitchMode = false;
 
+    public Transform attackSpawnPoint;
     public LayerMask unitLayerMask;
 
     private void Start()
@@ -74,49 +75,10 @@ public class SpellCaster : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayerMask))
         {
-            Debug.Log($"🟢 Raycast hit: {hit.collider.gameObject.name} (Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
+            HealthAndStamina hp = hit.collider.transform.root.GetComponent<HealthAndStamina>();
+            if (hp == null) return;
 
-            SelectableUnit newUnit = hit.collider.GetComponentInParent<SelectableUnit>(); 
-
-            if (newUnit == null)
-            {
-                Debug.LogError($"❌ {hit.collider.gameObject.name} does NOT have a SelectableUnit component!");
-                return;
-            }
-
-            GameObject newCharacter = newUnit.gameObject;
-            GameObject currentCharacter = GameStateManager.Instance.selectedUnit?.gameObject;
-
-            if (newCharacter == currentCharacter)
-            {
-                Debug.Log("Already controlling this unit.");
-                return;
-            }
-
-            Debug.Log($"🔄 Switching to {newCharacter.name}");
-
-            if (currentCharacter != null)
-            {
-                SelectableUnit oldUnit = currentCharacter.GetComponent<SelectableUnit>();
-                if (oldUnit != null)
-                {
-                    oldUnit.OnDeselect();
-                }
-                else
-                {
-                    Debug.Log($"Spell {spellList[selectedSpellNum].keyCode} is on cooldown!");
-                }
-                ToggleCharacterControl(currentCharacter, false);
-            }
-
-            
-            newUnit.OnSelect();
-            ToggleCharacterControl(newCharacter, true);
-            GameStateManager.Instance.selectedUnit = newUnit;
-        }
-        else
-        {
-            Debug.Log("❌ No valid unit selected. Check layer and colliders.");
+            if (hp.isStunned) GameStateManager.Instance.TransferToTarget(transform, hit.collider.transform.root);
         }
 
         selectedSpell = null;
@@ -125,27 +87,7 @@ public class SpellCaster : MonoBehaviour
 
     private void ToggleCharacterControl(GameObject character, bool isActive)
     {
-        if (character == null)
-        {
-            Debug.LogError("❌ ToggleCharacterControl: Character is NULL!");
-            return;
-            CastSelectedSpell();
-            HideRangeIndicator();
-            SpellCooldownUI.instance.StartCooldown(2 ,selectedSpellNum);
-        }
-
-        PlayerController playerController = character.GetComponent<PlayerController>();
-        SpellCaster spellCaster = character.GetComponent<SpellCaster>();
-
-        if (playerController != null)
-            playerController.enabled = isActive;
-        else
-            Debug.LogWarning($"⚠️ {character.name} has no PlayerController.");
-
-        if (spellCaster != null)
-            spellCaster.enabled = isActive;
-        else
-            Debug.LogWarning($"⚠️ {character.name} has no SpellCaster.");
+        
     }
 
     private void ShowRangeIndicator(float range)
@@ -179,6 +121,7 @@ public class SpellCaster : MonoBehaviour
                 castPosition = transform.position + direction * currentSpellRange;
             }
 
+            selectedSpell.Initialize(this);
             selectedSpell.Cast(castPosition);
         }
 

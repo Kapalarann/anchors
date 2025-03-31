@@ -7,18 +7,21 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float attackRange = 5f;
     public float attackCooldown = 1f;
-    public GameObject autoAttackPrefab;
-    public GameObject homingPrefab; // Assign this in Unity
+    public float attackDamage = 5f;
+    public GameObject homingPrefab;
     public Transform attackSpawnPoint;
 
     private Transform targetEnemy;
     private Vector3 targetPosition;
     private bool isMoving = false;
     private bool isAttacking = false;
+    private Animator animator;
+
     private Coroutine autoAttackCoroutine;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         targetPosition = transform.position;
     }
 
@@ -35,7 +38,7 @@ public class PlayerController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (hit.collider.CompareTag("Enemy"))
+                if (hit.collider.CompareTag("Unit"))
                 {
                     targetEnemy = hit.collider.transform;
                     isMoving = true;
@@ -65,7 +68,7 @@ public class PlayerController : MonoBehaviour
             if (distance <= attackRange)
             {
                 isMoving = false;
-                FaceTarget(targetEnemy);
+                FaceTarget(targetEnemy.position);
                 return;
             }
             else
@@ -77,7 +80,9 @@ public class PlayerController : MonoBehaviour
 
         if (isMoving)
         {
+            animator.SetFloat("Movementspeed", moveSpeed);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            FaceTarget(targetPosition);
 
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
@@ -96,35 +101,25 @@ public class PlayerController : MonoBehaviour
                 yield break;
             }
 
-            FaceTarget(targetEnemy);
-            ShootAutoAttack();
+            FaceTarget(targetEnemy.position);
+            animator.SetTrigger("onCast1");
             yield return new WaitForSeconds(attackCooldown);
         }
     }
 
-    void ShootAutoAttack()
+    public void ShootAutoAttack()
     {
         if (targetEnemy == null) return;
 
-        if (homingPrefab == null)
-        {
-            Debug.LogError("HomingPrefab is not assigned in PlayerController!");
-            return;
-        }
+        if (homingPrefab == null) return;
 
-        // Instantiate the homing projectile (now using HomingSpell)
         GameObject projectile = Instantiate(homingPrefab, attackSpawnPoint.position, Quaternion.identity);
-
-        // Get the HomingSpell script instead of HomingProjectile
         HomingSpell homingScript = projectile.GetComponent<HomingSpell>();
 
         if (homingScript != null)
         {
             homingScript.SetTarget(targetEnemy);
-        }
-        else
-        {
-            Debug.LogError("HomingSpell script missing on homingPrefab!");
+            homingScript.damage = attackDamage;
         }
     }
 
@@ -136,12 +131,13 @@ public class PlayerController : MonoBehaviour
         {
             StopCoroutine(autoAttackCoroutine);
             autoAttackCoroutine = null;
+            animator.SetTrigger("onCastCancel");
         }
     }
 
-    void FaceTarget(Transform target)
+    void FaceTarget(Vector3 target)
     {
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = (target - transform.position).normalized;
         direction.y = 0;
         transform.rotation = Quaternion.LookRotation(direction);
     }

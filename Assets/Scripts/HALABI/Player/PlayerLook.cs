@@ -22,9 +22,9 @@ public class PlayerLook : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
     }
-    public void OnLook(InputValue value)
+    public void OnLook(InputAction.CallbackContext context)
     {
-        mouseX = value.Get<Vector2>().x;
+        mouseX = context.ReadValue<Vector2>().x;
     }
 
     private void Update()

@@ -53,12 +53,12 @@ public class PlayerMotor : MonoBehaviour
         controller.Move(playerVelocity * Time.deltaTime);
     }
 
-    public void OnMovement(InputValue value)
+    public void OnMovement(InputAction.CallbackContext context)
     {
-        moveDirection = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y);
+        moveDirection = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
     }
 
-    public void OnJump()
+    public void OnJump(InputAction.CallbackContext context)
     {
         if (isGrounded)
         {
@@ -66,7 +66,7 @@ public class PlayerMotor : MonoBehaviour
         }
     }
 
-    public void OnCrouch()
+    public void OnCrouch(InputAction.CallbackContext context)
     {
         if (!crouching && Physics.Raycast(transform.position, Vector3.up, 2f))
         {
