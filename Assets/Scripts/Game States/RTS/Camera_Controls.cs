@@ -48,13 +48,13 @@ public class CameraControls : MonoBehaviour
 
         // Mouse Input (Screen Edge Pan)
         if (Input.mousePosition.x >= Screen.width - panBorderThickness)
-            moveValue += transform.right;
+            moveValue += Vector3.right;
         if (Input.mousePosition.x <= panBorderThickness)
-            moveValue -= transform.right;
+            moveValue -= Vector3.right;
         if (Input.mousePosition.y >= Screen.height - panBorderThickness)
-            moveValue += transform.up;
+            moveValue += Vector3.forward;
         if (Input.mousePosition.y <= panBorderThickness)
-            moveValue -= transform.up;
+            moveValue -= Vector3.forward;
 
         transform.position += moveValue * panSpeed * Time.deltaTime;
     }

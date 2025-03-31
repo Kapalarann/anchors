@@ -132,6 +132,9 @@ public class GameStateManager : MonoBehaviour
             case StateType.ThirdPerson:
                 currentState = new ThirdPersonState(this, stateData);
                 break;
+            case StateType.Isometric:
+                currentState = new IsometricState(this, stateData);
+                break;
             default:
                 Debug.LogError($"Unknown state type: {stateData.state}");
                 return;
