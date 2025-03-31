@@ -8,7 +8,6 @@ public class UnitAttackState : UnitState
 
     public override void Enter(UnitStateManager unit)
     {
-        Debug.Log("Entering Attack State");
     }
 
     public override void FixedUpdate(UnitStateManager unit)

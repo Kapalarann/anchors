@@ -59,8 +59,6 @@ public class BerserkPassive : MonoBehaviour
             ParticleSystem effects = Instantiate(_berserkEffect, transform);
         }
 
-        Debug.Log("Berserk Mode Activated!");
-
         StartCoroutine(BerserkTimer());
         StartCoroutine(EndBerserkInvulnerability());
         StartCoroutine(BerserkCooldownTimer());
@@ -76,7 +74,6 @@ public class BerserkPassive : MonoBehaviour
     {
         yield return new WaitForSeconds(_invulnerabilityDuration);
         _health.isInvulnerable = false;
-        Debug.Log("Berserk Invulnerability Ended!");
     }
 
     private void DeactivateBerserk()
@@ -90,15 +87,11 @@ public class BerserkPassive : MonoBehaviour
         {
             _berserkEffect.Stop(); // Stop Berserk Particle Effect
         }
-
-        Debug.Log("Berserk Mode Deactivated!");
     }
 
     private IEnumerator BerserkCooldownTimer()
     {
-        Debug.Log("Berserk Cooldown Started!");
         yield return new WaitForSeconds(_berserkCooldown);
         _isOnCooldown = false;
-        Debug.Log("Berserk Ready Again!");
     }
 }

@@ -127,6 +127,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: -7987214852364927799, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -7886462197306306534, guid: afafab9dfee2e6d4da67a2eaa1835c33, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1275,9 +1279,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _berserkThreshold: 0.5
-  _speedMultiplier: 1.5
+  _speedMultiplier: 1.2
   _sizeMultiplier: 1.2
-  _animationSpeedMultiplier: 1.5
+  _animationSpeedMultiplier: 1.2
   _invulnerabilityDuration: 0
   _berserkDuration: 10
   _berserkCooldown: 15
@@ -1423,8 +1427,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0021981471, y: 0.00073886005, z: 0.009090963}
-  m_Center: {x: 4.610485e-11, y: 2.4262709e-10, z: 0.0030940457}
+  m_Size: {x: 0.004396294, y: 0.00110829, z: 0.012171255}
+  m_Center: {x: -4.2470244e-10, y: 0.0000000039785104, z: 0.0026690743}
 --- !u!114 &7302110576814536715
 MonoBehaviour:
   m_ObjectHideFlags: 0

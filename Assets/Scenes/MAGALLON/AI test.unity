@@ -1305,10 +1305,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Archer 3
       objectReference: {fileID: 0}
-    - target: {fileID: 4584216481525430931, guid: 22f6f69eb4c0cb64fbe81970067dd1a7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2497,10 +2493,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Melee
       objectReference: {fileID: 0}
-    - target: {fileID: 936895380371631859, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2672,10 +2664,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
-    - target: {fileID: 8154848154084562310, guid: 69282dfa68389664ebd80404532d87e2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8343760396363351040, guid: 69282dfa68389664ebd80404532d87e2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.482
@@ -2772,10 +2760,6 @@ PrefabInstance:
     - target: {fileID: 5663990382136102776, guid: 964e7e576f710044a9cf9b6b3eff627f, type: 3}
       propertyPath: m_Name
       value: Game Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5663990382136102776, guid: 964e7e576f710044a9cf9b6b3eff627f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

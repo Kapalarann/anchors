@@ -25,6 +25,5 @@ public class SwordCollision : MonoBehaviour
         }
 
         targetHP.TakeDamage(damage);
-        Debug.Log($"Dealt {damage} damage to {targetHP.name}.");
     }
 }

@@ -5,7 +5,6 @@ public class CameraControls : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float panSpeed = 20f; // Speed of camera panning
     [SerializeField] private float panBorderThickness = 10f; // Thickness of the screen edge for mouse pan
-    [SerializeField] private Vector2 panLimit = new Vector2(50f, 50f); // Limits for camera movement
 
     [Header("Movement Controls")]
     [SerializeField] private KeyCode _up;
@@ -18,27 +17,20 @@ public class CameraControls : MonoBehaviour
     [SerializeField] private float minZoom = 5f; // Minimum zoom level
     [SerializeField] private float maxZoom = 50f; // Maximum zoom level
 
-    [Header("Rotation Settings")]
-    [SerializeField] private float rotationSpeed = 50f; // Speed of camera rotation
-    [SerializeField] private float pivotDistance = 20f; // Distance from the camera to the pivot
-
     private Camera _camera;
     private float currentZoom;
-    private Vector3 pivotPoint; // The pivot point for rotation
+
 
     private void Start()
     {
         _camera = GetComponent<Camera>();
-        //currentZoom = _camera.orthographicSize;
         currentZoom = _camera.fieldOfView;
-        pivotPoint = transform.position + transform.forward * pivotDistance;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         HandleMovement();
         HandleZoom();
-        HandleRotation();
     }
 
     private void HandleMovement()
@@ -73,21 +65,5 @@ public class CameraControls : MonoBehaviour
         currentZoom -= scroll * scrollSpeed * Time.deltaTime * 100f;
 
         _camera.fieldOfView = Mathf.Clamp(currentZoom, minZoom, maxZoom);
-    }
-
-    private void HandleRotation()
-    {
-        if (Input.GetMouseButton(2)) // Middle Mouse Button
-        {
-            float horizontal = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
-            float vertical = -Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
-
-            // Rotate around the pivot point
-            transform.RotateAround(pivotPoint, Vector3.up, horizontal);
-            transform.RotateAround(pivotPoint, transform.right, vertical);
-
-            // Recalculate the pivot distance
-            pivotDistance = Vector3.Distance(transform.position, pivotPoint);
-        }
     }
 }

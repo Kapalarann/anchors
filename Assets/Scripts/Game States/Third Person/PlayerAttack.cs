@@ -98,8 +98,10 @@ public class PlayerAttack : MonoBehaviour
         float closestDistance = detectionRange;
         float bestSnapDistance = maxSnapDistance;
 
-        foreach (var enemy in UnitStats.units)
+        UnitStats[] unitList = UnitStats.GetUnitsArray();
+        for (int i = 0; i < unitList.Length; i++)
         {
+            var enemy = unitList[i];
             if (enemy.gameObject == this.gameObject) continue;
 
             Transform enemyTransform = enemy.transform;

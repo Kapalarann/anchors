@@ -89,7 +89,7 @@ public class Bow : MonoBehaviour
         arrow.damage = Mathf.Lerp(0f, damage, power);
         arrow.headshotMult = headshotMultiplier;
 
-        if (isTransferArrow) arrow.GetComponent<TrailRenderer>().colorGradient = setTrailGradient(Color.black);
+        if (isTransferArrow) arrow.GetComponent<TrailRenderer>().colorGradient = setTrailGradient(Color.red);
 
         Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
         if (arrowRb != null)

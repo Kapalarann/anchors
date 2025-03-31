@@ -5,7 +5,6 @@ public class UnitMoveState : UnitState
     private float noiseOffset;
     public override void Enter(UnitStateManager unit)
     {
-        Debug.Log("Entering Move State");
         unit._agent.SetDestination(unit._targetPosition);
 
         if(unit.strafes) noiseOffset = Random.Range(0f, 100f);
