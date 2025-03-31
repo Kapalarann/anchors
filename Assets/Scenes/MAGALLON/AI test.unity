@@ -1305,6 +1305,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Archer 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4584216481525430931, guid: 22f6f69eb4c0cb64fbe81970067dd1a7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2493,141 +2497,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Melee
       objectReference: {fileID: 0}
-    - target: {fileID: 4370066826917248407, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: heavyStaminaCost
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4370066826917248407, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: lightStaminaCost
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _sprintSpeed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _rollStaminaCost
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[0].time
-      value: -0.00059890747
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[1].time
-      value: 0.35717136
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[2].time
-      value: 0.6852909
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[3].time
-      value: 0.8592232
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[4].time
-      value: 0.9904785
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[0].value
-      value: 1.0003357
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[1].value
-      value: 0.87177247
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[2].value
-      value: 0.71023
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[3].value
-      value: 0.29553482
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[4].value
-      value: 0.011009216
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[0].inSlope
-      value: -0.35934576
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[1].inSlope
-      value: -0.25016034
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[2].inSlope
-      value: -1.1819417
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[3].inSlope
-      value: -2.311281
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[4].inSlope
-      value: -2.167726
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[0].outSlope
-      value: -0.35934576
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[1].inWeight
-      value: 0.6857517
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[1].outSlope
-      value: -0.25016034
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[2].inWeight
-      value: 0.49681902
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[2].outSlope
-      value: -1.1819417
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[3].inWeight
-      value: 0.40149865
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[3].outSlope
-      value: -2.311281
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[4].inWeight
-      value: 0.33333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[4].outSlope
-      value: -2.167726
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[1].outWeight
-      value: 0.65118927
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[2].outWeight
-      value: 0.33333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[3].outWeight
-      value: 0.68138623
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[3].tangentMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385562487793312664, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-      propertyPath: _dodgeSpeedCurve.m_Curve.Array.data[4].tangentMode
-      value: 34
+    - target: {fileID: 936895380371631859, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2800,6 +2672,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 8154848154084562310, guid: 69282dfa68389664ebd80404532d87e2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8343760396363351040, guid: 69282dfa68389664ebd80404532d87e2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.482
@@ -2896,6 +2772,10 @@ PrefabInstance:
     - target: {fileID: 5663990382136102776, guid: 964e7e576f710044a9cf9b6b3eff627f, type: 3}
       propertyPath: m_Name
       value: Game Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663990382136102776, guid: 964e7e576f710044a9cf9b6b3eff627f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -82,7 +82,7 @@ public class GameStateManager : MonoBehaviour
         else Debug.LogError("No states available in GameStateManager!");
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         currentState?.Update();
     }

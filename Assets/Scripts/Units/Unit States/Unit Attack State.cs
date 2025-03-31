@@ -11,7 +11,7 @@ public class UnitAttackState : UnitState
         Debug.Log("Entering Attack State");
     }
 
-    public override void Update(UnitStateManager unit)
+    public override void FixedUpdate(UnitStateManager unit)
     {
         if (unit._target == null)
         {

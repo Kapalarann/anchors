@@ -27,7 +27,7 @@ public class HealthBar : MonoBehaviour
 
     public void InitializeHP(HealthAndStamina un) { this.unit = un; }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (unit == null) return;
         if (unit.invisibleHpBar)

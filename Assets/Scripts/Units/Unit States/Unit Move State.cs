@@ -10,7 +10,7 @@ public class UnitMoveState : UnitState
 
         if(unit.strafes) noiseOffset = Random.Range(0f, 100f);
     }
-    public override void Update(UnitStateManager unit)
+    public override void FixedUpdate(UnitStateManager unit)
     {
         if (unit._target != null && unit.isRanged)
         {
