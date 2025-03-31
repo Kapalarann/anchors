@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerMotor : MonoBehaviour
@@ -10,9 +6,11 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
-    public float speed = 5f;
+    public float walkSpeed = 3f;
+    public float sprintSpeed = 5f;
     public float jumpHeight = 3f;
 
+    private float currentSpeed;
     private bool lerpCrouch = false;
     private bool crouching = false;
     private float crouchTimer = 0f;
@@ -22,6 +20,7 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        currentSpeed = walkSpeed;
     }
 
     void Update()
@@ -44,7 +43,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         //movement
-        controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
+        controller.Move(transform.TransformDirection(moveDirection) * currentSpeed * Time.deltaTime);
 
         playerVelocity.y += Physics.gravity.y * Time.deltaTime;
 
@@ -80,9 +79,16 @@ public class PlayerMotor : MonoBehaviour
         lerpCrouch = true;
     }
 
-    public void OnSprint()
+    public void OnSprint(InputAction.CallbackContext context)
     {
-        sprinting = !sprinting;
-        speed = sprinting ? 8f : 5f;
+        if (context.started)
+        {
+            sprinting = true;
+        }
+        else if (context.canceled)
+        {
+            sprinting = false;
+        }
+        currentSpeed = sprinting ? sprintSpeed : walkSpeed;
     }
 }

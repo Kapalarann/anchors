@@ -15,7 +15,7 @@ public class HealthAndStamina : MonoBehaviour
     [SerializeField] public float maxStamina;
     [SerializeField] public float stamina;
     [SerializeField] public float staminaRegen;
-    [HideInInspector] public bool isStunned = false;
+    public bool isStunned = false;
 
     private GameObject healthBarObj;
     private HealthBar healthBar;
@@ -26,9 +26,6 @@ public class HealthAndStamina : MonoBehaviour
     [Header("UI Elements")]
     public Slider healthSlider;
     private Bleed bleed;
-
-    [Header("Game Over Panel")]
-    public GameOverPanel gameOverPanel; // Assign in Inspector
 
     private void Awake()
     {
@@ -57,7 +54,7 @@ public class HealthAndStamina : MonoBehaviour
         animationManager = GetComponent<AnimationManager>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (stamina >= maxStamina || isStunned) return;
         stamina += staminaRegen * Time.deltaTime;
@@ -71,35 +68,44 @@ public class HealthAndStamina : MonoBehaviour
 
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, maxHP);
-        if (GameStateManager.Instance.currentUnit != this.gameObject) ConsumeStamina(damage);
+
+        if (GameStateManager.Instance.currentUnit == this.gameObject)
+        {
+            if (isStunned) StopStun();
+        }
+        else ConsumeStamina(damage);
 
         animationManager.Flinch(isStunned);
         GetComponent<Animator>().SetTrigger("onHit");
 
         if (healthBar != null) healthBar.UpdateHP(HP, maxHP);
-
         if (healthSlider != null) healthSlider.value = HP;
-
         OnHealthChanged?.Invoke(HP, maxHP);
-
         if (bleed != null && GameStateManager.Instance.currentUnit == this.gameObject) bleed.ShowBleed();
 
-        if (HP <= 0)
-        {
-            Die();
-        }
+        if (HP <= 0) Die();
     }
 
     public void ConsumeStamina(float staminaCost)
     {
         stamina -= staminaCost;
-        if(stamina < 0) isStunned = true;
-        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
+        if (stamina < 0)
+        {
+            isStunned = true;
+            if (GameStateManager.Instance.currentUnit == this.gameObject) animationManager.Flinch(isStunned);
+        }
 
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
         if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
     }
 
     public void StopStun()
+    {
+        animationManager._animator.SetBool("isStunned", false);
+        OnStunFinish();
+    }
+
+    public void OnStunFinish()
     {
         isStunned = false;
         stamina = maxStamina;
@@ -110,13 +116,10 @@ public class HealthAndStamina : MonoBehaviour
     {
         HealthBarPool.Instance.ReturnHealthBar(healthBarObj);
 
-        // Show Game Over panel instead of destroying the player
-        if (gameOverPanel != null && GameStateManager.Instance.currentUnit == this.gameObject)
+        if (GameStateManager.Instance.currentUnit == this.gameObject)
         {
-            gameOverPanel.ShowGameOverPanel();
+            //gameOver
         }
-
-        // Hide the player instead of destroying (optional)
         gameObject.SetActive(false);
     }
 }

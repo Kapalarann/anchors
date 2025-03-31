@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
-    private Animator _animator;
+    [HideInInspector] public Animator _animator;
     private PlayerAttack attack;
     private MeleeMovement movement;
 
@@ -19,7 +19,7 @@ public class AnimationManager : MonoBehaviour
     {
         if (attack != null)
         {
-            attack._isAttacking = false;
+            attack.EndAttack(new AnimationEvent());
             attack.DisableWeaponCollider();
         }
 

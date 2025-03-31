@@ -1,11 +1,11 @@
-using UnityEngine;
+ using UnityEngine;
 
 public class SwordCollision : MonoBehaviour
 {
     public bool isTransfer = false;
     private Collider coll;
     public Animator _animator;
-    public float lDamage, hDamage;
+    public float damage;
 
     private void Start()
     {
@@ -16,15 +16,14 @@ public class SwordCollision : MonoBehaviour
     {
         if (!coll.enabled) return;
 
-        if (isTransfer && GameStateManager.Instance.currentUnit.transform == this.transform.root)
+        HealthAndStamina targetHP = other.GetComponent<HealthAndStamina>();
+        if (targetHP == null) return;
+
+        if (isTransfer && GameStateManager.Instance.currentUnit.transform == this.transform.root && targetHP.isStunned)
         {
             if (GameStateManager.Instance.TransferToTarget(transform.root, other)) return;
         }
 
-        HealthAndStamina targetHP = other.GetComponent<HealthAndStamina>();
-        if (targetHP == null) return;
-        
-        float damage = _animator.GetCurrentAnimatorStateInfo(0).IsTag("HeavyAttack") ? hDamage : lDamage;
         targetHP.TakeDamage(damage);
         Debug.Log($"Dealt {damage} damage to {targetHP.name}.");
     }

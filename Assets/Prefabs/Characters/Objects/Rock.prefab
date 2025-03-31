@@ -217,7 +217,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8154848154084562310}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -594,6 +594,7 @@ MonoBehaviour:
   currentAttack: 0
   _unitStat: {fileID: 0}
   _target: {fileID: 0}
+  _health: {fileID: 0}
   _agent: {fileID: 0}
   _animator: {fileID: 0}
   isAttacking: 0
@@ -613,6 +614,10 @@ MonoBehaviour:
   HP: 100
   isInvulnerable: 0
   invisibleHpBar: 1
+  maxStamina: 1
+  stamina: 0
+  staminaRegen: 1
+  isStunned: 0
   healthSlider: {fileID: 0}
   gameOverPanel: {fileID: 0}
 --- !u!114 &6310807325434058336
@@ -627,6 +632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4aa2ca4cee5324e829cd692cf8e7da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _animator: {fileID: 0}
   isFlinching: 0
 --- !u!114 &219550189569068147
 MonoBehaviour:
@@ -655,7 +661,16 @@ MonoBehaviour:
   _moveSpeed: 3
   _sprintSpeed: 8
   _rollSpeed: 9
+  _dodgeDuration: 1.05
+  _dodgeSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _cinemachineCamera: {fileID: 0}
   _cameraTransform: {fileID: 0}
+  _direction: {x: 0, y: 0, z: 0}
+  _lastDirection: {x: 0, y: 0, z: 0}
   _isAttacking: 0
   _isRolling: 0

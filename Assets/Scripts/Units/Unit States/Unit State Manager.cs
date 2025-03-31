@@ -60,7 +60,7 @@ public class UnitStateManager : MonoBehaviour
         _currentState.Enter(this);
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         if (_health.isStunned) return; 
 
@@ -76,7 +76,7 @@ public class UnitStateManager : MonoBehaviour
             attack.attackTimer += Time.deltaTime;
         }
 
-        _currentState?.Update(this);
+        _currentState?.FixedUpdate(this);
     }
 
     private void OnEnable()

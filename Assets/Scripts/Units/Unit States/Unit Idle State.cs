@@ -11,7 +11,7 @@ public class UnitIdleState : UnitState
         idleTimer = 0f;
     }
 
-    public override void Update(UnitStateManager unit)
+    public override void FixedUpdate(UnitStateManager unit)
     {
         idleTimer += Time.deltaTime;
         if (idleTimer < unit.idleTime) return;
