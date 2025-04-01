@@ -7,21 +7,14 @@ namespace Spells
     public class HomingSpell : Spell
     {
         public float damage = 0f;
-        public float speed = 10f;
+        public float speed = 5f;
+        public float turnSpeed = 5f;
         public float lifetime = 5f;
-        private Transform target;
-        private bool isFired = false;
         private Rigidbody rb;
 
         public override void Cast(Vector3 targetPosition)
         {
             
-        }
-
-        public void SetTarget(Transform newTarget)
-        {
-            target = newTarget;
-            isFired = true;
         }
 
         private void Start()
@@ -41,21 +34,12 @@ namespace Spells
             if (target == null || !isFired) return;
 
             Vector3 tar = target.position;
-            tar.y += 1f;
-            Vector3 direction = (tar - transform.position).normalized;
-            rb.linearVelocity = direction * speed;
+            tar.y += 1.2f;
+            Vector3 desiredDirection = (tar - transform.position).normalized;
 
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Body"))
-            {
-                other.transform.root.GetComponent<HealthAndStamina>()?.TakeDamage(damage);
-                Destroy(gameObject);
-            }
+            // Gradually adjust velocity direction
+            Vector3 newVelocity = Vector3.Slerp(rb.linearVelocity.normalized, desiredDirection, turnSpeed * Time.deltaTime) * speed;
+            rb.linearVelocity = newVelocity;
         }
     }
 }

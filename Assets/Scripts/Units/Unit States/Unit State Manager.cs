@@ -67,14 +67,18 @@ public class UnitStateManager : MonoBehaviour
 
         if(_animator != null) _animator.SetFloat("Movementspeed", _agent.velocity.magnitude);
 
-        for (int i = 0; i < rangeAttacks.Length; i++)
-        {
-            rangeAttacks[i].attackTimer += Time.deltaTime;
+        if(isRanged){
+            for (int i = 0; i < rangeAttacks.Length; i++)
+            {
+                rangeAttacks[i].attackTimer += Time.deltaTime;
+            }
         }
 
-        for (int i = 0; i < meleeAttacks.Length; i++)
-        {
-            meleeAttacks[i].attackTimer += Time.deltaTime;
+        if(isMelee){
+            for (int i = 0; i < meleeAttacks.Length; i++)
+            {
+                meleeAttacks[i].attackTimer += Time.deltaTime;
+            }
         }
 
         _currentState?.FixedUpdate(this);
@@ -106,33 +110,44 @@ public class UnitStateManager : MonoBehaviour
         Vector3 targetPosition = _target.transform.position;
         RangeAttack attack = rangeAttacks[currentAttack];
         Vector3 direction = (targetPosition + attack.fireOffset) - attack.firePoint.position;
-        float distance = new Vector3(direction.x, 0, direction.z).magnitude; // Horizontal distance
-        float height = direction.y; // Vertical height
+        float distance = new Vector3(direction.x, 0, direction.z).magnitude;
+        float height = direction.y;
+        float angle = 0f;
 
-        // Calculate the launch angle
-        if (CalculateLaunchAngle(distance, height, attack.projectileSpeed, -Physics.gravity.y, out float angle))
+        if (attack.hasGravity && !CalculateLaunchAngle(distance, height, attack.projectileSpeed, -Physics.gravity.y, out angle))
         {
-            // Convert angle to a directional vector
-            Quaternion rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            Vector3 launchDirection = rotation * Quaternion.Euler(-angle, 0, 0) * Vector3.forward;
-
-            // Instantiate and fire the projectile
-            GameObject projectile = Instantiate(attack.projectilePrefab, attack.firePoint.position, Quaternion.LookRotation(launchDirection));
-            PlayerBullet arrow = projectile.GetComponent<PlayerBullet>();
-
-            if (arrow != null) 
-            {
-                arrow.shooterTransform = transform;
-                arrow.damage = attack.damage;
-                arrow.headshotMult = attack.headshotMultiplier;
-            }
-
-            Rigidbody rb = projectile.GetComponent<Rigidbody>();
-            if (rb)
-            {
-                rb.linearVelocity = launchDirection * attack.projectileSpeed;
-            }
+            return; // Target out of range, don't fire
         }
+
+        GameObject projectile = Instantiate(attack.projectilePrefab, attack.firePoint.position, Quaternion.identity);
+        PlayerBullet proj = projectile.GetComponent<PlayerBullet>();
+        Spell spell = projectile.GetComponent<Spell>();
+
+        proj.shooterTransform = transform;
+        proj.damage = attack.damage;
+        proj.headshotMult = attack.headshotMultiplier;
+
+        if(spell != null)
+        {
+            spell.Cast(targetPosition + attack.fireOffset);
+            spell.SetTarget(_target.transform);
+        }
+
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        Vector3 launchDirection = Vector3.zero;
+        if (attack.hasGravity)
+        {
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            launchDirection = rotation * Quaternion.Euler(-angle, 0, 0) * Vector3.forward;
+            projectile.transform.rotation = Quaternion.LookRotation(launchDirection);
+        }
+        else
+        {
+            launchDirection = direction.normalized * attack.projectileSpeed;
+            projectile.transform.rotation = Quaternion.LookRotation(launchDirection);
+        }
+        rb.linearVelocity = launchDirection * attack.projectileSpeed;
+        if(attack.projectileDuration > 0) Destroy(projectile, attack.projectileDuration);
     }
 
     private bool CalculateLaunchAngle(float distance, float height, float speed, float gravity, out float angle)
@@ -166,8 +181,10 @@ public class RangeAttack
     public GameObject projectilePrefab;
     public string animationTrigger;
     public Transform firePoint;
+    public bool hasGravity;
     public Vector3 fireOffset;
     public float maxRange;
+    public float projectileDuration;
     public float attackCooldown;
     [HideInInspector]public float attackTimer = 0f;
     public float projectileSpeed;

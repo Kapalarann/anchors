@@ -85,11 +85,6 @@ public class SpellCaster : MonoBehaviour
         isSwitchMode = false;
     }
 
-    private void ToggleCharacterControl(GameObject character, bool isActive)
-    {
-        
-    }
-
     private void ShowRangeIndicator(float range)
     {
         if (activeRangeIndicator != null) Destroy(activeRangeIndicator);

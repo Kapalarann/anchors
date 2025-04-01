@@ -303,4 +303,5 @@ MonoBehaviour:
   damage: 0
   headshotMult: 1
   isTransfer: 0
+  sticksToTarget: 1
   shooterTransform: {fileID: 0}
