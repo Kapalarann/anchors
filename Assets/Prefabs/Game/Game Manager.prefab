@@ -80,8 +80,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitSpawn:
   - unitPrefab: {fileID: 936895380371631859, guid: e97cfeaa9ef89d045995b052272c5457, type: 3}
-    weight: 1
+    weight: 3
   - unitPrefab: {fileID: 4584216481525430931, guid: 22f6f69eb4c0cb64fbe81970067dd1a7, type: 3}
+    weight: 2
+  - unitPrefab: {fileID: 2515544287848893123, guid: 9ad702d1f56a0b54d8b689160062a4a0, type: 3}
     weight: 1
   spawnPoints:
   - {fileID: 7716599199436099351}
