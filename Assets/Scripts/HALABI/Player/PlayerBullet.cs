@@ -5,6 +5,7 @@ public class PlayerBullet : MonoBehaviour
     public float damage = 0f;
     public float headshotMult = 1f;
     public bool isTransfer;
+    public bool sticksToTarget;
     public Transform shooterTransform;
 
     private Rigidbody rb;
@@ -18,7 +19,7 @@ public class PlayerBullet : MonoBehaviour
 
     private void Update()
     {
-        if (rb.linearVelocity != Vector3.zero) transform.rotation = Quaternion.LookRotation(rb.linearVelocity);
+        transform.rotation = Quaternion.LookRotation(rb.linearVelocity);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -54,8 +55,16 @@ public class PlayerBullet : MonoBehaviour
             }
 
             hp.TakeDamage(damage * damageMult);
-            rb.isKinematic = true;
-            GetComponent<TrailRenderer>().enabled = false;
+
+            if (!sticksToTarget)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            if(rb != null)rb.isKinematic = true;
+            TrailRenderer trail = GetComponent<TrailRenderer>();
+            if(trail != null) trail.enabled = false;
             col.enabled = false;
             this.enabled = false;
 

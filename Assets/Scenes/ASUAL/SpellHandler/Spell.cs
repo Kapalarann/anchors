@@ -13,6 +13,8 @@ public abstract class Spell : MonoBehaviour
     [Header("Spell Settings")]
     public float cooldownTime = 5f;
 
+    public bool isFired = false;
+    public Transform target;
     public SpellCaster caster;
 
     private void Awake()
@@ -85,4 +87,10 @@ public abstract class Spell : MonoBehaviour
     }
 
     public abstract void Cast(Vector3 targetPosition);
+
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+        isFired = true;
+    }
 }
