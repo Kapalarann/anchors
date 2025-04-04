@@ -4,7 +4,6 @@ public class FPSState : GameState
 {
     private StateData stateData;
     private Camera fpsCameraInstance;
-    private FPSMovement fpsMovement;
     public FPSState(GameStateManager manager, StateData stateData) : base(manager)
     {
         this.stateData = stateData;
@@ -35,11 +34,6 @@ public class FPSState : GameState
                 Debug.LogError("FPS Camera prefab does not have a Camera component!");
             }
         }
-
-        // Enable FPSMovement
-        fpsMovement = manager.selectedUnit.GetComponent<FPSMovement>();
-        if (fpsMovement != null) fpsMovement.enabled = true;
-
         Debug.Log("Entered FPS Mode");
     }
 

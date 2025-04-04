@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class SpellCooldownUI : MonoBehaviour
 {
+    public static SpellCooldownUI instance;
+
     public cooldownUI[] cooldownUIs;
 
     private void Start()
@@ -30,10 +32,10 @@ public class SpellCooldownUI : MonoBehaviour
         }
     }
 
-    public void StartCooldown(int spellIndex)
+    public void StartCooldown(int spellIndex, float cooldownTime)
     {
         cooldownUIs[spellIndex].Timers = cooldownUIs[spellIndex].Times;
-        cooldownUIs[spellIndex].Images.fillAmount = 1; 
+        cooldownUIs[spellIndex].Images.fillAmount = 1;
     }
 
     [System.Serializable] 

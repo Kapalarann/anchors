@@ -263,6 +263,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 479423959877545640, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2562253907568664245, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
       propertyPath: m_Name
       value: Enemy (2)
@@ -507,6 +511,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1900321514392760053, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2754422296849947209, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.4516582
@@ -1969,7 +1977,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitBehavior: 0
   _movementSpeed: 0
   _targetPosition: {x: 0, y: 0, z: 0}
   _unitStat: {fileID: 0}
@@ -2243,6 +2250,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1900321514392760053, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2754422296849947209, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.09
@@ -2315,6 +2326,10 @@ PrefabInstance:
     - target: {fileID: 4434947418196320703, guid: 7f0576edc4785c149aa6e5d9b3e02f89, type: 3}
       propertyPath: m_StoppingDistance
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770177039302510382, guid: 7f0576edc4785c149aa6e5d9b3e02f89, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8511992563947297887, guid: 7f0576edc4785c149aa6e5d9b3e02f89, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2845,7 +2860,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7b787243a7e53429421f594927aff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitBehavior: 0
   _movementSpeed: 0
   _targetPosition: {x: 0, y: 0, z: 0}
   _unitStat: {fileID: 0}
@@ -3612,6 +3626,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 479423959877545640, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2562253907568664245, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
       propertyPath: m_Name
       value: Enemy (1)
@@ -3777,6 +3795,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 479423959877545640, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2562253907568664245, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
       propertyPath: m_Name
       value: Enemy (3)
@@ -4395,6 +4417,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 479423959877545640, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2562253907568664245, guid: 6f5cf522eb63f1543bf214e69bb28040, type: 3}
       propertyPath: m_Name
       value: Enemy

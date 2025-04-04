@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Spell : MonoBehaviour
@@ -5,47 +6,69 @@ public abstract class Spell : MonoBehaviour
     public GameObject spellPrefab;
 
     [SerializeField]
-    private MonoBehaviour[] effectComponents; 
+    private MonoBehaviour[] effectComponents;
 
-    private ISpellEffect[] spellEffects; 
+    public List<ISpellEffect> spellEffects = new List<ISpellEffect>();
+
+    [Header("Spell Settings")]
+    public float cooldownTime = 5f;
+
+    public bool isFired = false;
+    public Transform target;
+    public SpellCaster caster;
+
     private void Awake()
     {
-        Debug.Log($"Spell {name} is being instantiated...");
+        Debug.Log($"📜 Spell {name} (Instance ID: {GetInstanceID()}) is being instantiated...");
     }
 
     private void Start()
     {
-        Debug.Log($"Spell {name} is initializing effects in Start()...");
+        Debug.Log($"📜 Initializing spell: {name} (Instance ID: {GetInstanceID()})");
 
         if (effectComponents == null || effectComponents.Length == 0)
         {
-            Debug.LogError($"Spell {name}: No effects assigned in Inspector!");
+            Debug.LogError($"❌ Spell {name}: effectComponents is NULL or EMPTY! Check Inspector.");
             return;
         }
 
-        spellEffects = new ISpellEffect[effectComponents.Length];
+        spellEffects.Clear();
 
-        for (int i = 0; i < effectComponents.Length; i++)
+        foreach (var component in effectComponents)
         {
-            spellEffects[i] = effectComponents[i] as ISpellEffect;
-            if (spellEffects[i] == null)
+            if (component == null)
             {
-                Debug.LogError($"Effect at index {i} on {name} is NOT an ISpellEffect! Check Inspector.");
+                Debug.LogError($"❌ Spell {name}: Found NULL component in effectComponents array.");
+                continue;
+            }
+
+            ISpellEffect effect = component as ISpellEffect; 
+            if (effect == null)
+            {
+                Debug.LogError($"❌ Spell {name}: Component {component.GetType().Name} does NOT implement ISpellEffect!");
             }
             else
             {
-                Debug.Log($"Spell {name} initialized effect in Start(): {spellEffects[i].GetType().Name}");
+                spellEffects.Add(effect);
+                Debug.Log($"✅ Spell {name} added effect: {component.GetType().Name}");
             }
         }
+
+        Debug.Log($"🎯 Spell {name} now has {spellEffects.Count} valid effects.");
+    }
+
+    public void Initialize(SpellCaster caster)
+    {
+        this.caster = caster;
     }
 
     protected void ApplyEffects(GameObject target)
     {
-        Debug.Log($"ApplyEffects() called on {name} at {Time.time} seconds");
+        Debug.Log($"🔍 ApplyEffects() called on {name} (Instance ID: {GetInstanceID()}) for {target.name}");
 
-        if (spellEffects == null || spellEffects.Length == 0)
+        if (spellEffects.Count == 0)
         {
-            Debug.LogError($"Spell {name}: spellEffects is NULL or EMPTY when calling ApplyEffects()!");
+            Debug.LogError($"❌ Spell {name}: spellEffects list is EMPTY when calling ApplyEffects()! Check if Start() ran properly.");
             return;
         }
 
@@ -53,16 +76,21 @@ public abstract class Spell : MonoBehaviour
         {
             if (effect != null)
             {
-                Debug.Log($"Applying {effect.GetType().Name} to {target.name}");
+                Debug.Log($"✅ Applying {effect.GetType().Name} to {target.name}");
                 effect.ApplyEffect(target);
             }
             else
             {
-                Debug.LogError($"Spell {name} has a NULL effect in spellEffects array.");
+                Debug.LogError($"❌ Spell {name} has a NULL effect in spellEffects list.");
             }
         }
     }
 
-
     public abstract void Cast(Vector3 targetPosition);
+
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+        isFired = true;
+    }
 }

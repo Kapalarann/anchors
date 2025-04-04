@@ -1,42 +1,126 @@
 using UnityEngine;
+using System;
+using UnityEngine.UI;
+using UnityEngine.AI;
 
-public enum HealthType
-{
-    unit,
-    structure,
-    resource
-}
-
-public class Health : MonoBehaviour
+public class HealthAndStamina : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] public float maxHP;
     [SerializeField] public float HP;
-    [System.NonSerialized] public bool isInvulnerable = false;
+    public bool isInvulnerable = false;
+    public bool invisibleHpBar = false;
 
-    [SerializeField] public HealthType type;
+    [Header("Stamina")]
+    [SerializeField] public float maxStamina;
+    [SerializeField] public float stamina;
+    [SerializeField] public float staminaRegen;
+    public bool isStunned = false;
+
+    private GameObject healthBarObj;
+    private HealthBar healthBar;
+    private AnimationManager animationManager;
+
+    public event Action<float, float> OnHealthChanged;
+
+    [Header("UI Elements")]
+    public Slider healthSlider;
+    private Bleed bleed;
+
     private void Awake()
     {
         HP = maxHP;
+        stamina = maxStamina;
+    }
+
+    private void Start()
+    {
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = maxHP;
+            healthSlider.value = HP;
+        }
+
+        healthBarObj = HealthBarPool.Instance.GetHealthBar();
+        if (healthBarObj == null) return;
+        healthBar = healthBarObj.GetComponent<HealthBar>();
+        if (healthBar == null) return;
+
+        healthBarObj.transform.SetParent(UIManager.Instance.HealthBarContainer);
+        healthBar.InitializeHP(this);
+
+        bleed = Bleed.instance;
+
+        animationManager = GetComponent<AnimationManager>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (stamina >= maxStamina || isStunned) return;
+        stamina += staminaRegen * Time.deltaTime;
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
     }
 
     public void TakeDamage(float damage)
     {
         if (isInvulnerable) return;
-        //Show damage number
 
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, maxHP);
 
-        if (HP <= 0)
+        if (GameStateManager.Instance.currentUnit == this.gameObject)
         {
-            Die();
-            return;
+            if (isStunned) StopStun();
         }
+        else ConsumeStamina(damage);
+
+        animationManager.Flinch(isStunned);
+        GetComponent<Animator>().SetTrigger("onHit");
+
+        if (healthBar != null) healthBar.UpdateHP(HP, maxHP);
+        if (healthSlider != null) healthSlider.value = HP;
+        OnHealthChanged?.Invoke(HP, maxHP);
+        if (bleed != null && GameStateManager.Instance.currentUnit == this.gameObject) bleed.ShowBleed();
+
+        if (HP <= 0) Die();
+    }
+
+    public void ConsumeStamina(float staminaCost)
+    {
+        stamina -= staminaCost;
+        if (stamina < 0)
+        {
+            isStunned = true;
+            if (GameStateManager.Instance.currentUnit == this.gameObject) animationManager.Flinch(isStunned);
+        }
+
+        stamina = Mathf.Clamp(stamina, 0f, maxStamina);
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
+    }
+
+    public void StopStun()
+    {
+        animationManager._animator.SetBool("isStunned", false);
+        animationManager.stopFlinching();
+        OnStunFinish();
+    }
+
+    public void OnStunFinish()
+    {
+        isStunned = false;
+        stamina = maxStamina;
+        if (healthBar != null) healthBar.UpdateStamina(stamina, maxStamina);
     }
 
     private void Die()
     {
-        Destroy(gameObject);
+        HealthBarPool.Instance.ReturnHealthBar(healthBarObj);
+
+        if (GameStateManager.Instance.currentUnit == this.gameObject)
+        {
+            //gameOver
+        }
+        gameObject.SetActive(false);
     }
 }

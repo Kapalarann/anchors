@@ -2,32 +2,73 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision objectWeHit)
+    public float damage = 0f;
+    public float headshotMult = 1f;
+    public bool isTransfer;
+    public bool sticksToTarget;
+    public Transform shooterTransform;
+
+    private Rigidbody rb;
+    private Collider col;
+
+    private void Start()
     {
-        if (objectWeHit.gameObject.CompareTag("Target"))
-        {
-            print("hit " + objectWeHit.gameObject.name + "!");
-            CreateBulletImpactEffect(objectWeHit);
-            Destroy(gameObject);
-        }
-         if (objectWeHit.gameObject.CompareTag("Wall"))
-        {
-            print("hit a wall");
-            CreateBulletImpactEffect(objectWeHit);
-            Destroy(gameObject);
-        }
-        
+        rb = GetComponent<Rigidbody>();
+        col = rb.GetComponent<Collider>();
     }
 
-    void CreateBulletImpactEffect(Collision objectWeHit)
+    private void Update()
     {
-        ContactPoint contact = objectWeHit.contacts[0];
-        GameObject hole = Instantiate(
-            GlobalReferences.Instance.bulletImpactEffectPrefab,
-            contact.point,
-            Quaternion.LookRotation(contact.normal)
+        transform.rotation = Quaternion.LookRotation(rb.linearVelocity);
+    }
 
-        );
-        hole.transform.SetParent(objectWeHit.gameObject.transform);
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Boundary"))
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        Transform parent = other.transform.root;
+
+        if (shooterTransform == parent) return;
+
+        HealthAndStamina hp = parent.gameObject.GetComponent<HealthAndStamina>();
+        if (hp == null) return;
+
+        if (isTransfer && GameStateManager.Instance.currentUnit.transform == shooterTransform && hp.isStunned)
+        {
+            if (GameStateManager.Instance.TransferToTarget(shooterTransform, parent))
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        if (other.gameObject.CompareTag("Body") || other.gameObject.CompareTag("Head"))
+        {
+            float damageMult = 1f;
+            if (other.gameObject.CompareTag("Head")) 
+            { 
+                damageMult = headshotMult;
+            }
+
+            hp.TakeDamage(damage * damageMult);
+
+            if (!sticksToTarget)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            if(rb != null)rb.isKinematic = true;
+            TrailRenderer trail = GetComponent<TrailRenderer>();
+            if(trail != null) trail.enabled = false;
+            col.enabled = false;
+            this.enabled = false;
+
+            transform.SetParent(other.transform, true);
+        }
     }
 }

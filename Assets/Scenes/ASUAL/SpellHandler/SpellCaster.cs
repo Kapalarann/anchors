@@ -1,5 +1,4 @@
-using Spells;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -9,13 +8,26 @@ public class SpellCaster : MonoBehaviour
     private Camera mainCamera;
     public SpellCooldownUI splCldwnUi;
 
+    private float[] lastCastTimes = new float[4];
     public GameObject rangeIndicatorPrefab;
     private GameObject activeRangeIndicator;
     private float currentSpellRange = 0f;
 
+    private SpellCooldownUI cooldownUI;
+    private bool isSwitchMode = false;
+
+    public Transform attackSpawnPoint;
+    public LayerMask unitLayerMask;
+
     private void Start()
     {
         mainCamera = Camera.main;
+
+        if (GameStateManager.Instance.selectedUnit == null)
+        {
+            GameStateManager.Instance.selectedUnit = FindFirstObjectByType<SelectableUnit>();
+            Debug.Log($"✅ Default unit set to {GameStateManager.Instance.selectedUnit?.gameObject.name}");
+        }
     }
 
     private void Update()
@@ -30,6 +42,9 @@ public class SpellCaster : MonoBehaviour
 
                     if (spellList[i].spell is ESpell)
                     {
+                        isSwitchMode = true;
+                        selectedSpell = spellList[i].spell;
+                        Debug.Log("Switch mode activated. Click on a unit to switch.");
                         spellList[i].spell.Cast(transform.position);
                     }
                     else
@@ -38,26 +53,41 @@ public class SpellCaster : MonoBehaviour
                         selectedSpellNum = i;
                         ShowRangeIndicator(spellList[i].range);
                     }
-                }
-                else
-                {
-                    Debug.Log($"Spell {spellList[i].keyCode} is on cooldown!");
+
+                    SpellCooldownUI.instance?.StartCooldown(i, spellList[i].spellCooldowns);
                 }
             }
         }
 
         if (selectedSpell != null && Input.GetMouseButtonDown(0))
         {
-            CastSelectedSpell();
+            if (isSwitchMode)
+                AttemptCharacterSwitch();
+            else
+                CastSelectedSpell();
+
             HideRangeIndicator();
-            splCldwnUi.StartCooldown(selectedSpellNum);
         }
+    }
+
+    private void AttemptCharacterSwitch()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayerMask))
+        {
+            HealthAndStamina hp = hit.collider.transform.root.GetComponent<HealthAndStamina>();
+            if (hp == null) return;
+
+            if (hp.isStunned) GameStateManager.Instance.TransferToTarget(transform, hit.collider.transform.root);
+        }
+
+        selectedSpell = null;
+        isSwitchMode = false;
     }
 
     private void ShowRangeIndicator(float range)
     {
         if (activeRangeIndicator != null) Destroy(activeRangeIndicator);
-
         if (selectedSpell is ESpell) return;
 
         activeRangeIndicator = Instantiate(rangeIndicatorPrefab, transform);
@@ -86,11 +116,12 @@ public class SpellCaster : MonoBehaviour
                 castPosition = transform.position + direction * currentSpellRange;
             }
 
+            selectedSpell.Initialize(this);
             selectedSpell.Cast(castPosition);
-            Debug.Log($"Spell {selectedSpell.name} cast at: {castPosition}");
         }
 
         selectedSpell = null;
+        isSwitchMode = false;
     }
 
     [System.Serializable]

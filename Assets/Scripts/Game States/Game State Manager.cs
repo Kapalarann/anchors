@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.AI;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class GameStateManager : MonoBehaviour
 
     [Header("RTS settings")]
     [SerializeField] public LayerMask unitLayerMask;
-    
+
     [Header("FPS settings")]
     [SerializeField] public float cameraY;
 
@@ -21,16 +21,22 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] public float cameraDistance = 10f;
 
     [Header("State Data")]
-    public List<StateData> states; // List of all states in the game
+    public StateData[] states; // List of all states in the game
     public Dictionary<StateType, StateData> stateDictionary; // Lookup table for states
     public Dictionary<StateType, GameObject> cameraInstances = new Dictionary<StateType, GameObject>(); // Stores camera instances
     public Dictionary<StateType, GameObject> uiInstances = new Dictionary<StateType, GameObject>(); // Stores UI instances
     private List<Component> activeComponents = new List<Component>();
 
     [HideInInspector] public GameState currentState;
-    [HideInInspector] public SelectableUnit selectedUnit;
+    /*[HideInInspector]*/
+    public Camera currentCamera;
+    /*[HideInInspector]*/
+    public SelectableUnit selectedUnit;
     [HideInInspector] public PlayerInput currentPlayerInput;
+    [HideInInspector] public Rigidbody currentRigidbody;
     [HideInInspector] public UnitStateManager currentUSM;
+    [HideInInspector] public NavMeshAgent currentAgent;
+    [HideInInspector] public GameObject currentUnit;
 
     void Awake()
     {
@@ -74,11 +80,11 @@ public class GameStateManager : MonoBehaviour
 
     private void Start()
     {
-        if (states.Count > 0) SwitchState(states[0]); // Default to the first state
+        if (states.Length > 0) SwitchState(states[0]); // Default to the first state
         else Debug.LogError("No states available in GameStateManager!");
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         currentState?.Update();
     }
@@ -99,11 +105,17 @@ public class GameStateManager : MonoBehaviour
 
         DisableActiveComponents();
 
-        if (cameraInstances.ContainsKey(stateData.state)) cameraInstances[stateData.state].SetActive(true);
+        if (cameraInstances.ContainsKey(stateData.state))
+        {
+            currentCamera = cameraInstances[stateData.state].GetComponentInChildren<Camera>();
+            cameraInstances[stateData.state].SetActive(true);
+        }
         if (uiInstances.ContainsKey(stateData.state)) uiInstances[stateData.state].SetActive(true);
 
         ActivateStateComponents(stateData);
         HandlePlayerInput(stateData.hasPlayerInput);
+        HandleRigidbody(stateData.hasRigidbody);
+        HandleHealth();
         HandleUSM();
 
         switch (stateData.state)
@@ -119,6 +131,9 @@ public class GameStateManager : MonoBehaviour
                 break;
             case StateType.ThirdPerson:
                 currentState = new ThirdPersonState(this, stateData);
+                break;
+            case StateType.Isometric:
+                currentState = new IsometricState(this, stateData);
                 break;
             default:
                 Debug.LogError($"Unknown state type: {stateData.state}");
@@ -164,7 +179,9 @@ public class GameStateManager : MonoBehaviour
 
     private void ActivateStateComponents(StateData sData)
     {
-        if (selectedUnit == null || sData.ScriptType.Length == 0) return;
+        if (selectedUnit == null || sData == null || sData.ScriptType.Length == 0) return;
+
+        currentUnit = selectedUnit.gameObject;
 
         foreach (var scriptName in sData.ScriptType)
         {
@@ -195,12 +212,12 @@ public class GameStateManager : MonoBehaviour
 
     private void HandlePlayerInput(bool hasPlayerInput)
     {
-        if(currentPlayerInput != null)
+        if (currentPlayerInput != null)
         {
             currentPlayerInput.enabled = false;
             currentPlayerInput = null;
         }
-        if(hasPlayerInput)
+        if (hasPlayerInput)
         {
             PlayerInput pInput = selectedUnit.GetComponent<PlayerInput>();
             if (selectedUnit != null && pInput != null)
@@ -211,16 +228,63 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    private void HandleRigidbody(bool hasRigidbody)
+    {
+        if (currentRigidbody != null)
+        {
+            currentRigidbody.isKinematic = true;
+            currentRigidbody = null;
+        }
+        if (hasRigidbody)
+        {
+            Rigidbody rb = selectedUnit.GetComponent<Rigidbody>();
+            if (selectedUnit != null && rb != null)
+            {
+                currentRigidbody = rb;
+                rb.isKinematic = false;
+            }
+        }
+    }
+
     private void HandleUSM()
     {
-        if(currentUSM != null)
+        if (currentUSM != null)
         {
             currentUSM.enabled = true;
+            currentAgent.enabled = true;
         }
         if (selectedUnit != null)
         {
             currentUSM = selectedUnit.GetComponent<UnitStateManager>();
             if (currentUSM != null) currentUSM.enabled = false;
+
+            currentAgent = selectedUnit.GetComponent<NavMeshAgent>();
+            if (currentAgent != null) currentAgent.enabled = false;
         }
+    }
+
+    private void HandleHealth()
+    {
+        HealthAndStamina hp;
+        if (selectedUnit != null)
+        {
+            hp = selectedUnit.GetComponent<HealthAndStamina>();
+            if (hp != null) hp.StopStun();
+        }
+    }
+
+    public bool TransferToTarget(Transform root, Transform target)
+    {
+        if (target.gameObject == root.gameObject) return false;
+
+        SelectableUnit unit = target.gameObject.GetComponent<SelectableUnit>();
+        UnitStats stats = target.gameObject.GetComponent<UnitStats>();
+
+        if (unit == null || stats == null) return false;
+
+        selectedUnit = unit;
+        RequestStateChange(stats.unitType);
+
+        return true;
     }
 }

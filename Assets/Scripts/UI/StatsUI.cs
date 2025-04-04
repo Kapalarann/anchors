@@ -17,13 +17,13 @@ public class StatsUI : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void UpdateStats(UnitStats stats, Health hp)
+    public void UpdateStats(UnitStats stats, HealthAndStamina hp)
     {
         if (stats == null) return;
 
-        unitNameText.text = $"Name: {stats.unitName}";
-        unitTypeText.text = $"Type: {stats.unitType}";
-        healthText.text = $"Health: {hp.HP}/{hp.maxHP}";
+        unitNameText.text = $" {stats.unitName}";
+        unitTypeText.text = $" {stats.unitType}";
+        healthText.text = $" {hp.HP}/{hp.maxHP}";
     }
 
     public void ClearStats()

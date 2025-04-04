@@ -332,6 +332,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4209773935468637330, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
+      propertyPath: damagePerSecond
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6037066643949003414, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
       propertyPath: _cameraTransform
       value: 
@@ -343,7 +347,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3274817115598110963, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2093504948}
   m_SourcePrefab: {fileID: 100100000, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
 --- !u!114 &1342327973 stripped
 MonoBehaviour:
@@ -591,6 +598,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2093504931 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3274817115598110963, guid: 5434bad2d5725ce4694ecccd5f9bbcfe, type: 3}
+  m_PrefabInstance: {fileID: 978881281}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2093504948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093504931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b979305b4967133469d1f2b0a301dcac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _berserkThreshold: 0.5
+  _speedMultiplier: 1
+  _sizeMultiplier: 2
+  _animationSpeedMultiplier: 1.5
+  _invulnerabilityDuration: 5
+  _berserkDuration: 5
+  _berserkCooldown: 15
+  _berserkEffect: {fileID: 56852242586695117, guid: 4d7e19c9fcb52be4bb9a8ba855ffe12d, type: 3}
 --- !u!1001 &4395675457702715648
 PrefabInstance:
   m_ObjectHideFlags: 0

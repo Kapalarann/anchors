@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerMotor : MonoBehaviour
@@ -10,10 +6,11 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
-    public float gravity = 9.8f;
-    public float speed = 5f;
+    public float walkSpeed = 3f;
+    public float sprintSpeed = 5f;
     public float jumpHeight = 3f;
 
+    private float currentSpeed;
     private bool lerpCrouch = false;
     private bool crouching = false;
     private float crouchTimer = 0f;
@@ -23,6 +20,7 @@ public class PlayerMotor : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        currentSpeed = walkSpeed;
     }
 
     void Update()
@@ -45,9 +43,9 @@ public class PlayerMotor : MonoBehaviour
         }
 
         //movement
-        controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
+        controller.Move(transform.TransformDirection(moveDirection) * currentSpeed * Time.deltaTime);
 
-        playerVelocity.y += -gravity * Time.deltaTime;
+        playerVelocity.y += Physics.gravity.y * Time.deltaTime;
 
         if (isGrounded && playerVelocity.y < 0)
             playerVelocity.y = -2f;
@@ -55,20 +53,20 @@ public class PlayerMotor : MonoBehaviour
         controller.Move(playerVelocity * Time.deltaTime);
     }
 
-    public void OnMovement(InputValue value)
+    public void OnMovement(InputAction.CallbackContext context)
     {
-        moveDirection = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y);
+        moveDirection = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
     }
 
-    public void OnJump()
+    public void OnJump(InputAction.CallbackContext context)
     {
         if (isGrounded)
         {
-            playerVelocity.y = Mathf.Sqrt(jumpHeight * 2f * gravity);
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * 2f * -Physics.gravity.y);
         }
     }
 
-    public void OnCrouch()
+    public void OnCrouch(InputAction.CallbackContext context)
     {
         if (!crouching && Physics.Raycast(transform.position, Vector3.up, 2f))
         {
@@ -81,9 +79,16 @@ public class PlayerMotor : MonoBehaviour
         lerpCrouch = true;
     }
 
-    public void OnSprint()
+    public void OnSprint(InputAction.CallbackContext context)
     {
-        sprinting = !sprinting;
-        speed = sprinting ? 8f : 5f;
+        if (context.started)
+        {
+            sprinting = true;
+        }
+        else if (context.canceled)
+        {
+            sprinting = false;
+        }
+        currentSpeed = sprinting ? sprintSpeed : walkSpeed;
     }
 }
