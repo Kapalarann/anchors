@@ -1566,6 +1566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4da7f7041bd75243a9890f3ac23e147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nameList: {fileID: 11400000, guid: 954d433d5bdc18f47a6ba4c1421a0ec3, type: 2}
   unitName: Kap
   unitType: 1
 --- !u!114 &4569841048431006319

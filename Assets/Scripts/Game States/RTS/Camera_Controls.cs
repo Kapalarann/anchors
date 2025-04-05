@@ -3,8 +3,8 @@ using UnityEngine;
 public class CameraControls : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float panSpeed = 20f; // Speed of camera panning
-    [SerializeField] private float panBorderThickness = 10f; // Thickness of the screen edge for mouse pan
+    [SerializeField] private float panSpeed = 20f;
+    [SerializeField] private float panBorderThickness = 10f;
 
     [Header("Movement Controls")]
     [SerializeField] private KeyCode _up;
@@ -13,13 +13,16 @@ public class CameraControls : MonoBehaviour
     [SerializeField] private KeyCode _right;
 
     [Header("Zoom Settings")]
-    [SerializeField] private float scrollSpeed = 10f; // Speed of zoom
-    [SerializeField] private float minZoom = 5f; // Minimum zoom level
-    [SerializeField] private float maxZoom = 50f; // Maximum zoom level
+    [SerializeField] private float scrollSpeed = 10f;
+    [SerializeField] private float minZoom = 5f;
+    [SerializeField] private float maxZoom = 50f;
+
+    [Header("Camera Movement Boundaries")]
+    [SerializeField] private Vector2 minBoundary = new Vector2(-50, -50); // X and Z min
+    [SerializeField] private Vector2 maxBoundary = new Vector2(50, 50);   // X and Z max
 
     private Camera _camera;
     private float currentZoom;
-
 
     private void Start()
     {
@@ -46,7 +49,6 @@ public class CameraControls : MonoBehaviour
         if (Input.GetKey(_left))
             moveValue -= transform.right;
 
-        // Mouse Input (Screen Edge Pan)
         if (Input.mousePosition.x >= Screen.width - panBorderThickness)
             moveValue += Vector3.right;
         if (Input.mousePosition.x <= panBorderThickness)
@@ -56,14 +58,18 @@ public class CameraControls : MonoBehaviour
         if (Input.mousePosition.y <= panBorderThickness)
             moveValue -= Vector3.forward;
 
-        transform.position += moveValue * panSpeed * Time.deltaTime;
+        Vector3 newPosition = transform.position + moveValue * panSpeed * Time.deltaTime;
+
+        newPosition.x = Mathf.Clamp(newPosition.x, minBoundary.x, maxBoundary.x);
+        newPosition.z = Mathf.Clamp(newPosition.z, minBoundary.y, maxBoundary.y);
+
+        transform.position = newPosition;
     }
 
     private void HandleZoom()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         currentZoom -= scroll * scrollSpeed * Time.deltaTime * 100f;
-
         _camera.fieldOfView = Mathf.Clamp(currentZoom, minZoom, maxZoom);
     }
 }
