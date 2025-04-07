@@ -53,6 +53,11 @@ public class PlayerAttack : MonoBehaviour
         baseHeavyAttackDamage = heavyAttackDamage;
     }
 
+    private void OnDisable()
+    {
+        sword.isTransfer = false;
+    }
+
     public void Attack_Event(InputAction.CallbackContext context)
     {
         if (context.performed && !_meleeMovement._isRolling && !_isAttacking && !_manager.isFlinching)

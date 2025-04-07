@@ -39,6 +39,7 @@ public class Bow : MonoBehaviour
         arrowMesh.enabled = false;
         foreach (MeshRenderer mesh in objectMesh) mesh.enabled = true;
         foreach (SkinnedMeshRenderer mesh in characterMesh) mesh.enabled = true;
+        isTransferArrow = false;
     }
 
     void Update()
