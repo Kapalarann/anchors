@@ -7,12 +7,19 @@ public class MissionBriefing : MonoBehaviour
     public Button startMissionButton;
     public Button cancelButton;
 
+    [SerializeField] private GameObject healthBarContainer;
+
     private void Start()
     {
         briefingPanel.SetActive(true);
-        Time.timeScale = 0; 
+        Time.timeScale = 0;
 
-        //Listeners
+        if (healthBarContainer != null)
+        {
+            healthBarContainer.SetActive(false); // Hide health bar during briefing
+        }
+
+        // Listeners
         startMissionButton.onClick.AddListener(StartMission);
         cancelButton.onClick.AddListener(CancelMission);
     }
@@ -21,6 +28,11 @@ public class MissionBriefing : MonoBehaviour
     {
         briefingPanel.SetActive(false);
         Time.timeScale = 1;
+
+        if (healthBarContainer != null)
+        {
+            healthBarContainer.SetActive(true); // Show health bar when mission starts
+        }
     }
 
     public void CancelMission()
